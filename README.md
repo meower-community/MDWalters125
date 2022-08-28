@@ -1,2 +1,2 @@
 # MDWalters125
-The source code for the MDWalters125 Meower Bot.
+The source code for the MDWalters125 Meower Bot
