@@ -9,10 +9,6 @@ window.handlePost = function(bundle) {
         bundle = bundle[1].split(": ");
     }
 
-    if (bundle[1].startsWith("@MDWalters125")) {
-        post("MY PREFIX IS ~ NOW GO USE THAT");
-    }
-
     if (bundle[1].startsWith("~hello")) {
         post(`Hello, ${bundle[1].split(" ")[1]}!`);
     }
