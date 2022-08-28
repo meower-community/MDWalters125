@@ -12,27 +12,27 @@ window.handlePost = function(bundle) {
     if (bundle[1].startsWith("~hello")) {
         post(`Hello, ${bundle[1].split(" ")[1]}!`);
     }
-    
+
     if (bundle[1].startsWith("~help")) {
         post(` ${help}`);
     }
-    
+
     if (bundle[1].startsWith("~str")) {
         post(` ${bundle[1].split(" ")[1]}`);
     }
-    
+
     if (bundle[1].startsWith("~amazing")) {
         post(`Amazing ${bundle[1].split(" ")[1]}`);
     }
-    
+
     if (bundle[1].startsWith("~uptime")) {
         post(uptime);
     }
-    
+
     if (bundle[1].startsWith("~uwu")) {
         post("UwU");
     }
-    
+
     if (bundle[1].startsWith("~8ball")) {
     	var num = Math.floor(Math.random() * eightBall.length);
     	post(eightBall[num]);
