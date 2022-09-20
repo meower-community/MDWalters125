@@ -15,7 +15,11 @@ window.handlePost = function(bundle) {
     }
 
     if (bundle[1].startsWith("~hello")) {
-        post(`Hello, ${bundle[1].split(" ")[1]}!`);
+        if (bundle[1].split(" ")[1] === undefined) {
+           post(`Hello, ${bundle[0]}!`);
+        } else {
+           post(`Hello, ${bundle[1].split(" ")[1]}!`);
+        }
     }
 
     if (bundle[1].startsWith("~help")) {
