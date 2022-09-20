@@ -1,7 +1,7 @@
 const uptime = new Date();
 const help = ["~hello", "~help", "~str", "~amazing", "~uptime", "~uwu", "~8ball", "~motd"];
 const eightBall = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.", "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.", "Don't count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."];
-const motd = ["Meower is not dead", "Furries can do infinite crime"];
+const motd = ["Meower is not dead", "Furries can do infinite crime", "~8ball get a life?"];
 
 post("MDWalters125 is now online! Use ~help to see a list of commands.");
 
@@ -10,20 +10,24 @@ window.handlePost = function(bundle) {
         bundle = bundle[1].split(": ");
     }
 
+    if (bundle[0] == "MDWalters125") {
+        return;
+    }
+
     if (bundle[1].startsWith("~hello")) {
         post(`Hello, ${bundle[1].split(" ")[1]}!`);
     }
 
     if (bundle[1].startsWith("~help")) {
-        post(` ${help}`);
+        post(`${help}`);
     }
 
     if (bundle[1].startsWith("~str")) {
-        post(` ${bundle[1].split(" ")[1]}`);
+        post(`${bundle[1].split(" ")[1]}`);
     }
 
     if (bundle[1].startsWith("~amazing")) {
-        post(`Amazing ${bundle[1].split(" ")[1]}`);
+        post(`Amazing ${bundle[1].split(" ")}`);
     }
 
     if (bundle[1].startsWith("~uptime")) {
