@@ -1,7 +1,7 @@
 const uptime = new Date();
 const help = ["~hello", "~help", "~str", "~amazing", "~uptime", "~uwu", "~8ball", "~motd"];
 const eightBall = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.", "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.", "Don't count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."];
-const motd = ["Meower is not dead", "Furries can do infinite crime", "~8ball get a life?"];
+const motd = ["Meower is not dead", "Furries can do infinite crime", "~8ball get a life?", "Never gonna give you up", "usebottles", "Why did the chicken cross the road?\nTo get to the other side"];
 
 post("MDWalters125 is now online! Use ~help to see a list of commands.");
 
