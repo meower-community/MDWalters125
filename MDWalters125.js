@@ -11,7 +11,7 @@ window.handlePost = function(bundle) {
         bundle = bundle[1].split(": ");
     }
 
-    if (bundle[0] == "MDWalters125" || bundle[0] == "m") {
+    if (bundle[0] == "MDWalters125") {
         return;
     }
 
