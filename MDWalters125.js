@@ -15,7 +15,7 @@ window.handlePost = function(bundle) {
         return;
     }
 
-    if (bundle[1].startsWith("~") && banned.includes(bundle[0])) {
+    if (bundle[1].startsWith("~") && muted.includes(bundle[0])) {
         post("You are currently muted from MDWalters125");
         return;
     }
