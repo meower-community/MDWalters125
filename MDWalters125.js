@@ -62,8 +62,4 @@ window.handlePost = function(bundle) {
     	var num = Math.floor(Math.random() * motd.length);
     	post(motd[num]);
     }
-
-    if (bundle[1].startsWith("~about")) {
-    	post("MDWalters125 by @MDWalters124\n");
-    }
 }
