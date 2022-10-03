@@ -16,7 +16,12 @@ window.handlePost = function(bundle) {
     }
 
     if (bundle[1].startsWith("~") && muted.includes(bundle[0])) {
-        post("You are currently muted from MDWalters125");
+        post("You are currently muted from MDWalters125.");
+        return;
+    }
+
+    if (bundle[1].startsWith("~") && !(help.includes(bundle[1]))) {
+        post("That command doesn't exist! Use ~help to see a list of commands.");
         return;
     }
 
