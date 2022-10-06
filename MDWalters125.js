@@ -39,7 +39,7 @@ window.handlePost = function(bundle) {
     }
 
     if (bundle[1].startsWith("~str")) {
-        post(`${bundle[1].split(" ")[1]}`);
+        post(`${bundle[1].split(" ")}`);
     }
 
     if (bundle[1].startsWith("~amazing")) {
