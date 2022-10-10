@@ -7,7 +7,7 @@ const admins = ["MDWalters124", "m"];
 
 post("MDWalters125 is now online! Use ~help to see a list of commands.");
 
-window.handlePost = function(bundle) {
+window.handlePost = async function(bundle) {
     if (bundle[0] == "Discord") {
         bundle = bundle[1].split(": ");
     }
