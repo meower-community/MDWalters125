@@ -79,4 +79,8 @@ window.handlePost = async function(bundle) {
             post("You do not have the permissions to run this command.");
         }
     }
+
+    if (bundle[1].startsWith("~ulist")) {
+        post(document.querySelector("#ulist").innerHTML);
+    }
 }
