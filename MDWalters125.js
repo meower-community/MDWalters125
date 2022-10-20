@@ -10,6 +10,7 @@ post("MDWalters125 is now online! Use ~help to see a list of commands.");
 window.handlePost = async function(bundle) {
     if (bundle[0] == "Discord") {
         bundle = bundle[1].split(": ");
+
     }
 
     if (bundle[0] == document.querySelector("#username").value) {
@@ -38,7 +39,7 @@ window.handlePost = async function(bundle) {
     }
 
     if (bundle[1].startsWith("~help")) {
-        post(`${help}`);
+        post(`${help.join(", ")}`);
     }
 
     if (bundle[1].startsWith("~str")) {
