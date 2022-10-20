@@ -47,7 +47,7 @@ window.handlePost = async function(bundle) {
     }
 
     if (bundle[1].startsWith("~amazing")) {
-        post(`Amazing ${bundle[1].split(" ")}`);
+        post(`Amazing ${bundle[1].split(" ").slice(1, bundle[1].split(" ").length).join(" ")}`);
     }
 
     if (bundle[1].startsWith("~uptime")) {
