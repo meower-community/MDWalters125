@@ -117,8 +117,22 @@ window.handlePost = async function(bundle) {
         } else if (bundle[1].split(" ")[1] === "clear") {
             localStorage.removeItem(`MDW125-STATUS-${bundle[0]}`);
             post("Status successfully cleared!");
+        } else if (bundle[1].split(" ")[1] === "view") {
+            if (bundle[1].split(" ")[2] === bundle[0]) {
+                post(`Your status: ${localStorage.getItem("MDW125-STATUS-" + bundle[0])}`);
+            } else {
+                if (localStorage.getItem("MDW125-STATUS-" + bundle[1].split(" ")[2]) === null) {
+                    post(`@${bundle[1].split(" ")[2]} doesn't have a status set.`);
+                } else {
+                    post(`@${bundle[1].split(" ")[2]}'s status: ${localStorage.getItem("MDW125-STATUS-" + bundle[1].split(" ")[2])}`);
+                }
+            }    
         } else {
-            post(localStorage.getItem(`MDW125-STATUS-${bundle[1].split(" ")[1]}`));
+            if (localStorage.getItem("MDW125-STATUS-" + bundle[0]) === null) {
+                post(`You don't have a status set.`);
+            } else {
+                post(`Your status: ${localStorage.getItem("MDW125-STATUS-" + bundle[0])}`);
+            }
         }
     }
 }
