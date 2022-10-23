@@ -10,10 +10,9 @@ post("MDWalters125 is now online! Use ~help to see a list of commands.");
 window.handlePost = async function(bundle) {
     if (bundle[0] == "Discord") {
         bundle = bundle[1].split(": ");
-
     }
 
-    if (bundle[0] == document.querySelector("#username").value) {
+    if (bundle[0] === document.querySelector("#username").value) {
         return;
     }
 
@@ -129,7 +128,7 @@ window.handlePost = async function(bundle) {
             }    
         } else {
             if (localStorage.getItem("MDW125-STATUS-" + bundle[0]) === null) {
-                post(`You don't have a status set.`);
+                post(`You don't have a status set. To set one, use ~status set [your status].`);
             } else {
                 post(`Your status: ${localStorage.getItem("MDW125-STATUS-" + bundle[0])}`);
             }
