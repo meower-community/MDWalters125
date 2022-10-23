@@ -128,7 +128,7 @@ window.handlePost = async function(bundle) {
             }    
         } else {
             if (localStorage.getItem("MDW125-STATUS-" + bundle[0]) === null) {
-                post(`You don't have a status set. To set one, use ~status set [your status].`);
+                post(`You don't have a status set. To set one, use ~status set [message].`);
             } else {
                 post(`Your status: ${localStorage.getItem("MDW125-STATUS-" + bundle[0])}`);
             }
