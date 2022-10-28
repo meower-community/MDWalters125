@@ -1,7 +1,7 @@
 const WebSocket = require("ws");
 const {LocalStorage} = require("node-localstorage");
 const username = "MDWalters125";
-const password = "";
+const password = "mundenpark124";
 const uptime = new Date();
 const help = ["~hello", "~help", "~say", "~amazing", "~uptime", "~uwu", "~8ball", "~motd", "~ulist", "~zen", "~shorten", "~cat", "~status"];
 const eightBall = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.", "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.", "Don't count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."];
@@ -144,12 +144,11 @@ async function connect() {
 }
 
 console.log("Connecting...");
-const ws = new WebSocket("wss://server.meower.org/");
+var ws = new WebSocket("wss://server.meower.org/");
 
 ws.on('open', connect);
-ws.on('close', function() {
-    ws.close();
-    connect();
+ws.on('close', async function() {
+    throw new Error("Websocket closed");
 });
 
 ws.on('message', function message(data) {
