@@ -2,7 +2,7 @@ const WebSocket = require("ws");
 const {LocalStorage} = require("node-localstorage");
 require("dotenv").config();
 
-const username = "MDWalters125";
+const username = process.env.MDW125_USERNAME;
 const password = process.env.MDW125_PASSWORD;
 
 const uptime = new Date();
