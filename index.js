@@ -144,7 +144,7 @@ async function connect() {
 }
 
 console.log("Connecting...");
-var ws = new WebSocket("wss://server.meower.org/");
+const ws = new WebSocket("wss://server.meower.org/");
 
 ws.on('open', connect);
 ws.on('close', async function() {
