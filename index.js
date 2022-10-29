@@ -13,7 +13,7 @@ const muted = ["Eris"]
 
 const localStorage = new LocalStorage("./localStorage");
 
-async function fetchURL(url){
+async function fetchURL(url) {
     return await fetch(url).then(res => res.text());
 }
 
@@ -131,7 +131,7 @@ function post(content) {
 async function connect() {
     console.log("Connected");
     ws.send('{"cmd": "direct", "val": {"cmd": "type", "val": "js"}}');
-    ws.send(`{"cmd": "direct", "val": {"cmd": "ip", "val": "${await fetch("https://api.meower.org/ip").then(res => res.text())}"}}`);
+    ws.send(`{"cmd": "direct", "val": {"cmd": "ip", "val": "${await fetchURL("https://api.meower.org/ip")}"}}`);
     ws.send('{"cmd": "direct", "val": "meower"}');
     ws.send('{"cmd": "direct", "val": {"cmd": "version_chk", "val": "scratch-beta-5-r7"}}');
     ws.send(`{"cmd": "direct", "val": {"cmd": "authpswd", "val": {"username": "${username}", "pswd": "${password}"}}}`);
