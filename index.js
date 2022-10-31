@@ -1,6 +1,6 @@
 const WebSocket = require("ws");
 const {LocalStorage} = require("node-localstorage");
-const fetch = require("fetch").fetchUrl;
+const fetch = require("node-fetch");
 require("dotenv").config();
 
 const username = process.env.MDW125_USERNAME;
@@ -63,9 +63,7 @@ function epochToRelative(timestamp) {
 }
 
 async function fetchURL(url) {
-    await fetch(url, function(error, meta, body) {
-        return body.toString();
-    });
+    return await fetch(url).then(res => res.text());
 }
 
 async function handlePost(user, message) {
