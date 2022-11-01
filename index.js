@@ -223,7 +223,7 @@ ws.on('message', function message(data) {
             console.log(`${messageData.val.u}: ${messageData.val.p}`);
             handlePost(messageData.val.u, messageData.val.p);
         } catch(error) {
-            post
+            post(error);
         }
     } else if (messageData.cmd === "ping") {
         if (messageData.val === "I:100 | OK") {
