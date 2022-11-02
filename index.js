@@ -17,7 +17,6 @@ const motd = ["Meower is not dead", "Furries can do infinite crime", "~8ball get
 const muted = ["Eris"];
 
 const localStorage = new LocalStorage("./localStorage");
-var command;
 
 function epochToRelative(timestamp) {
     var msPerMinute = 60 * 1000;
