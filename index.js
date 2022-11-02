@@ -15,6 +15,7 @@ const motd = ["Meower is not dead", "Furries can do infinite crime", "~8ball get
 const muted = ["Eris"];
 
 const localStorage = new LocalStorage("./localStorage");
+var command;
 
 function epochToRelative(timestamp) {
     var msPerMinute = 60 * 1000;
@@ -213,7 +214,10 @@ var ws = new WebSocket("wss://server.meower.org/");
 
 ws.on('open', connect);
 ws.on('close', function() {
-  exec("npm run start");
+  var command = exec("npm run start");
+  command.stdout.on('data', output => {
+    console.log(output.toString());
+  });
 });
 
 ws.on('message', function message(data) {
