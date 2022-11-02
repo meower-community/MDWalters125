@@ -4,6 +4,7 @@ const fetch = require("node-fetch");
 const emoji = require('node-emoji');
 const {exec} = require("child_process");
 const ansiColours = require("ansi-colors");
+
 require("dotenv").config();
 
 const username = process.env["MDW125_USERNAME"];
