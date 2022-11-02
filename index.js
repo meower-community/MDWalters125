@@ -3,6 +3,7 @@ const {LocalStorage} = require("node-localstorage");
 const fetch = require("node-fetch");
 const emoji = require('node-emoji');
 const {exec} = require("child_process");
+const ansiColours = require("ansi-colors");
 require("dotenv").config();
 
 const username = process.env.MDW125_USERNAME;
@@ -228,16 +229,22 @@ ws.on('message', function message(data) {
         }
     } else if (messageData.cmd === "ping") {
         if (messageData.val === "I:100 | OK") {
-            console.log("Ping is OK");
+            console.log(ansiColours.green("Ping is OK"));
         } else {
-            console.log("Ping is not OK");
+            console.log(ansiColours.red("Ping is not OK"));
         }
     } else if (messageData.val.state === 101) {
         console.log(`${messageData.val.u} is typing...`);
     } else if (messageData.cmd === "ulist") {
         console.log(`Users online: ${messageData.val.split(";").join(", ")}`);
     } else if (messageData.cmd === "statuscode") {
-        console.log(`Status: ${messageData.val}`);
+        if (messageData.val.startsWith("E")) {
+            console.error(ansiColours.red(`Status: ${messageData.val}`));
+        } else if (messageData.val.startsWith("I:100")) {
+            console.error(ansiColours.green(`Status: ${messageData.val}`));
+        } else {
+            console.log(ansiColours.blue(`Status: ${messageData.val}`));
+        }
     } else if (messageData.val.cmd === "motd") {
         console.log(`MOTD: ${messageData.val.val}`);
     } else if (messageData.val.cmd === "vers") {
