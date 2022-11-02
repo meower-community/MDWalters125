@@ -6,8 +6,8 @@ const {exec} = require("child_process");
 const ansiColours = require("ansi-colors");
 require("dotenv").config();
 
-const username = process.env.MDW125_USERNAME;
-const password = process.env.MDW125_PASSWORD;
+const username = process.env["MDW125_USERNAME"];
+const password = process.env["MDW125_PASSWORD"];
 
 const uptime = new Date().getTime();
 const help = ["~hello", "~help", "~say", "~amazing", "~uptime", "~uwu", "~8ball", "~motd", "~zen", "~shorten", "~cat", "~status", "~random"];
@@ -194,27 +194,28 @@ function post(content) {
 }
 
 async function connect() {
-    console.log("Connected");
+    console.log(ansiColours.green("Connected"));
     ws.send('{"cmd": "direct", "val": {"cmd": "type", "val": "js"}}');
     ws.send(`{"cmd": "direct", "val": {"cmd": "ip", "val": "${await fetchURL("https://api.meower.org/ip")}"}}`);
     ws.send('{"cmd": "direct", "val": "meower"}');
     ws.send('{"cmd": "direct", "val": {"cmd": "version_chk", "val": "scratch-beta-5-r7"}}');
     ws.send(`{"cmd": "direct", "val": {"cmd": "authpswd", "val": {"username": "${username}", "pswd": "${password}"}}}`);
-    console.log("Logged in");
+    console.log(ansiColours.green("Logged in"));
     setTimeout(function() {
         post("MDWalters125 is now online! Use ~help to see a list of commands.");
     }, 1000);
 }
 
-console.log("Connecting...");
+console.log(ansiColours.yellow("Connecting..."));
 var ws = new WebSocket("wss://server.meower.org/");
 
 ws.on('open', connect);
 ws.on('close', function() {
-  var command = exec("npm run start");
-  command.stdout.on('data', output => {
-    console.log(output.toString());
-  });
+    console.log(ansiColours.red("Disconnected"));
+    var command = exec("npm run start");
+    command.stdout.on('data', output => {
+        console.log(output.toString());
+    });
 });
 
 ws.on('message', function message(data) {
@@ -233,7 +234,7 @@ ws.on('message', function message(data) {
         } else {
             console.log(ansiColours.red("Ping is not OK"));
         }
-    } else if (messageData.val.state === 101) {
+    } else if (messageData.val.state === 101 || messageData.val.state === 100) {
         console.log(`${messageData.val.u} is typing...`);
     } else if (messageData.cmd === "ulist") {
         console.log(`Users online: ${messageData.val.split(";").join(", ")}`);
@@ -249,6 +250,10 @@ ws.on('message', function message(data) {
         console.log(`MOTD: ${messageData.val.val}`);
     } else if (messageData.val.cmd === "vers") {
         console.log(`Meower Server Version: ${messageData.val.val}`);
+    } else if (messageData.val.state === 1) {
+        console.log(`${messageData.val.u} joined ${messageData.val.chatid}`);
+    } else if (messageData.val.state === 0) {
+        console.log(`${messageData.val.u} left ${messageData.val.chatid}`);
     } else {
         console.log(`New message: ${data}`);
     }
