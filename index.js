@@ -1,7 +1,8 @@
 const WebSocket = require("ws");
 const {LocalStorage} = require("node-localstorage");
 const fetch = require("node-fetch");
-const emoji = require('node-emoji')
+const emoji = require('node-emoji');
+const {exec} = require("child_process");
 require("dotenv").config();
 
 const username = process.env.MDW125_USERNAME;
@@ -208,11 +209,11 @@ async function connect() {
 }
 
 console.log("Connecting...");
-const ws = new WebSocket("wss://server.meower.org/");
+var ws = new WebSocket("wss://server.meower.org/");
 
 ws.on('open', connect);
 ws.on('close', function() {
-    throw new Error("Websocket closed");
+  exec("npm run start");
 });
 
 ws.on('message', function message(data) {
