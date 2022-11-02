@@ -238,6 +238,10 @@ ws.on('message', function message(data) {
         console.log(`Users online: ${messageData.val.split(";").join(", ")}`);
     } else if (messageData.cmd === "statuscode") {
         console.log(`Status: ${messageData.val}`);
+    } else if (messageData.val.cmd === "motd") {
+        console.log(`MOTD: ${messageData.val.val}`);
+    } else if (messageData.val.cmd === "vers") {
+        console.log(`Meower Server Version: ${messageData.val.val}`);
     } else {
         console.log(`New message: ${data}`);
     }
