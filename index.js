@@ -189,10 +189,7 @@ async function handlePost(user, message) {
     }
 
     if (message.startsWith("~credits")) {
-    	post(`
-        Creator: M.D. Walters
-        Hosting: M.D. Walters, JoshAtticus
-      `);
+    	post("Creator: M.D. Walters\nHosting: M.D. Walters (MDWalters125), JoshAtticus (MDBot)");
     }
 }
 
