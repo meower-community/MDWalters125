@@ -11,10 +11,10 @@ const username = process.env["MDW125_USERNAME"];
 const password = process.env["MDW125_PASSWORD"];
 
 const uptime = new Date().getTime();
-const help = ["~hello", "~help", "~say", "~amazing", "~uptime", "~uwu", "~8ball", "~motd", "~zen", "~shorten", "~cat", "~status", "~random"];
+const help = ["~hello", "~help", "~say", "~amazing", "~uptime", "~uwu", "~8ball", "~motd", "~zen", "~shorten", "~cat", "~status", "~random", "~credits"];
 const eightBall = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.", "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.", "Don't count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."];
 const motd = ["Meower is not dead", "Furries can do infinite crime", "~8ball get a life?", "Never gonna give you up", "usebottles", "Why did the chicken cross the road? To get to the other side", "Made in Canada", "The question that I always ask Bill Gates is why Windows is closed-source", "M.D. created Markdown, you can't deny that", "Proudly Furry", "You are currently muted from MDWalters125.", "MDWalters125 is now online! Use ~help to see a list of commands.", "Hello from Node.js!"];
-const muted = ["Eris"];
+const muted = ["Eris", "Hallow"];
 
 const localStorage = new LocalStorage("./localStorage");
 
@@ -77,7 +77,7 @@ async function handlePost(user, message) {
         }
     }
 
-    if (user == username) {
+    if (user === username) {
         return;
     }
 
@@ -187,10 +187,17 @@ async function handlePost(user, message) {
             post("~random word, ~random dice, ~random number");
         }
     }
+
+    if (message.startsWith("~credits")) {
+    	post(`
+        Creator: M.D. Walters
+        Hosting: M.D. Walters, JoshAtticus
+      `);
+    }
 }
 
 function post(content) {
-    ws.send(`{"cmd": "direct", "val": {"cmd": "post_home", "val": "${content}"}}`);
+    ws.send(JSON.stringify({"cmd": "direct", "val": {"cmd": "post_home", "val": content}}));
 }
 
 async function connect() {
