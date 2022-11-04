@@ -49,7 +49,7 @@ function epochToRelative(timestamp) {
         if (1 < Math.round(elapsed/msPerDay)) {
             return `${Math.round(elapsed/msPerDay)} days ago`;
         } else {
-            return `${Math.round(elapsed/msPerDay)} days ago`;
+            return `${Math.round(elapsed/msPerDay)} day ago`;
         }
     } else if (elapsed < msPerYear) {
         if (1 < Math.round(elapsed/msPerMonth)) {
