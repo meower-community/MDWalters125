@@ -182,7 +182,7 @@ async function handlePost(user, message) {
         } else if (message.split(" ")[1] === "dice") {
             post(Math.floor(Math.random() * 6));
         } else if (message.split(" ")[1] === "number") {
-            post(JSON.parse(await fetchURL("https://www.randomnumberapi.com/api/v1.0/random"))[0]);
+            post(JSON.parse(await fetchURL("https://randomnumberapi.com/api/v1.0/random"))[0]);
         } else {
             post("~random word, ~random dice, ~random number");
         }
