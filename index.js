@@ -1,7 +1,6 @@
 const WebSocket = require("ws");
 const {LocalStorage} = require("node-localstorage");
 const fetch = require("node-fetch");
-const emoji = require('node-emoji');
 const {exec} = require("child_process");
 const ansiColours = require("ansi-colors");
 
