@@ -86,7 +86,7 @@ async function handlePost(user, message) {
     }
 
     if (message.startsWith("~") && !(help.includes(message.split(" ")[0]))) {
-        if (message.startsWith("~!")) {
+        if (message.startsWith("~! ")) {
             return;
         }
         post("That command doesn't exist! Use ~help to see a list of commands.");
