@@ -10,7 +10,7 @@ const username = process.env["MDW125_USERNAME"];
 const password = process.env["MDW125_PASSWORD"];
 
 const uptime = new Date().getTime();
-const help = ["~hello", "~help", "~amazing", "~uptime", "~uwu", "~8ball", "~motd", "~zen", "~shorten", "~cat", "~status", "~random", "~credits"];
+const help = ["~hello", "~help", "~amazing", "~uptime", "~uwu", "~8ball", "~motd", "~zen", "~shorten", "~cat", "~status", "~credits"];
 const eightBall = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.", "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.", "Don't count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."];
 const motd = ["Meower is not dead", "Furries can do infinite crime", "~8ball get a life?", "Never gonna give you up", "usebottles", "Why did the chicken cross the road? To get to the other side", "Made in Canada", "The question that I always ask Bill Gates is why Windows is closed-source", "M.D. created Markdown, you can't deny that", "Proudly Furry", "You are currently muted from MDWalters125.", "MDWalters125 is now online! Use ~help to see a list of commands.", "Hello from Node.js!"];
 const muted = ["zedthehedgehog"];
@@ -172,18 +172,6 @@ async function handlePost(user, message) {
             } else {
                 post(`Your status: ${localStorage.getItem("MDW125-STATUS-" + user)}`);
             }
-        }
-    }
-
-    if (message.startsWith("~random")) {
-    	if (message.split(" ")[1] === "word") {
-            post(JSON.parse(await fetchURL("https://random-word-api.herokuapp.com/word"))[0]);
-        } else if (message.split(" ")[1] === "dice") {
-            post(Math.floor(Math.random() * 6));
-        } else if (message.split(" ")[1] === "number") {
-            post(JSON.parse(await fetchURL("https://randomnumberapi.com/api/v1.0/random"))[0]);
-        } else {
-            post("~random word, ~random dice, ~random number");
         }
     }
 
