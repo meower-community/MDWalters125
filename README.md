@@ -2,9 +2,8 @@
 A multi-purpose Meower bot
 ## Running
 ```
-touch .env
-echo "MDW125_USERNAME="[username here]" >> .env
-echo "MDW125_PASSWORD="[password here]" >> .env
+MDW125_USERNAME="[username here]"
+MDW125_PASSWORD="[password here]"
 npm install
 npm run start
 ```
