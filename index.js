@@ -133,9 +133,11 @@ async function handlePost(user, message) {
         if (message.split(" ")[1] === undefined) {
             post("https://shrtco.de/enVsHi");
         } else {
-            var short = await fetchURL(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[1]}`);
-            var short = JSON.parse(short);
-            post(short.result.full_short_link);
+            for (let i = 0; i < message.split(" ").length; i++) {
+                var short = await fetchURL(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[i]}`);
+                var short = JSON.parse(short);
+                post(short.result.full_short_link);
+            }
         }
     }
 
@@ -200,8 +202,8 @@ async function connect() {
 console.log(ansiColours.yellow("Connecting..."));
 var ws = new WebSocket("wss://server.meower.org/");
 
-ws.on('open', connect);
-ws.on('close', function() {
+ws.on("open", connect);
+ws.on("close", function() {
     console.log(ansiColours.red("Disconnected"));
     var command = exec("npm run start");
     command.stdout.on('data', output => {
@@ -209,15 +211,14 @@ ws.on('close', function() {
     });
 });
 
-ws.on('message', function message(data) {
-    var messageData = `${data}`;
-    var messageData = JSON.parse(messageData);
+ws.on("message", function message(data) {
+    var messageData = JSON.parse(data);
     if (messageData.val.type === 1) {
-        try {
-            console.log(`${messageData.val.u}: ${messageData.val.p}`);
+        console.log(`${messageData.val.u}: ${messageData.val.p}`);
+        if (messageData.val.post_origin === "home") {
             handlePost(messageData.val.u, messageData.val.p);
-        } catch(error) {
-            post(error);  
+        } else {
+            return;
         }
     } else if (messageData.cmd === "ping") {
         if (messageData.val === "I:100 | OK") {
