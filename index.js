@@ -1,10 +1,10 @@
-const WebSocket = require("ws");
-const {LocalStorage} = require("node-localstorage");
-const fetch = require("node-fetch");
-const {exec} = require("child_process");
-const ansiColours = require("ansi-colors");
+import WebSocket from "ws";
+import {LocalStorage} from "node-localstorage";
+import fetch from "node-fetch";
+import {exec} from "child_process";
+import * as dotenv from "dotenv";
 
-require("dotenv").config();
+dotenv.config();
 
 const username = process.env["MDW125_USERNAME"];
 const password = process.env["MDW125_PASSWORD"];
@@ -187,24 +187,24 @@ function post(content) {
 }
 
 async function connect() {
-    console.log(ansiColours.green("Connected"));
+    console.log("Connected");
     ws.send('{"cmd": "direct", "val": {"cmd": "type", "val": "js"}}');
     ws.send(`{"cmd": "direct", "val": {"cmd": "ip", "val": "${await fetchURL("https://api.meower.org/ip")}"}}`);
     ws.send('{"cmd": "direct", "val": "meower"}');
     ws.send('{"cmd": "direct", "val": {"cmd": "version_chk", "val": "scratch-beta-5-r7"}}');
     ws.send(`{"cmd": "direct", "val": {"cmd": "authpswd", "val": {"username": "${username}", "pswd": "${password}"}}}`);
-    console.log(ansiColours.green("Logged in"));
+    console.log("Logged in");
     setTimeout(function() {
         post("MDWalters125 is now online! Use ~help to see a list of commands.");
     }, 1000);
 }
 
-console.log(ansiColours.yellow("Connecting..."));
+console.log("Connecting...");
 var ws = new WebSocket("wss://server.meower.org/");
 
 ws.on("open", connect);
 ws.on("close", function() {
-    console.log(ansiColours.red("Disconnected"));
+    console.error("Disconnected");
     var command = exec("npm run start");
     command.stdout.on('data', output => {
         console.log(output.toString());
@@ -222,9 +222,9 @@ ws.on("message", function message(data) {
         }
     } else if (messageData.cmd === "ping") {
         if (messageData.val === "I:100 | OK") {
-            console.log(ansiColours.green("Ping is OK"));
+            console.log("Ping is OK");
         } else {
-            console.log(ansiColours.red("Ping is not OK"));
+            console.error("Ping is not OK");
         }
     } else if (messageData.val.state === 101 || messageData.val.state === 100) {
         console.log(`${messageData.val.u} is typing...`);
@@ -232,11 +232,11 @@ ws.on("message", function message(data) {
         console.log(`Users online: ${messageData.val.split(";").join(", ")}`);
     } else if (messageData.cmd === "statuscode") {
         if (messageData.val.startsWith("E")) {
-            console.error(ansiColours.red(`Status: ${messageData.val}`));
+            console.error(`Status: ${messageData.val}`);
         } else if (messageData.val.startsWith("I:100")) {
-            console.error(ansiColours.green(`Status: ${messageData.val}`));
+            console.log(`Status: ${messageData.val}`);
         } else {
-            console.log(ansiColours.blue(`Status: ${messageData.val}`));
+            console.log(`Status: ${messageData.val}`);
         }
     } else if (messageData.val.cmd === "motd") {
         console.log(`MOTD: ${messageData.val.val}`);

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A multi-purpose Meower bot",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node index.js"
   },
@@ -17,7 +18,6 @@
   },
   "homepage": "https://github.com/mdwalters/MDWalters125",
   "dependencies": {
-    "ansi-colors": "^4.1.3",
     "dotenv": "^16.0.3",
     "node-fetch": "^2.6.7",
     "node-localstorage": "^2.2.1",
