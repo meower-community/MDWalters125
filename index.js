@@ -29,9 +29,11 @@ function epochToRelative(timestamp) {
     if (elapsed < msPerMinute) {
         if (1 < Math.round(elapsed/1000)) {
             return `${Math.round(elapsed/1000)} seconds ago`; 
-        } else {
+        } else if (Math.round(elapsed/1000) == 0) {
             return "just now";
-        }  
+        } else {
+            return `${Math.round(elapsed/1000)} second ago`;
+        }
     } else if (elapsed < msPerHour) {
         if (1 < Math.round(elapsed/msPerMinute)) {
             return `${Math.round(elapsed/msPerMinute)} minutes ago`;
