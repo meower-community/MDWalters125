@@ -1,8 +1,8 @@
 import WebSocket from "ws";
-import {LocalStorage} from "node-localstorage";
 import fetch from "node-fetch";
 import {exec} from "child_process";
 import * as dotenv from "dotenv";
+import JSONdb from "simple-json-db";
 
 dotenv.config();
 
@@ -15,7 +15,7 @@ const eightBall = ["It is certain.", "It is decidedly so.", "Without a doubt.", 
 const motd = ["Meower is not dead", "Furries can do infinite crime", "~8ball get a life?", "Never gonna give you up", "usebottles", "Why did the chicken cross the road? To get to the other side", "Made in Canada", "The question that I always ask Bill Gates is why Windows is closed-source", "M.D. created Markdown, you can't deny that", "Proudly Furry", "You are currently muted from MDWalters125.", "MDWalters125 is now online! Use ~help to see a list of commands.", "Hello from Node.js!"];
 const muted = [];
 
-const localStorage = new LocalStorage("./localStorage");
+const db = new JSONdb("db.json");
 
 function epochToRelative(timestamp) {
     var msPerMinute = 60 * 1000;
@@ -151,30 +151,30 @@ async function handlePost(user, message) {
 
     if (message.startsWith("~status")) {
         if (message.split(" ")[1] === "set") {
-            localStorage.setItem(`MDW125-STATUS-${user}`, message.split(" ").slice(2, message.split(" ").length).join(" "));
+            db.set(`MDW125-STATUS-${user}`,  message.split(" ").slice(2, message.split(" ").length).join(" "));
             post("Status successfully set!");
         } else if (message.split(" ")[1] === "clear") {
-            localStorage.removeItem(`MDW125-STATUS-${user}`);
+            db.delete(`MDW125-STATUS-${user}`);
             post("Status successfully cleared!");
         } else if (message.split(" ")[1] === "view") {
             if (message.split(" ")[2] === user) {
-                if (localStorage.getItem(`MDW125-STATUS-${user}`) === null) {
+                if (!(db.has(`MDW125-STATUS-${user}`))) {
                     post("You don't have a status set. To set one, use ~status set [message].");
                 } else {
-                    post(`Your status: ${localStorage.getItem("MDW125-STATUS-" + user)}`);
+                    post(`Your status: ${db.get("MDW125-STATUS-" + user)}`);
                 }
             } else {
-                if (localStorage.getItem("MDW125-STATUS-" + message.split(" ")[2]) === null) {
+                if (!(db.has(`MDW125-STATUS-${user}`))) {
                     post(`@${message.split(" ")[2]} doesn't have a status set.`);
                 } else {
-                    post(`@${message.split(" ")[2]}'s status: ${localStorage.getItem("MDW125-STATUS-" + message.split(" ")[2])}`);
+                    post(`@${message.split(" ")[2]}'s status: ${db.get("MDW125-STATUS-" + message.split(" ")[2])}`);
                 }
             }    
         } else {
-            if (localStorage.getItem("MDW125-STATUS-" + user) === null) {
+            if (!(db.has(`MDW125-STATUS-${user}`))) {
                 post("You don't have a status set. To set one, use ~status set [message].");
             } else {
-                post(`Your status: ${localStorage.getItem("MDW125-STATUS-" + user)}`);
+                post(`Your status: ${db.get("MDW125-STATUS-" + user)}`);
             }
         }
     }
