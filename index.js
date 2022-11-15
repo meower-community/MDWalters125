@@ -260,12 +260,6 @@ function post(content) {
     ws.send(JSON.stringify({"cmd": "direct", "val": {"cmd": "post_home", "val": content}}));
 }
 
-function postChat(content) {
-    ws.send(JSON.stringify({"cmd": "direct", "val": {"cmd": "set_chat_state", "val": {"state": 1, "chatid": "cfe5e97f-65db-4749-a278-1cfdd4e5f9bb"}}}));
-    ws.send(JSON.stringify({"cmd": "direct", "val": {"cmd": "post_chat", "val": {"p": content, "chatid": "cfe5e97f-65db-4749-a278-1cfdd4e5f9bb"}}}));
-    ws.send(JSON.stringify({"cmd": "direct", "val": {"cmd": "set_chat_state", "val": {"state": 0, "chatid": "cfe5e97f-65db-4749-a278-1cfdd4e5f9bb"}}}));
-}
-
 async function connect() {
     console.log("Connected");
     ws.send('{"cmd": "direct", "val": {"cmd": "type", "val": "js"}}');
