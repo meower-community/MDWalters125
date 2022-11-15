@@ -249,7 +249,6 @@ async function connect() {
     ws.send('{"cmd": "direct", "val": "meower"}');
     ws.send('{"cmd": "direct", "val": {"cmd": "version_chk", "val": "scratch-beta-5-r7"}}');
     ws.send(`{"cmd": "direct", "val": {"cmd": "authpswd", "val": {"username": "${username}", "pswd": "${password}"}}}`);
-    console.log("Logged in");
     setTimeout(function() {
         post("MDWalters125 is now online! Use ~help to see a list of commands.");
     }, 1000);
@@ -302,6 +301,8 @@ ws.on("message", function message(data) {
         console.log(`${messageData.val.u} joined ${messageData.val.chatid}`);
     } else if (messageData.val.state === 0) {
         console.log(`${messageData.val.u} left ${messageData.val.chatid}`);
+    } else if (messageData.val.mode === "auth") {
+        console.log(`Logged in as "${messageData.val.payload.username}" (${messageData.val.payload.token})`);
     } else {
         console.log(`New message: ${data}`);
     }
