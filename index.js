@@ -262,7 +262,7 @@ ws.on("open", connect);
 ws.on("close", function() {
     console.error("Disconnected");
     var command = exec("npm run start");
-    command.stdout.on('data', output => {
+    command.stdout.on("data", output => {
         console.log(output.toString());
     });
 });
