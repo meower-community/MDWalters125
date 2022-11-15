@@ -13,7 +13,7 @@ const uptime = new Date().getTime();
 const help = ["~hello", "~help", "~amazing", "~uptime", "~uwu", "~8ball", "~motd", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma"];
 const eightBall = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.", "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.", "Don't count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."];
 const motd = ["Meower is not dead", "Furries can do infinite crime", "~8ball get a life?", "Never gonna give you up", "usebottles", "Why did the chicken cross the road? To get to the other side", "Made in Canada", "The question that I always ask Bill Gates is why Windows is closed-source", "M.D. created Markdown, you can't deny that", "Proudly Furry", "You are currently muted from MDWalters125.", "MDWalters125 is now online! Use ~help to see a list of commands.", "Hello from Node.js!"];
-const muted = [];
+const muted = ["cat", "tnix"];
 
 const db = new JSONdb("db.json");
 
@@ -135,11 +135,9 @@ async function handlePost(user, message) {
         if (message.split(" ")[1] === undefined) {
             post("https://shrtco.de/enVsHi");
         } else {
-            for (let i = 0; i < message.split(" ").length; i++) {
-                var short = await fetchURL(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[i]}`);
-                var short = JSON.parse(short);
-                post(short.result.full_short_link);
-            }
+            var short = await fetchURL(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[i]}`);
+            var short = JSON.parse(short);
+            post(short.result.full_short_link);
         }
     }
 
@@ -210,29 +208,29 @@ async function handlePost(user, message) {
                 }
             } else {
                 if (message.split(" ")[2] === user) {
-                    post("You can't upvote yourself!");
+                    post("You can't downvote yourself!");
                 } else {
                     db.set(`MDW125-KARMA-${message.split(" ")[2]}`, (parseInt(db.get(`MDW125-KARMA-${message.split(" ")[2]}`)) - 1));
-                    post(`Successfully downvoted @${message.split(" ")[2]}. They now have ${db.get("MDW125-KARMA-" + message.split(" ")[2])} karma.`);
+                    post(`Successfully downvoted @${message.split(" ")[2]}! They now have ${db.get("MDW125-KARMA-" + message.split(" ")[2])} karma.`);
                 }
             }
         } else if (message.split(" ")[1] === "view") {
             if (message.split(" ")[2] === user) {
                 if (!(db.has(`MDW125-KARMA-${user}`))) {
-                    post(`You don't have any karma.`);
+                    post(`You have 0 karma.`);
                 } else {
                     post(`You have ${db.get("MDW125-KARMA-" + user)} karma.`);
                 }
             } else {
                 if (!(db.has(`MDW125-KARMA-${message.split(" ")[2]}`))) {
-                    post(`@${message.split(" ")[2]} doesn't have any karma.`);
+                    post(`@${message.split(" ")[2]} has 0 karma.`);
                 } else {
                     post(`@${message.split(" ")[2]} has ${db.get("MDW125-KARMA-" + message.split(" ")[2])} karma.`);
                 }
             }
         } else {
             if (!(db.has(`MDW125-KARMA-${user}`))) {
-                post(`You don't have any karma.`);
+                post(`You have 0 karma.`);
             } else {
                 post(`You have ${db.get("MDW125-KARMA-" + user)} karma.`);
             }
