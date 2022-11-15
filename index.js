@@ -249,6 +249,7 @@ async function connect() {
     ws.send('{"cmd": "direct", "val": "meower"}');
     ws.send('{"cmd": "direct", "val": {"cmd": "version_chk", "val": "scratch-beta-5-r7"}}');
     ws.send(`{"cmd": "direct", "val": {"cmd": "authpswd", "val": {"username": "${username}", "pswd": "${password}"}}}`);
+
     setTimeout(function() {
         post("MDWalters125 is now online! Use ~help to see a list of commands.");
     }, 1000);
