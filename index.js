@@ -104,7 +104,7 @@ async function handlePost(user, message) {
     }
 
     if (message.startsWith("~help")) {
-        post(`${help.join(", ")}`);
+        post(`Commands: ${help.join(", ")}`);
     }
 
     if (message.startsWith("~amazing")) {
