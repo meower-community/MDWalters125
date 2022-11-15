@@ -242,6 +242,12 @@ function post(content) {
     ws.send(JSON.stringify({"cmd": "direct", "val": {"cmd": "post_home", "val": content}}));
 }
 
+function postChat(content) {
+    ws.send(JSON.stringify({"cmd": "direct", "val": {"cmd": "set_chat_state", "val": {"state": 1, "chatid": "cfe5e97f-65db-4749-a278-1cfdd4e5f9bb"}}}));
+    ws.send(JSON.stringify({"cmd": "direct", "val": {"cmd": "post_chat", "val": {"p": content, "chatid": "cfe5e97f-65db-4749-a278-1cfdd4e5f9bb"}}}));
+    ws.send(JSON.stringify({"cmd": "direct", "val": {"cmd": "set_chat_state", "val": {"state": 0, "chatid": "cfe5e97f-65db-4749-a278-1cfdd4e5f9bb"}}}));
+}
+
 async function connect() {
     console.log("Connected");
     ws.send('{"cmd": "direct", "val": {"cmd": "type", "val": "js"}}');
@@ -249,7 +255,6 @@ async function connect() {
     ws.send('{"cmd": "direct", "val": "meower"}');
     ws.send('{"cmd": "direct", "val": {"cmd": "version_chk", "val": "scratch-beta-5-r7"}}');
     ws.send(`{"cmd": "direct", "val": {"cmd": "authpswd", "val": {"username": "${username}", "pswd": "${password}"}}}`);
-
     setTimeout(function() {
         post("MDWalters125 is now online! Use ~help to see a list of commands.");
     }, 1000);
