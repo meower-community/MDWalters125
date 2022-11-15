@@ -313,4 +313,4 @@ setInterval(function() {
     if (ws.readyState == 1) {
         ws.send('{"cmd": "ping", "val": ""}');
     }
-}, 15000);
+}, 10000);
