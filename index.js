@@ -146,7 +146,7 @@ async function handlePost(user, message) {
     if (message.startsWith("~cat")) {
         var image = await fetchURL("https://aws.random.cat/meow");
         var image = JSON.parse(image);
-        post(image.file);
+        post(`[cat:${image.file}]`);
     }
 
     if (message.startsWith("~status")) {
