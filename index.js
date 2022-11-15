@@ -149,7 +149,7 @@ async function handlePost(user, message) {
 
     if (message.startsWith("~status")) {
         if (message.split(" ")[1] === "set") {
-            db.set(`MDW125-STATUS-${user}`,  message.split(" ").slice(2, message.split(" ").length).join(" "));
+            db.set(`MDW125-STATUS-${user}`, message.split(" ").slice(2, message.split(" ").length).join(" "));
             post("Status successfully set!");
         } else if (message.split(" ")[1] === "clear") {
             db.delete(`MDW125-STATUS-${user}`);
