@@ -162,7 +162,7 @@ async function handlePost(user, message) {
                     post(`Your status: ${db.get("MDW125-STATUS-" + user)}`);
                 }
             } else {
-                if (db.has(`MDW125-STATUS-${user}`)) {
+                if (!(db.has(`MDW125-STATUS-${user}`))) {
                     post(`@${message.split(" ")[2]} doesn't have a status set.`);
                 } else {
                     post(`@${message.split(" ")[2]}'s status: ${db.get("MDW125-STATUS-" + message.split(" ")[2])}`);
