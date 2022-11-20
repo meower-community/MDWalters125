@@ -83,7 +83,7 @@ async function handlePost(user, message) {
     }
 
     if (message.startsWith("~") && db.has(`MDW125-MUTED-${user}`)) {
-        post("You are currently muted from MDWalters125.");
+        post(`You are currently muted from ${username}.`);
         return;
     }
 
@@ -112,7 +112,7 @@ async function handlePost(user, message) {
     }
 
     if (message.startsWith("~uptime")) {
-        post(`MDWalters125 was online since ${epochToRelative(uptime)}.`);
+        post(`${username} was online since ${epochToRelative(uptime)}.`);
     }
 
     if (message.startsWith("~uwu")) {
@@ -268,7 +268,7 @@ async function connect() {
     ws.send('{"cmd": "direct", "val": {"cmd": "version_chk", "val": "scratch-beta-5-r7"}}');
     ws.send(`{"cmd": "direct", "val": {"cmd": "authpswd", "val": {"username": "${username}", "pswd": "${password}"}}}`);
     setTimeout(function() {
-        post("MDWalters125 is now online! Use ~help to see a list of commands.");
+        post(`${username} is now online! Use ~help to see a list of commands.`);
     }, 1000);
 }
 
