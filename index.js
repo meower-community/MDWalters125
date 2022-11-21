@@ -71,10 +71,10 @@ async function fetchURL(url) {
     return await fetch(url).then(res => res.text());
 }
 
-async function handlePost(user, message) {
+async function handlePost(user, message, id=null) {
     if (user == "Discord") {
         if (message.split(": ")[0] && message.split(": ")[1]) {
-            handlePost(message.split(": ")[0], message.split(": ")[1]);
+            handlePost(message.split(": ")[0], message.split(": ")[1], id);
         }
     }
 
@@ -83,7 +83,7 @@ async function handlePost(user, message) {
     }
 
     if (message.startsWith("~") && db.has(`MDW125-MUTED-${user}`)) {
-        post(`You are currently muted from ${username}.`);
+        post(`You are currently muted from ${username}.`, id);
         return;
     }
 
@@ -91,148 +91,147 @@ async function handlePost(user, message) {
         if (message.startsWith("~! ")) {
             return;
         }
-        post("That command doesn't exist! Use ~help to see a list of commands.");
+        post("That command doesn't exist! Use ~help to see a list of commands.", id);
         return;
     }
 
     if (message.startsWith("~hello")) {
         if (message.split(" ")[1] === undefined) {
-            post(`Hello, ${user}!`);
+            post(`Hello, ${user}!`, id);
         } else {
-            post(`Hello, ${message.split(" ").slice(1, message.split(" ").length).join(" ")}!`);
+            post(`Hello, ${message.split(" ").slice(1, message.split(" ").length).join(" ")}!`, id);
         }
     }
 
     if (message.startsWith("~help")) {
-        post(`Commands: ${help.join(", ")}`);
+        post(`Commands: ${help.join(", ")}`, id);
     }
 
     if (message.startsWith("~amazing")) {
-        post(`Amazing ${message.split(" ").slice(1, message.split(" ").length).join(" ")}`);
+        post(`Amazing ${message.split(" ").slice(1, message.split(" ").length).join(" ")}`, id);
     }
 
     if (message.startsWith("~uptime")) {
-        post(`${username} was online since ${epochToRelative(uptime)}.`);
+        post(`${username} was online since ${epochToRelative(uptime)}.`, id);
     }
 
     if (message.startsWith("~uwu")) {
-        post("UwU");
+        post("UwU", id);
     }
 
     if (message.startsWith("~8ball")) {
-    	post(eightBall[Math.floor(Math.random() * eightBall.length)]);
+    	post(eightBall[Math.floor(Math.random() * eightBall.length)], id);
     }
 
     if (message.startsWith("~motd")) {
-    	post(motd[Math.floor(Math.random() * motd.length)]);
+    	post(motd[Math.floor(Math.random() * motd.length)], id);
     }
 
     if (message.startsWith("~zen")) {
-        post(await fetchURL("https://api.github.com/zen"));
+        post(await fetchURL("https://api.github.com/zen"), id);
     }
 
     if (message.startsWith("~shorten")) {
         if (message.split(" ")[1] === undefined) {
-            post("https://shrtco.de/enVsHi");
+            post("https://shrtco.de/enVsHi", id);
         } else {
-            var short = await fetchURL(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[i]}`);
-            var short = JSON.parse(short);
-            post(short.result.full_short_link);
+            var short = JSON.parse(await fetchURL(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[i]}`));
+            post(short.result.full_short_link, id);
         }
     }
 
     if (message.startsWith("~cat")) {
         var image = await fetchURL("https://aws.random.cat/meow");
         var image = JSON.parse(image);
-        post(`[cat:${image.file}]`);
+        post(`[image:${image.file}]`, id);
     }
 
     if (message.startsWith("~status")) {
         if (message.split(" ")[1] === "set") {
             db.set(`MDW125-STATUS-${user}`, message.split(" ").slice(2, message.split(" ").length).join(" "));
-            post("Status successfully set!");
+            post("Status successfully set!", id);
         } else if (message.split(" ")[1] === "clear") {
             db.delete(`MDW125-STATUS-${user}`);
-            post("Status successfully cleared!");
+            post("Status successfully cleared!", id);
         } else if (message.split(" ")[1] === "view") {
             if (message.split(" ")[2] === user) {
                 if (!(db.has(`MDW125-STATUS-${user}`))) {
-                    post("You don't have a status set. To set one, use ~status set [message].");
+                    post("You don't have a status set. To set one, use ~status set [message].", id);
                 } else {
-                    post(`Your status: ${db.get("MDW125-STATUS-" + user)}`);
+                    post(`Your status: ${db.get("MDW125-STATUS-" + user)}`, id);
                 }
             } else {
                 if (!(db.has(`MDW125-STATUS-${user}`))) {
-                    post(`@${message.split(" ")[2]} doesn't have a status set.`);
+                    post(`@${message.split(" ")[2]} doesn't have a status set.`, id);
                 } else {
-                    post(`@${message.split(" ")[2]}'s status: ${db.get("MDW125-STATUS-" + message.split(" ")[2])}`);
+                    post(`@${message.split(" ")[2]}'s status: ${db.get("MDW125-STATUS-" + message.split(" ")[2])}`, id);
                 }
             }    
         } else {
             if (!(db.has(`MDW125-STATUS-${user}`))) {
-                post("You don't have a status set. To set one, use ~status set [message].");
+                post("You don't have a status set. To set one, use ~status set [message].", id);
             } else {
-                post(`Your status: ${db.get("MDW125-STATUS-" + user)}`);
+                post(`Your status: ${db.get("MDW125-STATUS-" + user)}`, id);
             }
         }
     }
 
     if (message.startsWith("~credits")) {
-    	post("Creator: M.D. Walters\nHosting: M.D. Walters (MDWalters125), JoshAtticus (MDBot)");
+    	post("Creator: M.D. Walters\nHosting: M.D. Walters (MDWalters125), JoshAtticus (MDBot)", id);
     }
 
     if (message.startsWith("~karma")) {
     	if (message.split(" ")[1] === "upvote") {
             if (!(db.has(`MDW125-KARMA-${message.split(" ")[2]}`))) {
                 if (message.split(" ")[2] === user) {
-                    post("You can't upvote yourself!")
+                    post("You can't upvote yourself!", id)
                 } else {
                     db.set(`MDW125-KARMA-${message.split(" ")[2]}`, 1);
-                    post(`Successfully upvoted @${message.split(" ")[2]}! They now have 1 karma.`);
+                    post(`Successfully upvoted @${message.split(" ")[2]}! They now have 1 karma.`, id);
                 }
             } else {
                 if (message.split(" ")[2] === user) {
-                    post("You can't upvote yourself!")
+                    post("You can't upvote yourself!", id)
                 } else {
                     db.set(`MDW125-KARMA-${message.split(" ")[2]}`, (parseInt(db.get(`MDW125-KARMA-${message.split(" ")[2]}`)) + 1));
-                    post(`Successfully upvoted @${message.split(" ")[2]}! They now have ${db.get("MDW125-KARMA-" + message.split(" ")[2])} karma.`);
+                    post(`Successfully upvoted @${message.split(" ")[2]}! They now have ${db.get("MDW125-KARMA-" + message.split(" ")[2])} karma.`, id);
                 }
             }
         } else if (message.split(" ")[1] === "downvote") {
             if (!(db.has(`MDW125-KARMA-${message.split(" ")[2]}`))) {
                 if (message.split(" ")[2] === user) {
-                    post("You can't downvote yourself!");
+                    post("You can't downvote yourself!", id);
                 } else {
-                    db.set(`MDW125-KARMA-${message.split(" ")[2]}`, 0);
-                    post(`Successfully downvoted @${message.split(" ")[2]}. They now have 0 karma.`);
+                    db.set(`MDW125-KARMA-${message.split(" ")[2]}`, -1);
+                    post(`Successfully downvoted @${message.split(" ")[2]}. They now have -1 karma.`, id);
                 }
             } else {
                 if (message.split(" ")[2] === user) {
-                    post("You can't downvote yourself!");
+                    post("You can't downvote yourself!", id);
                 } else {
                     db.set(`MDW125-KARMA-${message.split(" ")[2]}`, (parseInt(db.get(`MDW125-KARMA-${message.split(" ")[2]}`)) - 1));
-                    post(`Successfully downvoted @${message.split(" ")[2]}! They now have ${db.get("MDW125-KARMA-" + message.split(" ")[2])} karma.`);
+                    post(`Successfully downvoted @${message.split(" ")[2]}! They now have ${db.get("MDW125-KARMA-" + message.split(" ")[2])} karma.`, id);
                 }
             }
         } else if (message.split(" ")[1] === "view") {
             if (message.split(" ")[2] === user) {
                 if (!(db.has(`MDW125-KARMA-${user}`))) {
-                    post(`You have 0 karma.`);
+                    post(`You have 0 karma.`, id);
                 } else {
-                    post(`You have ${db.get("MDW125-KARMA-" + user)} karma.`);
+                    post(`You have ${db.get("MDW125-KARMA-" + user)} karma.`, id);
                 }
             } else {
                 if (!(db.has(`MDW125-KARMA-${message.split(" ")[2]}`))) {
-                    post(`@${message.split(" ")[2]} has 0 karma.`);
+                    post(`@${message.split(" ")[2]} has 0 karma.`, id);
                 } else {
-                    post(`@${message.split(" ")[2]} has ${db.get("MDW125-KARMA-" + message.split(" ")[2])} karma.`);
+                    post(`@${message.split(" ")[2]} has ${db.get("MDW125-KARMA-" + message.split(" ")[2])} karma.`, id);
                 }
             }
         } else {
             if (!(db.has(`MDW125-KARMA-${user}`))) {
-                post(`You have 0 karma.`);
+                post(`You have 0 karma.`, id);
             } else {
-                post(`You have ${db.get("MDW125-KARMA-" + user)} karma.`);
+                post(`You have ${db.get("MDW125-KARMA-" + user)} karma.`, id);
             }
         }
     }
@@ -240,24 +239,28 @@ async function handlePost(user, message) {
     if (message.startsWith("~mute")) {
         if (admins.includes(user)) {
             db.set(`MDW125-MUTED-${message.split(" ")[1]}`, "");
-            post(`Successfully muted @${message.split(" ")[1]}!`);
+            post(`Successfully muted @${message.split(" ")[1]}!`, id);
         } else {
-            post("You don't have the permissions to run this command.");
+            post("You don't have the permissions to run this command.", id);
         }
     }
 
     if (message.startsWith("~unmute")) {
         if (admins.includes(user)) {
             db.delete(`MDW125-MUTED-${message.split(" ")[1]}`);
-            post(`Successfully unmuted @${message.split(" ")[1]}!`);
+            post(`Successfully unmuted @${message.split(" ")[1]}!`, id);
         } else {
-            post("You don't have the permissions to run this command.");
+            post("You don't have the permissions to run this command.", id);
         }
     }
 }
 
-function post(content) {
-    ws.send(JSON.stringify({"cmd": "direct", "val": {"cmd": "post_home", "val": content}}));
+function post(content, id=null) {
+    if (id) {
+        ws.send(JSON.stringify({"cmd": "direct", "val": {"cmd": "post_chat", "val": {"p": content, "chatid": id}}}));
+    } else {
+        ws.send(JSON.stringify({"cmd": "direct", "val": {"cmd": "post_home", "val": content}}));
+    }
 }
 
 async function connect() {
@@ -291,7 +294,7 @@ ws.on("message", function message(data) {
         if (messageData.val.post_origin === "home") {
             handlePost(messageData.val.u, messageData.val.p);
         } else {
-            return;
+            handlePost(messageData.val.u, messageData.val.p, messageData.val.post_origin);
         }
     } else if (messageData.cmd === "ping") {
         if (messageData.val === "I:100 | OK") {
