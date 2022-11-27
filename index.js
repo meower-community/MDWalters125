@@ -261,7 +261,7 @@ Reason: ${db.get(`MDW125-MUTED-${user}`)}`, id);
     if (message.startsWith("~unmute")) {
         if (admins.includes(user)) {
             if (db.has(`MDW125-MUTED-${message.split(" ")[1]}`)) {
-                post(`@${message.split(" ")[1]} isn't muted!`);
+                post(`@${message.split(" ")[1]} isn't muted!`, id);
             } else {
                 db.delete(`MDW125-MUTED-${message.split(" ")[1]}`);
                 post(`Successfully unmuted @${message.split(" ")[1]}!`, id);
