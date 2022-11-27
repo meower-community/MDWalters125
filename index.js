@@ -244,7 +244,7 @@ Reason: ${db.get(`MDW125-MUTED-${user}`)}`, id);
     if (message.startsWith("~mute")) {
         if (admins.includes(user)) {
             if (db.has(`MDW125-MUTED-${message.split(" ")[1]}`)) {
-                post(`@${message.split(" ")[1]} is already muted!`);
+                post(`@${message.split(" ")[1]} is already muted!`, id);
             } else {
                 if (message.split(" ")[2]) {
                     db.set(`MDW125-MUTED-${message.split(" ")[1]}`, message.split(" ").slice(2, message.split(" ").length).join(" "));
@@ -260,7 +260,7 @@ Reason: ${db.get(`MDW125-MUTED-${user}`)}`, id);
 
     if (message.startsWith("~unmute")) {
         if (admins.includes(user)) {
-            if (db.has(`MDW125-MUTED-${message.split(" ")[1]}`)) {
+            if (!(db.has(`MDW125-MUTED-${message.split(" ")[1]}`))) {
                 post(`@${message.split(" ")[1]} isn't muted!`, id);
             } else {
                 db.delete(`MDW125-MUTED-${message.split(" ")[1]}`);
