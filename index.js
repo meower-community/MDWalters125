@@ -243,12 +243,16 @@ Reason: ${db.get(`MDW125-MUTED-${user}`)}`, id);
 
     if (message.startsWith("~mute")) {
         if (admins.includes(user)) {
-            if (message.split(" ")[2]) {
-                db.set(`MDW125-MUTED-${message.split(" ")[1]}`, message.split(" ").slice(2, message.split(" ").length).join(" "));
+            if (db.has(`MDW125-MUTED-${message.split(" ")[1]}`)) {
+                post(`@${message.split(" ")[1]} is already muted!`);
             } else {
-                db.set(`MDW125-MUTED-${message.split(" ")[1]}`, null);
+                if (message.split(" ")[2]) {
+                    db.set(`MDW125-MUTED-${message.split(" ")[1]}`, message.split(" ").slice(2, message.split(" ").length).join(" "));
+                } else {
+                    db.set(`MDW125-MUTED-${message.split(" ")[1]}`, null);
+                }
+                post(`Successfully muted @${message.split(" ")[1]}!`, id);
             }
-            post(`Successfully muted @${message.split(" ")[1]}!`, id);
         } else {
             post("You don't have the permissions to run this command.", id);
         }
@@ -256,8 +260,12 @@ Reason: ${db.get(`MDW125-MUTED-${user}`)}`, id);
 
     if (message.startsWith("~unmute")) {
         if (admins.includes(user)) {
-            db.delete(`MDW125-MUTED-${message.split(" ")[1]}`);
-            post(`Successfully unmuted @${message.split(" ")[1]}!`, id);
+            if (db.has(`MDW125-MUTED-${message.split(" ")[1]}`)) {
+                post(`@${message.split(" ")[1]} isn't muted!`);
+            } else {
+                db.delete(`MDW125-MUTED-${message.split(" ")[1]}`);
+                post(`Successfully unmuted @${message.split(" ")[1]}!`, id);
+            }
         } else {
             post("You don't have the permissions to run this command.", id);
         }
