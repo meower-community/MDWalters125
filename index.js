@@ -83,7 +83,7 @@ async function handlePost(user, message, id=null) {
     if (message.startsWith("~") && db.has(`MDW125-MUTED-${user}`)) {
         if (db.get(`MDW125-MUTED-${user}`)) {
             post(`You are currently muted from ${username}.
-Reason: ${db.get(`MDW125-MUTED-${user}`)}`, id);
+Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, id);
         } else {
             post(`You are currently muted from ${username}.`, id);
         }
@@ -182,7 +182,8 @@ Reason: ${db.get(`MDW125-MUTED-${user}`)}`, id);
     }
 
     if (message.startsWith("~credits")) {
-    	post("Creator: M.D. Walters\nHosting: M.D. Walters (MDWalters125), JoshAtticus (MDBot)", id);
+    	post(`Creator: M.D. Walters
+Hosting: M.D. Walters (MDWalters125), JoshAtticus (MDBot)`, id);
     }
 
     if (message.startsWith("~karma")) {
