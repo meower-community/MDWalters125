@@ -11,8 +11,6 @@ const password = process.env["MDW125_PASSWORD"];
 
 const uptime = new Date().getTime();
 const help = ["~hello", "~help", "~amazing", "~uptime", "~uwu", "~8ball", "~motd", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute"];
-const eightBall = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.", "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.", "Don't count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."];
-const motd = ["Meower is not dead", "Furries can do infinite crime", "~8ball get a life?", "Never gonna give you up", "usebottles", "Why did the chicken cross the road? To get to the other side", "Made in Canada", "The question that I always ask Bill Gates is why Windows is closed-source", "M.D. created Markdown, you can't deny that", "Proudly Furry", "You are currently muted from MDWalters125.", "MDWalters125 is now online! Use ~help to see a list of commands.", "Hello from Node.js!"];
 const admins = ["MDWalters124", "m", "JoshAtticus"];
 
 const db = new JSONdb("db.json");
@@ -83,7 +81,12 @@ async function handlePost(user, message, id=null) {
     }
 
     if (message.startsWith("~") && db.has(`MDW125-MUTED-${user}`)) {
-        post(`You are currently muted from ${username}.`, id);
+        if (db.get(`MDW125-MUTED-${user}`)) {
+            post(`You are currently muted from ${username}.
+Reason: ${db.get(`MDW125-MUTED-${user}`)}`, id);
+        } else {
+            post(`You are currently muted from ${username}.`, id);
+        }
         return;
     }
 
@@ -120,10 +123,12 @@ async function handlePost(user, message, id=null) {
     }
 
     if (message.startsWith("~8ball")) {
+        var eightBall = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.", "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.", "Don't count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."];
     	post(eightBall[Math.floor(Math.random() * eightBall.length)], id);
     }
 
     if (message.startsWith("~motd")) {
+        var motd = ["Meower is not dead", "Furries can do infinite crime", "~8ball get a life?", "Never gonna give you up", "usebottles", "Why did the chicken cross the road? To get to the other side", "Made in Canada", "The question that I always ask Bill Gates is why Windows is closed-source", "M.D. created Markdown, you can't deny that", "Proudly Furry", "You are currently muted from MDWalters125.", "MDWalters125 is now online! Use ~help to see a list of commands.", "Hello from Node.js!"];
     	post(motd[Math.floor(Math.random() * motd.length)], id);
     }
 
@@ -238,7 +243,11 @@ async function handlePost(user, message, id=null) {
 
     if (message.startsWith("~mute")) {
         if (admins.includes(user)) {
-            db.set(`MDW125-MUTED-${message.split(" ")[1]}`, "");
+            if (message.split(" ")[2]) {
+                db.set(`MDW125-MUTED-${message.split(" ")[1]}`, message.split(" ").slice(2, message.split(" ").length).join(" "));
+            } else {
+                db.set(`MDW125-MUTED-${message.split(" ")[1]}`, null);
+            }
             post(`Successfully muted @${message.split(" ")[1]}!`, id);
         } else {
             post("You don't have the permissions to run this command.", id);
