@@ -281,10 +281,6 @@ function post(content, id=null) {
     }
 }
 
-function postChat(content, id) {
-    ws.send(JSON.stringify({"cmd": "direct", "val": {"cmd": "post_chat", "val": {"p": content, "chatid": id}}}));
-}
-
 async function connect() {
     console.log("Connected");
     ws.send('{"cmd": "direct", "val": {"cmd": "type", "val": "js"}}');
