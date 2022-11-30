@@ -8,11 +8,9 @@ dotenv.config();
 
 const username = process.env["MDW125_USERNAME"];
 const password = process.env["MDW125_PASSWORD"];
-
 const uptime = new Date().getTime();
 const help = ["~hello", "~help", "~amazing", "~uptime", "~uwu", "~8ball", "~motd", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute"];
 const admins = ["MDWalters124", "m", "JoshAtticus"];
-
 const db = new JSONdb("db.json");
 
 function epochToRelative(timestamp) {
