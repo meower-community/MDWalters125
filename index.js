@@ -146,7 +146,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, id);
     if (message.startsWith("~cat")) {
         var image = await fetchURL("https://aws.random.cat/meow");
         var image = JSON.parse(image);
-        post(`[image:${image.file}]`, id);
+        post(image.file, id);
     }
 
     if (message.startsWith("~status")) {
