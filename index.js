@@ -9,7 +9,7 @@ dotenv.config();
 const username = process.env["MDW125_USERNAME"];
 const password = process.env["MDW125_PASSWORD"];
 const uptime = new Date().getTime();
-const help = ["~hello", "~help", "~amazing", "~uptime", "~uwu", "~8ball", "~motd", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute", "~connectfour"];
+const help = ["~hello", "~help", "~amazing", "~uptime", "~uwu", "~8ball", "~motd", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute"];
 const admins = ["MDWalters124", "m", "JoshAtticus"];
 const db = new JSONdb("db.json");
 
@@ -286,7 +286,7 @@ async function connect() {
     ws.send('{"cmd": "direct", "val": "meower"}');
     ws.send('{"cmd": "direct", "val": {"cmd": "version_chk", "val": "scratch-beta-5-r7"}}');
     ws.send(`{"cmd": "direct", "val": {"cmd": "authpswd", "val": {"username": "${username}", "pswd": "${password}"}}}`);
-    setTimeout(function() {
+    setTimeout(() => {
         post(`${username} is now online! Use ~help to see a list of commands.`);
     }, 1000);
 }
@@ -298,7 +298,7 @@ ws.on("open", connect);
 ws.on("close", function() {
     console.error("Disconnected");
     var command = exec("npm run start");
-    command.stdout.on("data", output => {
+    command.stdout.on("data", (output) => {
         console.log(output.toString());
     });
 });
@@ -345,7 +345,7 @@ ws.on("message", function message(data) {
     }
 });
 
-setInterval(function() {
+setInterval(() => {
     if (ws.readyState == 1) {
         ws.send('{"cmd": "ping", "val": ""}');
     }
