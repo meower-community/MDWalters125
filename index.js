@@ -9,7 +9,7 @@ dotenv.config();
 const username = process.env["MDW125_USERNAME"];
 const password = process.env["MDW125_PASSWORD"];
 const uptime = new Date().getTime();
-const help = ["~hello", "~help", "~amazing", "~uptime", "~uwu", "~8ball", "~motd", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute"];
+const help = ["~hello", "~help", "~amazing", "~uptime", "~uwu", "~8ball", "~motd", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute", "~connectfour"];
 const admins = ["MDWalters124", "m", "JoshAtticus"];
 const db = new JSONdb("db.json");
 
@@ -138,7 +138,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, id);
         if (message.split(" ")[1] === undefined) {
             post("https://shrtco.de/enVsHi", id);
         } else {
-            var short = JSON.parse(await fetchURL(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[i]}`));
+            var short = JSON.parse(await fetchURL(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[1]}`));
             post(short.result.full_short_link, id);
         }
     }
