@@ -302,3 +302,7 @@ bot.onClose(() => {
         console.log(output.toString());
     });
 });
+
+bot.onLogin(() => {
+    
+});
