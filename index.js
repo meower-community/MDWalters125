@@ -13,7 +13,7 @@ const help = ["~hello", "~help", "~amazing", "~uptime", "~uwu", "~8ball", "~motd
 const admins = ["MDWalters124", "m", "JoshAtticus"];
 const db = new JSONdb("db.json");
 const bot = new Bot(username, password, () => {
-    post(`${username} is now online! Use ~help to see a list of commands.`);
+    bot.post(`${username} is now online! Use ~help to see a list of commands.`);
 });
 
 function epochToRelative(timestamp) {
@@ -66,21 +66,7 @@ function epochToRelative(timestamp) {
     }
 }
 
-async function fetchURL(url) {
-    return await fetch(url).then(res => res.text());
-}
-
 bot.handlePost(username, message, () => {
-    if (user == "Discord") {
-        if (message.split(": ")[0] && message.split(": ")[1]) {
-            handlePost(message.split(": ")[0], message.split(": ")[1], id);
-        }
-    }
-
-    if (user === username) {
-        return;
-    }
-
     if (message.startsWith("~") && db.has(`MDW125-MUTED-${user}`)) {
         if (db.get(`MDW125-MUTED-${user}`)) {
             post(`You are currently muted from ${username}.
@@ -134,21 +120,20 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, id);
     }
 
     if (message.startsWith("~zen")) {
-        post(await fetchURL("https://api.github.com/zen"), id);
+        post(await fetch("https://api.github.com/zen").then(res => res.text()));
     }
 
     if (message.startsWith("~shorten")) {
         if (message.split(" ")[1] === undefined) {
             post("https://shrtco.de/enVsHi", id);
         } else {
-            var short = JSON.parse(await fetchURL(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[1]}`));
+            var short = JSON.parse(await fetch(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[1]}`).then(res => res.json()));
             post(short.result.full_short_link, id);
         }
     }
 
     if (message.startsWith("~cat")) {
-        var image = await fetchURL("https://aws.random.cat/meow");
-        var image = JSON.parse(image);
+        var image = await fetch("https://aws.random.cat/meow").then(res => res.json());
         post(image.file, id);
     }
 
