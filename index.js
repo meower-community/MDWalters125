@@ -66,7 +66,7 @@ function epochToRelative(timestamp) {
     }
 }
 
-bot.handlePost(user, message, async () => {
+bot.onPost(async (user, message) => {
     if (message.startsWith("~") && db.has(`MDW125-MUTED-${user}`)) {
         if (db.get(`MDW125-MUTED-${user}`)) {
             bot.post(`You are currently muted from ${username}.
