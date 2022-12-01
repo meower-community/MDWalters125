@@ -1,4 +1,4 @@
-import WebSocket from "ws";
+import Bot from "meowerbot";
 import fetch from "node-fetch";
 import {exec} from "child_process";
 import * as dotenv from "dotenv";
@@ -12,6 +12,9 @@ const uptime = new Date().getTime();
 const help = ["~hello", "~help", "~amazing", "~uptime", "~uwu", "~8ball", "~motd", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute"];
 const admins = ["MDWalters124", "m", "JoshAtticus"];
 const db = new JSONdb("db.json");
+const bot = new Bot(username, password, () => {
+    post(`${username} is now online! Use ~help to see a list of commands.`);
+});
 
 function epochToRelative(timestamp) {
     var msPerMinute = 60 * 1000;
@@ -67,7 +70,7 @@ async function fetchURL(url) {
     return await fetch(url).then(res => res.text());
 }
 
-async function handlePost(user, message, id=null) {
+bot.handlePost(username, message, () => {
     if (user == "Discord") {
         if (message.split(": ")[0] && message.split(": ")[1]) {
             handlePost(message.split(": ")[0], message.split(": ")[1], id);
@@ -269,84 +272,11 @@ Hosting: M.D. Walters (MDWalters125), JoshAtticus (MDBot)`, id);
             post("You don't have the permissions to run this command.", id);
         }
     }
-}
+});
 
-function post(content, id=null) {
-    if (id) {
-        ws.send(JSON.stringify({"cmd": "direct", "val": {"cmd": "post_chat", "val": {"p": content, "chatid": id}}}));
-    } else {
-        ws.send(JSON.stringify({"cmd": "direct", "val": {"cmd": "post_home", "val": content}}));
-    }
-}
-
-async function connect() {
-    console.log("Connected");
-    ws.send('{"cmd": "direct", "val": {"cmd": "type", "val": "js"}}');
-    ws.send(`{"cmd": "direct", "val": {"cmd": "ip", "val": "${await fetchURL("https://api.meower.org/ip")}"}}`);
-    ws.send('{"cmd": "direct", "val": "meower"}');
-    ws.send('{"cmd": "direct", "val": {"cmd": "version_chk", "val": "scratch-beta-5-r7"}}');
-    ws.send(`{"cmd": "direct", "val": {"cmd": "authpswd", "val": {"username": "${username}", "pswd": "${password}"}}}`);
-    setTimeout(() => {
-        post(`${username} is now online! Use ~help to see a list of commands.`);
-    }, 1000);
-}
-
-console.log("Connecting...");
-var ws = new WebSocket("wss://server.meower.org/");
-
-ws.on("open", connect);
-ws.on("close", function() {
-    console.error("Disconnected");
+bot.onClose(() => {
     var command = exec("npm run start");
     command.stdout.on("data", (output) => {
         console.log(output.toString());
     });
 });
-
-ws.on("message", function message(data) {
-    var messageData = JSON.parse(data);
-    if (messageData.val.type === 1) {
-        console.log(`${messageData.val.u}: ${messageData.val.p}`);
-        if (messageData.val.post_origin === "home") {
-            handlePost(messageData.val.u, messageData.val.p);
-        } else {
-            handlePost(messageData.val.u, messageData.val.p, messageData.val.post_origin);
-        }
-    } else if (messageData.cmd === "ping") {
-        if (messageData.val === "I:100 | OK") {
-            console.log("Ping is OK");
-        } else {
-            console.error("Ping is not OK");
-        }
-    } else if (messageData.val.state === 101 || messageData.val.state === 100) {
-        console.log(`${messageData.val.u} is typing...`);
-    } else if (messageData.cmd === "ulist") {
-        console.log(`Users online: ${messageData.val.split(";").join(", ")}`);
-    } else if (messageData.cmd === "statuscode") {
-        if (messageData.val.startsWith("E")) {
-            console.error(`Status: ${messageData.val}`);
-        } else if (messageData.val.startsWith("I:100")) {
-            console.log(`Status: ${messageData.val}`);
-        } else {
-            console.log(`Status: ${messageData.val}`);
-        }
-    } else if (messageData.val.cmd === "motd") {
-        console.log(`MOTD: ${messageData.val.val}`);
-    } else if (messageData.val.cmd === "vers") {
-        console.log(`Meower Server Version: ${messageData.val.val}`);
-    } else if (messageData.val.state === 1) {
-        console.log(`${messageData.val.u} joined ${messageData.val.chatid}`);
-    } else if (messageData.val.state === 0) {
-        console.log(`${messageData.val.u} left ${messageData.val.chatid}`);
-    } else if (messageData.val.mode === "auth") {
-        console.log(`Logged in as "${messageData.val.payload.username}" (${messageData.val.payload.token})`);
-    } else {
-        console.log(`New message: ${data}`);
-    }
-});
-
-setInterval(() => {
-    if (ws.readyState == 1) {
-        ws.send('{"cmd": "ping", "val": ""}');
-    }
-}, 10000);
