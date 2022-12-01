@@ -19,8 +19,8 @@
   "homepage": "https://github.com/mdwalters/MDWalters125",
   "dependencies": {
     "dotenv": "^16.0.3",
+    "meowerbot": "^1.1.1",
     "node-fetch": "^3.3.0",
-    "simple-json-db": "^2.0.0",
-    "ws": "^8.10.0"
+    "simple-json-db": "^2.0.0"
   }
 }
