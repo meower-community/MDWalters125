@@ -12,9 +12,7 @@ const uptime = new Date().getTime();
 const help = ["~hello", "~help", "~amazing", "~uptime", "~uwu", "~8ball", "~motd", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute"];
 const admins = ["MDWalters124", "m", "JoshAtticus"];
 const db = new JSONdb("db.json");
-const bot = new Bot(username, password, () => {
-    bot.post(`${username} is now online! Use ~help to see a list of commands.`);
-});
+const bot = new Bot(username, password);
 
 function epochToRelative(timestamp) {
     var msPerMinute = 60 * 1000;
@@ -260,7 +258,7 @@ Bot Library: MeowerBot.js `);
     }
 });
 
-bot.onMessage((data) => {
+bot.onMessage((messageData) => {
     if (messageData.val.type === 1) {
         console.log(`${messageData.val.u}: ${messageData.val.p}`);
     } else if (messageData.cmd === "ping") {
@@ -292,7 +290,7 @@ bot.onMessage((data) => {
     } else if (messageData.val.mode === "auth") {
         console.log(`Logged in as "${messageData.val.payload.username}" (${messageData.val.payload.token})`);
     } else {
-        console.log(`New message: ${data}`);
+        console.log(`New message: ${JSON.stringify(messageData)}`);
     }
 });
 
@@ -304,5 +302,5 @@ bot.onClose(() => {
 });
 
 bot.onLogin(() => {
-    
+    bot.post(`${username} is now online! Use ~help to see a list of commands.`);
 });
