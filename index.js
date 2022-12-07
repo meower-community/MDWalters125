@@ -262,15 +262,21 @@ Bot Library: MeowerBot.js `);
 
     if (message.startsWith("~wordle")) {
         if (message.split(" ")[1] === "new") {
-            wordle.init(await fetch("https://random-word-api.herokuapp.com/word?length=5").then(res => res.json())[0]);
+            var word = await fetch("https://random-word-api.herokuapp.com/word?length=5").then(res => res.text());
+            wordle.init(JSON.parse(word)[0]);
             bot.post("New Wordle game started! Use ~wordle guess [word] to guess.");
         } else if (message.split(" ")[1] === "guess") {
             try {
                 var grid = wordle.guess(message.split(" ")[2]);
-                bot.post(`Your current grid:
-    ${grid}`);
+                bot.post(`${wordle.grid[0].join("")}
+${wordle.grid[1].join("")}
+${wordle.grid[2].join("")}
+${wordle.grid[3].join("")}
+${wordle.grid[4].join("")}
+${wordle.grid[5].join("")}          
+`);
             } catch(e) {
-                bot.post(e);
+                bot.post(`${e}`);
             }
         } else if (message.split(" ")[1] === "grid") {
             bot.post(`${wordle.grid[0].join("")}
