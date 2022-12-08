@@ -264,7 +264,7 @@ Bot Library: MeowerBot.js `);
         if (message.split(" ")[1] === "new") {
             var word = await fetch("https://random-word-api.herokuapp.com/word?length=5").then(res => res.text());
             wordle.init(JSON.parse(word)[0]);
-            bot.post("New Wordle game started! Use ~wordle guess [word] to guess.");
+            bot.post("New Wordle game started! Use ~wordle guess [word] to guess a word.");
         } else if (message.split(" ")[1] === "guess") {
             try {
                 var grid = wordle.guess(message.split(" ")[2]);
