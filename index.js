@@ -4,7 +4,7 @@ import {exec} from "child_process";
 import * as dotenv from "dotenv";
 import JSONdb from "simple-json-db";
 
-import Wordle from "./lib/wordle.js";
+import Wordle from "./lib/wordle/index.js";
 
 dotenv.config();
 
