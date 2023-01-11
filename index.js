@@ -291,39 +291,7 @@ ${wordle.grid[5].join("")}
 });
 
 bot.onMessage((messageData) => {
-    if (messageData.val.type === 1) {
-        console.log(`${messageData.val.u}: ${messageData.val.p}`);
-    } else if (messageData.cmd === "ping") {
-        if (messageData.val === "I:100 | OK") {
-            console.log("Ping is OK");
-        } else {
-            console.error("Ping is not OK");
-        }
-    } else if (messageData.val.state === 101 || messageData.val.state === 100) {
-        console.log(`${messageData.val.u} is typing...`);
-    } else if (messageData.cmd === "ulist") {
-        console.log(`Users online: ${messageData.val.split(";").join(", ")}`);
-    } else if (messageData.cmd === "statuscode") {
-        if (messageData.val.startsWith("E")) {
-            console.error(`Status: ${messageData.val}`);
-        } else if (messageData.val.startsWith("I:100")) {
-            console.log(`Status: ${messageData.val}`);
-        } else {
-            console.log(`Status: ${messageData.val}`);
-        }
-    } else if (messageData.val.cmd === "motd") {
-        console.log(`MOTD: ${messageData.val.val}`);
-    } else if (messageData.val.cmd === "vers") {
-        console.log(`Meower Server Version: ${messageData.val.val}`);
-    } else if (messageData.val.state === 1) {
-        console.log(`${messageData.val.u} joined ${messageData.val.chatid}`);
-    } else if (messageData.val.state === 0) {
-        console.log(`${messageData.val.u} left ${messageData.val.chatid}`);
-    } else if (messageData.val.mode === "auth") {
-        console.log(`Logged in as "${messageData.val.payload.username}" (${messageData.val.payload.token})`);
-    } else {
-        console.log(`New message: ${JSON.stringify(messageData)}`);
-    }
+    console.log(`New message: ${messageData}`);
 });
 
 bot.onClose(() => {
