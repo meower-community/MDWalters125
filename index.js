@@ -4,7 +4,7 @@ import {exec} from "child_process";
 import * as dotenv from "dotenv";
 import JSONdb from "simple-json-db";
 
-import Wordle from "./lib/wordle/index.js";
+import Wordle from "./lib/wordle.js";
 
 dotenv.config();
 
@@ -87,7 +87,8 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`);
     }
 
     if (message.startsWith("~help")) {
-        bot.post(`Commands: ${help.join(", ")}`);
+        bot.post(`Commands:
+    ${help.join(", ")}`);
     }
 
     if (message.startsWith("~hello")) {
