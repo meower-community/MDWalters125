@@ -11,7 +11,7 @@ dotenv.config();
 const username = process.env["MDW125_USERNAME"];
 const password = process.env["MDW125_PASSWORD"];
 const uptime = new Date().getTime();
-const help = ["~hello", "~help", "~amazing", "~uptime", "~uwu", "~8ball", "~motd", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute", "~wordle"];
+const help = ["~help", "~hello", "~amazing", "~uptime", "~uwu", "~8ball", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute", "~wordle"];
 const admins = ["mdwalters", "m", "JoshAtticus"];
 const db = new JSONdb("db.json");
 const bot = new Bot(username, password);
@@ -86,16 +86,16 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`);
         return;
     }
 
+    if (message.startsWith("~help")) {
+        bot.post(`Commands: ${help.join(", ")}`);
+    }
+
     if (message.startsWith("~hello")) {
         if (message.split(" ")[1] === undefined) {
             bot.post(`Hello, ${user}!`);
         } else {
             bot.post(`Hello, ${message.split(" ").slice(1, message.split(" ").length).join(" ")}!`);
         }
-    }
-
-    if (message.startsWith("~help")) {
-        bot.post(`Commands: ${help.join(", ")}`);
     }
 
     if (message.startsWith("~amazing")) {
@@ -113,11 +113,6 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`);
     if (message.startsWith("~8ball")) {
         var eightBall = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.", "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.", "Don't count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."];
     	bot.post(eightBall[Math.floor(Math.random() * eightBall.length)]);
-    }
-
-    if (message.startsWith("~motd")) {
-        var motd = ["Meower is not dead", "Furries can do infinite crime", "~8ball get a life?", "Never gonna give you up", "usebottles", "Why did the chicken cross the road? To get to the other side", "Made in Canada", "The question that I always ask Bill Gates is why Windows is closed-source", "M.D. created Markdown, you can't deny that", "Proudly Furry", "You are currently muted from MDWalters125.", "MDWalters125 is now online! Use ~help to see a list of commands.", "Hello from Node.js!"];
-    	bot.post(motd[Math.floor(Math.random() * motd.length)]);
     }
 
     if (message.startsWith("~zen")) {
@@ -150,20 +145,23 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`);
                 if (!(db.has(`MDW125-STATUS-${user}`))) {
                     bot.post("You don't have a status set. To set one, use ~status set [message].");
                 } else {
-                    bot.post(`Your status: ${db.get("MDW125-STATUS-" + user)}`);
+                    bot.post(`Your status:
+    ${db.get("MDW125-STATUS-" + user)}`);
                 }
             } else {
-                if (!(db.has(`MDW125-STATUS-${user}`))) {
-                    bot.post(`@${message.split(" ")[2]} doesn't have a status set.`);
+                if (db.has(`MDW125-STATUS-${user}`)) {
+                    bot.post(`@${message.split(" ")[2]}'s status:
+    ${db.get("MDW125-STATUS-" + message.split(" ")[2])}`);
                 } else {
-                    bot.post(`@${message.split(" ")[2]}'s status: ${db.get("MDW125-STATUS-" + message.split(" ")[2])}`);
+                    bot.post(`@${message.split(" ")[2]} doesn't have a status set.`);
                 }
             }    
         } else {
             if (!(db.has(`MDW125-STATUS-${user}`))) {
                 bot.post("You don't have a status set. To set one, use ~status set [message].");
             } else {
-                bot.post(`Your status: ${db.get("MDW125-STATUS-" + user)}`);
+                bot.post(`Your status:
+    ${db.get("MDW125-STATUS-" + user)}`);
             }
         }
     }
@@ -267,7 +265,7 @@ Bot Library: MeowerBot.js `);
             bot.post("New Wordle game started! Use ~wordle guess [word] to guess a word.");
         } else if (message.split(" ")[1] === "guess") {
             try {
-                var grid = wordle.guess(message.split(" ")[2]);
+                let grid = wordle.guess(message.split(" ")[2]);
                 bot.post(`${wordle.grid[0].join("")}
 ${wordle.grid[1].join("")}
 ${wordle.grid[2].join("")}
