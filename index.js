@@ -130,7 +130,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`);
 
     if (message.startsWith("~cat")) {
         var image = await fetch("https://aws.random.cat/meow").then(res => res.json());
-        bot.post(image.file);
+        bot.post(`[?format=src: ${image.file}]`);
     }
 
     if (message.startsWith("~status")) {
