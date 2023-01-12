@@ -11,7 +11,7 @@ dotenv.config();
 const username = process.env["MDW125_USERNAME"];
 const password = process.env["MDW125_PASSWORD"];
 const uptime = new Date().getTime();
-const help = ["~help", "~hello", "~amazing", "~uptime", "~uwu", "~8ball", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute", "~wordle"];
+const help = ["~help", "~hello", "~uptime", "~uwu", "~8ball", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute", "~wordle"];
 const admins = ["mdwalters", "m", "JoshAtticus"];
 const db = new JSONdb("db.json");
 const bot = new Bot(username, password);
@@ -96,10 +96,6 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`);
         } else {
             bot.post(`Hello, ${message.split(" ").slice(1, message.split(" ").length).join(" ")}!`);
         }
-    }
-
-    if (message.startsWith("~amazing")) {
-        bot.post(`Amazing ${message.split(" ").slice(1, message.split(" ").length).join(" ")}`);
     }
 
     if (message.startsWith("~uptime")) {
