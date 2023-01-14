@@ -87,8 +87,54 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
     }
 
     if (message.startsWith("~help")) {
-        bot.post(`Commands:
+        if (message.split(" ")[1] === undefined) {
+            bot.post(`Commands:
     ${help.join(", ")}`, origin);
+        } else {
+            if (message.split(" ")[1] === "help") {
+                bot.post(`~help:
+    Shows you a list of commands.`, origin);
+            } else if (message.split(" ")[1] === "hello") {
+                bot.post(`~hello:
+    Replies with "Hello, [your username]. You can set a custom message with ~hello [custom message].`, origin);
+            } else if (message.split(" ")[1] === "uptime") {
+                bot.post(`~uptime:
+    Shows you how long the bot was online for.`, origin);
+            } else if (message.split(" ")[1] === "uwu") {
+                bot.post(`~uwu:
+    Sends "UwU.`, origin);
+            } else if (message.split(" ")[1] === "8ball") {
+                bot.post(`~8ball:
+    Makes a prediction.`, origin);
+            } else if (message.split(" ")[1] === "zen") {
+                bot.post(`~zen:
+    Posts zen quotes from GitHub's API.`, origin);
+            } else if (message.split(" ")[1] === "shorten") {
+                bot.post(`~shorten:
+    Shortens links via shortco.de's API.`, origin);
+            } else if (message.split(" ")[1] === "zen") {
+                bot.post(`~cat:
+    Posts random cat pictures.`, origin);
+            } else if (message.split(" ")[1] === "zen") {
+                bot.post(`~status:
+    View, set and view someone else's status.`, origin);
+            } else if (message.split(" ")[1] === "credits") {
+                bot.post(`~credits:
+    Lists everyone behind ${username}!`, origin);
+            } else if (message.split(" ")[1] === "karma") {
+                bot.post(`~karma:
+    Upvote, downvote, and view someone's karma.`, origin);
+            } else if (message.split(" ")[1] === "mute") {
+                bot.post(`~mute:
+    Mutes the specified user. Must be a bot admin to do this.`, origin);
+            } else if (message.split(" ")[1] === "unmute") {
+                bot.post(`~unmute:
+    Unmutes the specified user. Must be a bot admin to do this.`, origin);
+            } else if (message.split(" ")[1] === "wordle") {
+                bot.post(`~wordle:
+    Play wordle.`, origin);
+            }
+        }
     }
 
     if (message.startsWith("~hello")) {
