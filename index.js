@@ -290,7 +290,7 @@ bot.onMessage((messageData) => {
 });
 
 bot.onClose(() => {
-    var command = exec("npm run start");
+    let command = exec("npm run start");
     command.stdout.on("data", (output) => {
         console.log(output.toString());
     });
