@@ -11,7 +11,7 @@ dotenv.config();
 const username = process.env["MDW125_USERNAME"];
 const password = process.env["MDW125_PASSWORD"];
 const uptime = new Date().getTime();
-const help = ["~help", "~hello", "~uptime", "~uwu", "~8ball", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute", "~wordle"];
+const help = ["~help", "~uptime", "~uwu", "~8ball", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute", "~wordle"];
 const admins = ["mdwalters", "m", "JoshAtticus"];
 const db = new JSONdb("db.json");
 const bot = new Bot(username, password);
