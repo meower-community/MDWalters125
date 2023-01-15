@@ -94,9 +94,6 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             if (message.split(" ")[1] === "help") {
                 bot.post(`~help:
     Shows you a list of commands.`, origin);
-            } else if (message.split(" ")[1] === "hello") {
-                bot.post(`~hello:
-    Replies with "Hello, [your username]. You can set a custom message with ~hello [custom message].`, origin);
             } else if (message.split(" ")[1] === "uptime") {
                 bot.post(`~uptime:
     Shows you how long the bot was online for.`, origin);
@@ -136,14 +133,6 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             } else {
                 bot.post("This command doesn't exist!", origin);
             }
-        }
-    }
-
-    if (message.startsWith("~hello")) {
-        if (message.split(" ")[1] === undefined) {
-            bot.post(`Hello, ${user}!`, origin);
-        } else {
-            bot.post(`Hello, ${message.split(" ").slice(1, message.split(" ").length).join(" ")}!`, origin);
         }
     }
 
