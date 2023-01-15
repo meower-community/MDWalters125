@@ -133,6 +133,8 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             } else if (message.split(" ")[1] === "wordle") {
                 bot.post(`~wordle:
     Play wordle.`, origin);
+            } else {
+                bot.post("This command doesn't exist!", origin);
             }
         }
     }
