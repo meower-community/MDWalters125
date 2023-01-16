@@ -330,14 +330,18 @@ ${wordle.grid[5].join("")}
     if (message.startsWith("~poll")) {
         if (message.split(" ")[1] === "new") {
             let polls = db.get("MDW125-POLLS");
-            polls.push({ "question": message.split(" ").slice(2, message.split(" ").length).join(" "), "id": polls.length + 1, "answers": [] });
+            polls.push({ "question": message.split(" ").slice(2, message.split(" ").length).join(" "), "id": polls.length + 1, "answers": [], "username": user });
             db.set("MDW125-POLLS", polls);
             bot.post("Succesfully created new poll!", origin);
         } else if (message.split(" ")[1] === "answer") {
             let polls = db.get("MDW125-POLLS");
-            polls[message.split(" ")[2] - 1].answers.push({ "username": user, "answer": message.split(" ").slice(3, message.split(" ").length).join(" ") });
-            db.set("MDW125-POLLS", polls);
-            bot.post("Successfully answered poll!", origin);
+            if (user == polls[message.split(" ")[2] - 1]) {
+                bot.post("You can't answer a poll you made!", origin);
+            } else {
+                polls[message.split(" ")[2] - 1].answers.push({ "username": user, "answer": message.split(" ").slice(3, message.split(" ").length).join(" ") });
+                db.set("MDW125-POLLS", polls);
+                bot.post("Successfully answered poll!", origin);
+            }
         } else {
             let polls = db.get("MDW125-POLLS");
             let randomPoll = polls[Math.floor(Math.random() * polls.length)]
