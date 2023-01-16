@@ -301,8 +301,7 @@ Bot Library: MeowerBot.js`, origin);
 
     if (message.startsWith("~wordle")) {
         if (message.split(" ")[1] === "new") {
-            let word = await fetch("https://random-word-api.herokuapp.com/word?length=5").then(res => res.json());
-            wordle.init(word[0]);
+            wordle.init();
             bot.post("New Wordle game started! Use ~wordle guess [word] to guess a word.", origin);
         } else if (message.split(" ")[1] === "guess") {
             try {
