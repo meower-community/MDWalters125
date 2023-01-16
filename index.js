@@ -306,7 +306,7 @@ Bot Library: MeowerBot.js`, origin);
         } else if (message.split(" ")[1] === "guess") {
             try {
                 wordle.guess(message.split(" ")[2]);
-                bot.post(`${wordle.grid[0].join("")}    Tries: ${(wordle.tries() != -1 ? wordle.tries() : 0)}
+                bot.post(`${wordle.grid[0].join("")}
 ${wordle.grid[1].join("")}
 ${wordle.grid[2].join("")}
 ${wordle.grid[3].join("")}
