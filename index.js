@@ -4,14 +4,14 @@ import {exec} from "child_process";
 import * as dotenv from "dotenv";
 import JSONdb from "simple-json-db";
 
-import Wordle from "./lib/wordle.js";
+import Wordle from "./lib/wordle/wordle.js";
 
 dotenv.config();
 
 const username = process.env["MDW125_USERNAME"];
 const password = process.env["MDW125_PASSWORD"];
 const uptime = new Date().getTime();
-const help = ["~help", "~uptime", "~uwu", "~8ball", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute", "~wordle"];
+const help = ["~help", "~uptime", "~uwu", "~8ball", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute", "~wordle", "~poll"];
 const admins = ["mdwalters", "m", "JoshAtticus"];
 const db = new JSONdb("db.json");
 const bot = new Bot(username, password);
@@ -65,6 +65,10 @@ function epochToRelative(timestamp) {
             return `${Math.round(elapsed/msPerYear)} year ago`;
         }
     }
+}
+
+if (!(db.has("MDW125-POLLS"))) {
+    db.set("MDW125-POLLS", []);
 }
 
 bot.onPost(async (user, message, origin) => {
@@ -130,6 +134,9 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             } else if (message.split(" ")[1] === "wordle") {
                 bot.post(`~wordle:
     Play wordle.`, origin);
+            } else if (message.split(" ")[1] === "poll") {
+                bot.post(`~poll:
+    Create and answer polls.`, origin);
             } else {
                 bot.post("This command doesn't exist!", origin);
             }
@@ -294,13 +301,13 @@ Bot Library: MeowerBot.js`, origin);
 
     if (message.startsWith("~wordle")) {
         if (message.split(" ")[1] === "new") {
-            let word = await fetch("https://random-word-api.herokuapp.com/word?length=5").then(res => res.text());
-            wordle.init(JSON.parse(word)[0]);
+            let word = await fetch("https://random-word-api.herokuapp.com/word?length=5").then(res => res.json());
+            wordle.init(word[0]);
             bot.post("New Wordle game started! Use ~wordle guess [word] to guess a word.", origin);
         } else if (message.split(" ")[1] === "guess") {
             try {
-                let grid = wordle.guess(message.split(" ")[2]);
-                bot.post(`${wordle.grid[0].join("")}
+                wordle.guess(message.split(" ")[2]);
+                bot.post(`${wordle.grid[0].join("")}    Tries: ${(wordle.tries() != -1 ? wordle.tries() : 0)}
 ${wordle.grid[1].join("")}
 ${wordle.grid[2].join("")}
 ${wordle.grid[3].join("")}
@@ -312,12 +319,31 @@ ${wordle.grid[5].join("")}
             }
         } else if (message.split(" ")[1] === "grid") {
             bot.post(`${wordle.grid[0].join("")}
-${wordle.grid[1].join("")}
+${wordle.grid[1].join("")} 
 ${wordle.grid[2].join("")}
 ${wordle.grid[3].join("")}
 ${wordle.grid[4].join("")}
 ${wordle.grid[5].join("")}          
 `, origin);
+        }
+    }
+
+    if (message.startsWith("~poll")) {
+        if (message.split(" ")[1] === "new") {
+            let polls = db.get("MDW125-POLLS");
+            polls.push({ "question": message.split(" ").slice(2, message.split(" ").length).join(" "), "id": polls.length + 1, "answers": [] });
+            db.set("MDW125-POLLS", polls);
+            bot.post("Succesfully created new poll!", origin);
+        } else if (message.split(" ")[1] === "answer") {
+            let polls = db.get("MDW125-POLLS");
+            polls[message.split(" ")[2] - 1].answers.push({ "username": user, "answer": message.split(" ").slice(3, message.split(" ").length).join(" ") });
+            db.set("MDW125-POLLS", polls);
+            bot.post("Successfully answered poll!", origin);
+        } else {
+            let polls = db.get("MDW125-POLLS");
+            let randomPoll = polls[Math.floor(Math.random() * polls.length)]
+            bot.post(`Random poll: ${randomPoll.question}
+    To answer this poll, use ~poll answer ${randomPoll.id} [answer].`, origin);
         }
     }
 });
