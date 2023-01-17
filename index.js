@@ -344,7 +344,15 @@ ${wordle.grid[5].join("")}
             }
         } else {
             let polls = db.get("MDW125-POLLS");
-            let randomPoll = polls[Math.floor(Math.random() * polls.length)]
+
+            for (let i in polls) {
+                if (polls[i].username == user) {
+                    polls.splice(i, 1);
+                }
+            }
+
+            let randomPoll = polls[Math.floor(Math.random() * polls.length)];
+
             bot.post(`Random poll: ${randomPoll.question}
     To answer this poll, use ~poll answer ${randomPoll.id} [answer].`, origin);
         }
