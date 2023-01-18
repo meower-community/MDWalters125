@@ -378,7 +378,7 @@ ${wordle.grid[5].join("")}
             log([user] + " created a new poll with the command " + [message] + '\n', { flag: 'a+' }, err => {});
         } else if (message.split(" ")[1] === "answer") {
             let polls = db.get("MDW125-POLLS");
-            if (user == polls[message.split(" ")[2] - 1]) {
+            if (user == polls[message.split(" ")[2] - 1].username) {
                 bot.post("You can't answer a poll you made!", origin);
                 log([user] + " tried to answer a poll they created with the command " + [message] + '\n', { flag: 'a+' }, err => {});
             } else {
@@ -400,7 +400,7 @@ ${wordle.grid[5].join("")}
 
             bot.post(`Random poll: ${randomPoll.question}
     To answer this poll, use ~poll answer ${randomPoll.id} [answer].`, origin);
-    log([user] + " found a random poll with the command " + [message] + '\n', { flag: 'a+' }, err => {});
+            log([user] + " found a random poll with the command " + [message] + '\n', { flag: 'a+' }, err => {});
         }
     }
 });
