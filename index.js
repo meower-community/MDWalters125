@@ -1,10 +1,5 @@
-import Bot from "meowerbot";
-import fetch from "node-fetch";
-import {exec} from "child_process";
-import * as dotenv from "dotenv";
-import JSONdb from "simple-json-db";
 
-import { logs } from "./lib/logs/logs.js";
+import { log } from "./lib/logs/logs.js";
 import Wordle from "./lib/wordle/wordle.js";
 
 dotenv.config();
@@ -13,7 +8,7 @@ const username = process.env["MDW125_USERNAME"];
 const password = process.env["MDW125_PASSWORD"];
 const uptime = new Date().getTime();
 const help = ["~help", "~uptime", "~uwu", "~8ball", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute", "~wordle", "~poll"];
-const admins = ["mdwalters", "m", "JoshAtticus"];
+const admins = ["mdwalters", "m", "JoshAtticus", "joshistesting"];
 const db = new JSONdb("db.json");
 const bot = new Bot(username, password);
 const wordle = new Wordle();
@@ -344,7 +339,7 @@ Bot Library: MeowerBot.js`, origin);
         if (message.split(" ")[1] === "new") {
             wordle.init();
             bot.post("New Wordle game started! Use ~wordle guess [word] to guess a word.", origin);
-            log([user] + " started a Wordle game with the command " + [message] + '\n', { flag: 'a+' }, err => {});
+            log(`${user} started a Wordle game with the command "${message}"`);
         } else if (message.split(" ")[1] === "guess") {
             try {
                 wordle.guess(message.split(" ")[2]);
@@ -375,17 +370,17 @@ ${wordle.grid[5].join("")}
             polls.push({ "question": message.split(" ").slice(2, message.split(" ").length).join(" "), "id": polls.length + 1, "answers": [], "username": user });
             db.set("MDW125-POLLS", polls);
             bot.post("Succesfully created new poll!", origin);
-            log([user] + " created a new poll with the command " + [message] + '\n', { flag: 'a+' }, err => {});
+            log(`${user} created a new poll with the command "${message}"`);
         } else if (message.split(" ")[1] === "answer") {
             let polls = db.get("MDW125-POLLS");
             if (user == polls[message.split(" ")[2] - 1].username) {
                 bot.post("You can't answer a poll you made!", origin);
-                log([user] + " tried to answer a poll they created with the command " + [message] + '\n', { flag: 'a+' }, err => {});
+                log(`${user} tried to answer a poll they created with the command "${message}"`);
             } else {
                 polls[message.split(" ")[2] - 1].answers.push({ "username": user, "answer": message.split(" ").slice(3, message.split(" ").length).join(" ") });
                 db.set("MDW125-POLLS", polls);
                 bot.post("Successfully answered poll!", origin);
-                log([user] + " answered a poll with the command " + [message] + '\n', { flag: 'a+' }, err => {});
+                log(`${user} answered a poll with the command "${message}"`);
             }
         } else {
             let polls = db.get("MDW125-POLLS");
@@ -398,9 +393,13 @@ ${wordle.grid[5].join("")}
 
             let randomPoll = polls[Math.floor(Math.random() * polls.length)];
 
-            bot.post(`Random poll: ${randomPoll.question}
+            try {
+                bot.post(`Random poll: ${randomPoll.question}
     To answer this poll, use ~poll answer ${randomPoll.id} [answer].`, origin);
-            log([user] + " found a random poll with the command " + [message] + '\n', { flag: 'a+' }, err => {});
+                log(`${user} found a random poll with the command "${message}"`);
+            } catch(e) {
+                bot.post("There are no polls to answer! Check back later or create a poll with ~poll new [poll].", origin);
+            }
         }
     }
 });
@@ -417,6 +416,7 @@ bot.onClose(() => {
 });
 
 bot.onLogin(() => {
-    bot.post(`${username} is now online! Use ~help to see a list of commands.`);
     log(`Logged on as user ${username}`);
+    bot.post(`${username} is now online! Use ~help to see a list of commands.`);
 });
+
