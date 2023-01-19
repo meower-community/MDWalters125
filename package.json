@@ -2,7 +2,7 @@
   "name": "mdwalters125",
   "version": "1.0.0",
   "description": "A multi-purpose Meower bot",
-  "main": "index.js",
+  "main": "./src/index.js",
   "type": "module",
   "scripts": {
     "start": "node ."

@@ -4,8 +4,8 @@ import { exec } from "child_process";
 import * as dotenv from "dotenv";
 import JSONdb from "simple-json-db";
 
-import { log } from "./lib/logs/logs.js";
-import Wordle from "./lib/wordle/wordle.js";
+import { log } from "./lib/logs.js";
+import Wordle from "./lib/wordle.js";
 
 dotenv.config();
 
@@ -14,59 +14,9 @@ const password = process.env["MDW125_PASSWORD"];
 const uptime = new Date().getTime();
 const help = ["~help", "~uptime", "~uwu", "~8ball", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute", "~wordle", "~poll"];
 const admins = ["mdwalters", "m", "JoshAtticus", "joshistesting"];
-const db = new JSONdb("db.json");
+const db = new JSONdb("./../db.json");
 const bot = new Bot(username, password);
 const wordle = new Wordle();
-
-function epochToRelative(timestamp) {
-    var msPerMinute = 60 * 1000;
-    var msPerHour = msPerMinute * 60;
-    var msPerDay = msPerHour * 24;
-    var msPerMonth = msPerDay * 30;
-    var msPerYear = msPerDay * 365;
-    var current = new Date().getTime();
-    var elapsed = current - timestamp;
-
-    if (elapsed < msPerMinute) {
-        if (1 < Math.round(elapsed/1000)) {
-            return `${Math.round(elapsed/1000)} seconds ago`; 
-        } else if (Math.round(elapsed/1000) == 0) {
-            return "just now";
-        } else {
-            return `${Math.round(elapsed/1000)} second ago`;
-        }
-    } else if (elapsed < msPerHour) {
-        if (1 < Math.round(elapsed/msPerMinute)) {
-            return `${Math.round(elapsed/msPerMinute)} minutes ago`;
-        } else {
-            return `${Math.round(elapsed/msPerMinute)} minute ago`;
-        }  
-    } else if (elapsed < msPerDay) {
-        if (1 < Math.round(elapsed/msPerHour)) {
-            return `${Math.round(elapsed/msPerHour)} hours ago`; 
-        } else {
-            return `${Math.round(elapsed/msPerHour)} hour ago`;
-        }  
-    } else if (elapsed < msPerMonth) {
-        if (1 < Math.round(elapsed/msPerDay)) {
-            return `${Math.round(elapsed/msPerDay)} days ago`;
-        } else {
-            return `${Math.round(elapsed/msPerDay)} day ago`;
-        }
-    } else if (elapsed < msPerYear) {
-        if (1 < Math.round(elapsed/msPerMonth)) {
-            return `${Math.round(elapsed/msPerMonth)} months ago`;
-        } else {
-            return `${Math.round(elapsed/msPerMonth)} month ago`;
-        }
-    } else {
-        if (1 < elapsed/msPerYear) {
-            return `${Math.round(elapsed/msPerYear)} years ago`;
-        } else {
-            return `${Math.round(elapsed/msPerYear)} year ago`;
-        }
-    }
-}
 
 if (!(db.has("MDW125-POLLS"))) {
     db.set("MDW125-POLLS", []);
