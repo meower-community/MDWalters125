@@ -1,3 +1,8 @@
+import Bot from "meowerbot";
+import fetch from "node-fetch";
+import { exec } from "child_process";
+import * as dotenv from "dotenv";
+import JSONdb from "simple-json-db";
 
 import { log } from "./lib/logs/logs.js";
 import Wordle from "./lib/wordle/wordle.js";
