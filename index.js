@@ -328,15 +328,15 @@ Bot Library: MeowerBot.js`, origin);
         if (admins.includes(user)) {
             if (!(db.has(`MDW125-MUTED-${message.split(" ")[1]}`))) {
                 bot.post(`@${message.split(" ")[1]} isn't muted!`, origin);
-                log([user] + " tried to unmute someone, but they weren't muted. They used the command " + [message] + '\n', { flag: 'a+' }, err => {});
+                log(`${user} tried to unmute someone, but they weren't muted. They used the command "${message}"`);
             } else {
                 db.delete(`MDW125-MUTED-${message.split(" ")[1]}`);
                 bot.post(`Successfully unmuted @${message.split(" ")[1]}!`, origin);
-                log([user] + " unmuted someone with the command " + [message] + '\n', { flag: 'a+' }, err => {});
+                log(`${user} unmuted someone with the command "${message}"`);
             }
         } else {
             bot.post("You don't have the permissions to run this command.", origin);
-            log([user] + " tried to unmute someone, but they didn't have permission to do so. They used the command " + [message] + '\n', { flag: 'a+' }, err => {});
+            log(`${user} tried to unmute someone, but they didn't have permission to do so. They used the command "${message}"`);
         }
     }
 
