@@ -4,8 +4,8 @@ import { exec } from "child_process";
 import * as dotenv from "dotenv";
 import JSONdb from "simple-json-db";
 
-import { log } from "./lib/logs.js";
-import Wordle from "./lib/wordle.js";
+import { log } from "./../lib/logs.js";
+import Wordle from "./../lib/wordle.js";
 
 dotenv.config();
 
