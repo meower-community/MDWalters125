@@ -58,7 +58,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
     Shows you how long the bot was online for.`, origin);
             } else if (message.split(" ")[1] === "uwu") {
                 bot.post(`~uwu:
-    Sends "UwU.`, origin);
+    Posts "UwU.`, origin);
             } else if (message.split(" ")[1] === "8ball") {
                 bot.post(`~8ball:
     Makes a prediction.`, origin);
@@ -73,7 +73,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
     Posts random cat pictures.`, origin);
             } else if (message.split(" ")[1] === "zen") {
                 bot.post(`~status:
-    View, set and view someone else's status.`, origin);
+    Lets you view, and set a status.`, origin);
             } else if (message.split(" ")[1] === "credits") {
                 bot.post(`~credits:
     Lists everyone behind ${username}!`, origin);
@@ -88,7 +88,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
     Unmutes the specified user. Must be a bot admin to do this.`, origin);
             } else if (message.split(" ")[1] === "wordle") {
                 bot.post(`~wordle:
-    Play wordle.`, origin);
+    Lets you play wordle.`, origin);
             } else if (message.split(" ")[1] === "poll") {
                 bot.post(`~poll:
     Create and answer polls.`, origin);
@@ -359,10 +359,6 @@ ${wordle.grid[5].join("")}
                 bot.post("There are no polls to answer! Check back later or create a poll with ~poll new [poll].", origin);
             }
         }
-    }
-
-    if (message.startsWith("")) {
-
     }
 });
 
