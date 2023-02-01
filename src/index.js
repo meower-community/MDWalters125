@@ -6,6 +6,7 @@ import JSONdb from "simple-json-db";
 
 import { log } from "./../lib/logs.js";
 import Wordle from "./../lib/wordle.js";
+import { toRelative } from "./../lib/relative.js";
 
 dotenv.config();
 
@@ -99,7 +100,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
     }
 
     if (message.startsWith("~uptime")) {
-        bot.post(`${username} was online since ${epochToRelative(uptime)}.`, origin);
+        bot.post(`${username} was online since ${toRelative(uptime)}.`, origin);
         log(`${user} used the command ${message}`);
     }
 
@@ -331,6 +332,8 @@ ${wordle.grid[5].join("")}
             if (user == polls[message.split(" ")[2] - 1].username) {
                 bot.post("You can't answer a poll you made!", origin);
                 log(`${user} tried to answer a poll they created with the command "${message}"`);
+            } else if (polls[message.split(" ")[2] - 1] == undefined) {
+                bot.post("This poll doesn't exist!");
             } else {
                 polls[message.split(" ")[2] - 1].answers.push({ "username": user, "answer": message.split(" ").slice(3, message.split(" ").length).join(" ") });
                 db.set("MDW125-POLLS", polls);
@@ -356,6 +359,10 @@ ${wordle.grid[5].join("")}
                 bot.post("There are no polls to answer! Check back later or create a poll with ~poll new [poll].", origin);
             }
         }
+    }
+
+    if (message.startsWith("")) {
+
     }
 });
 
