@@ -5,6 +5,7 @@ import { exec } from "child_process";
 import * as dotenv from "dotenv";
 import JSONdb from "simple-json-db";
 
+// They all have to end in .js, at least for now
 import { log } from "./../lib/logs.js";
 import Wordle from "./../lib/wordle.js";
 import { toRelative } from "./../lib/relative.js";
