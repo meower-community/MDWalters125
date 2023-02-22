@@ -5,11 +5,9 @@ import { exec } from "child_process";
 import * as dotenv from "dotenv";
 import JSONdb from "simple-json-db";
 
-// They all have to end in .js, at least for now
 import { log } from "./../lib/logs.js";
 import Wordle from "./../lib/wordle.js";
 import { toRelative } from "./../lib/relative.js";
-import { typing } from "./../lib/typing.js";
 
 dotenv.config();
 
@@ -31,7 +29,7 @@ bot.onPost(async (user: string, message: string, origin: string | null) => {
         if (db.get(`MDW125-MUTED-${user}`)) {
             bot.post(`You are currently muted from ${username}.
 Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
-    log(`${user} tried to use the command "${message}", but they are muted from ${username} for "${db.get(`MDW125-MUTED-${user}`)}"`);
+            log(`${user} tried to use the command "${message}", but they are muted from ${username} for "${db.get(`MDW125-MUTED-${user}`)}"`);
         } else {
             bot.post(`You are currently muted from ${username}.`, origin);
             log(`${user} tried to use the command "${message}", but they are muted from ${username}`);
@@ -43,6 +41,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
         if (message.startsWith("~! ")) {
             return;
         }
+
         bot.post("That command doesn't exist! Use ~help to see a list of commands.", origin);
         log(`${user} tried to use a command that does not exist. The command was "${message}"`);
         return;
@@ -61,7 +60,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
     Shows you how long the bot was online for.`, origin);
             } else if (message.split(" ")[1] === "uwu") {
                 bot.post(`~uwu:
-    Posts "UwU.`, origin);
+    Posts "UwU".`, origin);
             } else if (message.split(" ")[1] === "8ball") {
                 bot.post(`~8ball:
     Makes a prediction.`, origin);
@@ -119,7 +118,6 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
     }
 
     if (message.startsWith("~zen")) {
-        typing(bot);
         bot.post(await fetch("https://api.github.com/zen").then(res => res.text()), origin);
         log(`${user} used the command ${message}`);
     }
@@ -129,14 +127,14 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             bot.post("You need to specify a website to shorten!", origin);
             log(`${user} used the command ${message}`);
         } else {
-            let link = await fetch(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[1]}`).then(res => res.json());
+            let link: Object = await fetch(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[1]}`).then(res => res.json());
             bot.post(link.result.full_short_link, origin);
             log(`${user} used the command ${message}`);
         }
     }
 
     if (message.startsWith("~cat")) {
-        let image = await fetch("https://aws.random.cat/meow").then(res => res.json());
+        let image: Object = await fetch("https://aws.random.cat/meow").then(res => res.json());
         bot.post(`[?format=src: ${image.file}]`, origin);
         log(`${user} used the command ${message}`);
     }
@@ -326,13 +324,13 @@ ${wordle.grid[5].join("")}
 
     if (message.startsWith("~poll")) {
         if (message.split(" ")[1] === "new") {
-            let polls = db.get("MDW125-POLLS");
+            let polls: Object[] = db.get("MDW125-POLLS");
             polls.push({ "question": message.split(" ").slice(2, message.split(" ").length).join(" "), "id": polls.length + 1, "answers": [], "username": user });
             db.set("MDW125-POLLS", polls);
-            bot.post("Succesfully created new poll!", origin);
+            bot.post(`Succesfully created new poll! For others to answer this poll, use ~poll ${polls.length} [answer].`, origin);
             log(`${user} created a new poll with the command "${message}"`);
         } else if (message.split(" ")[1] === "answer") {
-            let polls = db.get("MDW125-POLLS");
+            let polls: Object[] = db.get("MDW125-POLLS");
             if (user == polls[message.split(" ")[2] - 1].username) {
                 bot.post("You can't answer a poll you made!", origin);
                 log(`${user} tried to answer a poll they created with the command "${message}"`);
@@ -345,7 +343,7 @@ ${wordle.grid[5].join("")}
                 log(`${user} answered a poll with the command "${message}"`);
             }
         } else {
-            let polls = db.get("MDW125-POLLS");
+            let polls: Object[] = db.get("MDW125-POLLS");
 
             for (let i in polls) {
                 if (polls[i].username == user) {
@@ -366,7 +364,7 @@ ${wordle.grid[5].join("")}
     }
 });
 
-bot.onMessage((messageData) => {
+bot.onMessage((messageData: string) => {
     console.log(`New message: ${messageData}`);
 });
 
