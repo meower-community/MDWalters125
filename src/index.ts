@@ -392,7 +392,7 @@ ${wordle.grid[5].join("")}
         } else {
             bot.post(`${user._id} (User levels coming soon):
     ${(user.banned ? "Banned" : "Not banned")}
-    Created ${toRelative(user.created)}
+    Created ${toRelative(user.created * 1000)}
     Quote: ${user.quote}`, origin);
         }
     }
