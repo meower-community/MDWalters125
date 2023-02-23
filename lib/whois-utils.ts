@@ -41,6 +41,7 @@ export const pfp: string[] = [
 ];
 
 export const lvl: string[] = [
+    "User",
     "Low-level Moderator",
     "Moderator",
     "Administratior",
