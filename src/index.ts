@@ -342,22 +342,22 @@ ${wordle.grid[5].join("")}
         }
     }
 
-    if (message.startsWith("~poll")) {
-        if (message.split(" ")[1] === "new") {
+    if (message.startsWith(`@${username} poll`)) {
+        if (message.split(" ")[2] === "new") {
             let polls: Object[] = db.get("MDW125-POLLS");
-            polls.push({ "question": message.split(" ").slice(2, message.split(" ").length).join(" "), "id": polls.length + 1, "answers": [], "username": user });
+            polls.push({ "question": message.split(" ").slice(3, message.split(" ").length).join(" "), "id": polls.length + 1, "answers": [], "username": user });
             db.set("MDW125-POLLS", polls);
-            bot.post(`Succesfully created new poll! For others to answer this poll, use ~poll ${polls.length} [answer].`, origin);
+            bot.post(`Succesfully created new poll! For others to answer this poll, use @${username} poll ${polls.length} [answer].`, origin);
             log(`${user} created a new poll with the command "${message}"`);
-        } else if (message.split(" ")[1] === "answer") {
+        } else if (message.split(" ")[2] === "answer") {
             let polls: Object[] = db.get("MDW125-POLLS");
-            if (user == polls[message.split(" ")[2] - 1].username) {
+            if (user == polls[message.split(" ")[3] - 1].username) {
                 bot.post("You can't answer a poll you made!", origin);
                 log(`${user} tried to answer a poll they created with the command "${message}"`);
-            } else if (polls[message.split(" ")[2] - 1] == undefined) {
+            } else if (polls[message.split(" ")[3] - 1] == undefined) {
                 bot.post("This poll doesn't exist!");
             } else {
-                polls[message.split(" ")[2] - 1].answers.push({ "username": user, "answer": message.split(" ").slice(3, message.split(" ").length).join(" ") });
+                polls[message.split(" ")[3] - 1].answers.push({ "username": user, "answer": message.split(" ").slice(4, message.split(" ").length).join(" ") });
                 db.set("MDW125-POLLS", polls);
                 bot.post("Successfully answered poll!", origin);
                 log(`${user} answered a poll with the command "${message}"`);
@@ -375,10 +375,10 @@ ${wordle.grid[5].join("")}
 
             try {
                 bot.post(`Random poll: ${randomPoll.question}
-    To answer this poll, use ~poll answer ${randomPoll.id} [answer].`, origin);
+    To answer this poll, use @${username} poll answer ${randomPoll.id} [answer].`, origin);
                 log(`${user} found a random poll with the command "${message}"`);
             } catch(e) {
-                bot.post("There are no polls to answer! Check back later or create a poll with ~poll new [poll].", origin);
+                bot.post(`There are no polls to answer! Check back later or create a poll with ${username} poll new [poll].`, origin);
             }
         }
     }
