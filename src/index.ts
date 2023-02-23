@@ -28,7 +28,8 @@ const help: string[] = [
     `@${username} mute`,
     `@${username} unmute`,
     `@${username} wordle`,
-    `@${username} poll`
+    `@${username} poll`,
+    `@${username} whois`
 ];
 const admins: string[] = [
     "mdwalters",
@@ -380,6 +381,19 @@ ${wordle.grid[5].join("")}
             } catch(e) {
                 bot.post(`There are no polls to answer! Check back later or create a poll with ${username} poll new [poll].`, origin);
             }
+        }
+    }
+
+    if (message.startsWith(`@${username} whois`)) {
+        let user: Promise<string> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}`).then(res => res.json());
+
+        if (user.error == true) {
+            bot.post("This user doesn't exist!", origin);
+        } else {
+            bot.post(`${user._id} (User levels coming soon):
+    ${(user.banned ? "Banned" : "Not banned")}
+    Created ${toRelative(user.created)}
+    Quote: ${user.quote}`, origin);
         }
     }
 });
