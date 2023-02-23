@@ -70,7 +70,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
     if (message.startsWith(`@${username} help`)) {
         if (message.split(" ")[2] === undefined) {
             bot.post(`Commands:
-    ${help.join(", ")}`, origin);
+    ${help.join("\n    ")}`, origin);
         } else {
             if (message.split(" ")[2] === "help") {
                 bot.post(`@${username} help:
