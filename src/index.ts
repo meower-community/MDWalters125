@@ -8,7 +8,7 @@ import JSONdb from "simple-json-db";
 import { log } from "./../lib/logs.js";
 import Wordle from "./../lib/wordle.js";
 import { toRelative } from "./../lib/relative.js";
-import { pfp } from "./../lib/pfp.ts";
+import { pfp } from "./../lib/pfp.js";
 
 dotenv.config();
 
