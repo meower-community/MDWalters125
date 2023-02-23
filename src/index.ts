@@ -8,6 +8,7 @@ import JSONdb from "simple-json-db";
 import { log } from "./../lib/logs.js";
 import Wordle from "./../lib/wordle.js";
 import { toRelative } from "./../lib/relative.js";
+import { pfp } from "./../lib/pfp.ts";
 
 dotenv.config();
 
@@ -393,7 +394,8 @@ ${wordle.grid[5].join("")}
             bot.post(`${user._id} (User levels coming soon):
     ${(user.banned ? "Banned" : "Not banned")}
     Created ${toRelative(user.created * 1000)}
-    Quote: ${user.quote}`, origin);
+    Quote: "${user.quote}"
+    Profile picture: ${pfp[user.pfp_data]}`, origin);
         }
     }
 });
