@@ -57,7 +57,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
         return;
     }
 
-    if (message.startsWith(`@${username} `) && !(help.includes(message.split(" ")[2]))) {
+    if (message.startsWith(`@${username} `) && !(help.includes(message.split(" ")[1]))) {
         bot.post(`That command doesn't exist! Use @${username} help to see a list of commands.`, origin);
         log(`${user} tried to use a command that does not exist. The command was "${message}"`);
         return;
