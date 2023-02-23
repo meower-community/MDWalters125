@@ -25,6 +25,7 @@ export const pfp: string[] = [
     "a lawnmower",
     "a duck",
     "a rubber duck",
+    "the Meower Media logo",
     "Grandpa Meowy",
     "BetterMeowy",
     "Purple Meowy",
