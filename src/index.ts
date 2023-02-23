@@ -395,7 +395,7 @@ ${wordle.grid[5].join("")}
     ${(user.banned ? "Banned" : "Not banned")}
     Created ${toRelative(user.created * 1000)}
     Quote: "${user.quote}"
-    Profile picture: ${pfp[user.pfp_data - 1]}`, origin);
+    Profile picture is ${pfp[user.pfp_data - 1]}`, origin);
         }
     }
 });
