@@ -8,7 +8,7 @@ import JSONdb from "simple-json-db";
 import { log } from "./../lib/logs.js";
 import Wordle from "./../lib/wordle.js";
 import { toRelative } from "./../lib/relative.js";
-import { pfp } from "./../lib/pfp.js";
+import { pfp, lvl } from "./../lib/whois-utils.js";
 
 dotenv.config();
 
@@ -391,7 +391,7 @@ ${wordle.grid[5].join("")}
         if (user.error == true) {
             bot.post("This user doesn't exist!", origin);
         } else {
-            bot.post(`${user._id} (User levels coming soon):
+            bot.post(`${user._id} (${lvl[user.lvl]}):
     ${(user.banned ? "Banned" : "Not banned")}
     Created ${toRelative(user.created * 1000)}
     Quote: "${user.quote}"

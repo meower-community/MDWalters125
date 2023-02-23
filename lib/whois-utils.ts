@@ -39,3 +39,10 @@ export const pfp: string[] = [
     "Unknown",
     "Unknown",
 ];
+
+export const lvl: string[] = [
+    "Low-level Moderator",
+    "Moderator",
+    "Administratior",
+    "Either Mike, Tnix, or MeowyMod"
+];
