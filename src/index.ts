@@ -14,7 +14,7 @@ dotenv.config();
 const username = process.env["MDW125_USERNAME"];
 const password = process.env["MDW125_PASSWORD"];
 const uptime: number = new Date().getTime();
-const help: string[] = ["~help", "~uptime", "~uwu", "~8ball", "~zen", "~shorten", "~cat", "~status", "~credits", "~karma", "~mute", "~unmute", "~wordle", "~poll"];
+const help: string[] = [`@${username} help`, `@${username} uptime`, `@${username} uwu`, `@${username} 8ball`, `@${username} zen`, `@${username} shorten`, `@${username} cat`, `@${username} status`, `@${username} credits`, `@${username} karma`, `@${username} mute`, `@${username} unmute`, `@${username} wordle`, `@${username} poll`];
 const admins: string[] = ["mdwalters", "m", "JoshAtticus", "AltJosh"];
 const db = new JSONdb("./../db.json");
 const bot = new Bot(username, password);
@@ -25,7 +25,7 @@ if (!(db.has("MDW125-POLLS"))) {
 }
 
 bot.onPost(async (user: string, message: string, origin: string | null) => {
-    if (message.startsWith("~") && db.has(`MDW125-MUTED-${user}`)) {
+    if (message.startsWith(`@${username} `) && db.has(`MDW125-MUTED-${user}`)) {
         if (db.get(`MDW125-MUTED-${user}`)) {
             bot.post(`You are currently muted from ${username}.
 Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
@@ -37,62 +37,58 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
         return;
     }
 
-    if (message.startsWith("~") && !(help.includes(message.split(" ")[0]))) {
-        if (message.startsWith("~! ")) {
-            return;
-        }
-
-        bot.post("That command doesn't exist! Use ~help to see a list of commands.", origin);
+    if (message.startsWith(`@${username} `) && !(help.includes(message.split(" ")[0]))) {
+        bot.post(`That command doesn't exist! Use @${username} help to see a list of commands.`, origin);
         log(`${user} tried to use a command that does not exist. The command was "${message}"`);
         return;
     }
 
-    if (message.startsWith("~help")) {
-        if (message.split(" ")[1] === undefined) {
+    if (message.startsWith(`@${username} help`)) {
+        if (message.split(" ")[2] === undefined) {
             bot.post(`Commands:
     ${help.join(", ")}`, origin);
         } else {
-            if (message.split(" ")[1] === "help") {
-                bot.post(`~help:
+            if (message.split(" ")[2] === "help") {
+                bot.post(`@${username} help:
     Shows you a list of commands.`, origin);
-            } else if (message.split(" ")[1] === "uptime") {
-                bot.post(`~uptime:
+            } else if (message.split(" ")[2] === "uptime") {
+                bot.post(`@${username} uptime:
     Shows you how long the bot was online for.`, origin);
-            } else if (message.split(" ")[1] === "uwu") {
-                bot.post(`~uwu:
+            } else if (message.split(" ")[2] === "uwu") {
+                bot.post(`@${username} uwu:
     Posts "UwU".`, origin);
-            } else if (message.split(" ")[1] === "8ball") {
-                bot.post(`~8ball:
+            } else if (message.split(" ")[2] === "8ball") {
+                bot.post(`@${username} 8ball:
     Makes a prediction.`, origin);
-            } else if (message.split(" ")[1] === "zen") {
-                bot.post(`~zen:
+            } else if (message.split(" ")[2] === "zen") {
+                bot.post(`@${username} zen:
     Posts zen quotes from GitHub's API.`, origin);
-            } else if (message.split(" ")[1] === "shorten") {
-                bot.post(`~shorten:
+            } else if (message.split(" ")[2] === "shorten") {
+                bot.post(`@${username} shorten:
     Shortens links via shortco.de's API.`, origin);
-            } else if (message.split(" ")[1] === "zen") {
-                bot.post(`~cat:
+            } else if (message.split(" ")[2] === "zen") {
+                bot.post(`@${username} cat:
     Posts random cat pictures.`, origin);
-            } else if (message.split(" ")[1] === "zen") {
-                bot.post(`~status:
+            } else if (message.split(" ")[2] === "zen") {
+                bot.post(`@${username} status:
     Lets you view, and set a status.`, origin);
-            } else if (message.split(" ")[1] === "credits") {
-                bot.post(`~credits:
+            } else if (message.split(" ")[2] === "credits") {
+                bot.post(`@${username} credits:
     Lists everyone behind ${username}!`, origin);
-            } else if (message.split(" ")[1] === "karma") {
-                bot.post(`~karma:
+            } else if (message.split(" ")[2] === "karma") {
+                bot.post(`@${username} karma:
     Upvote, downvote, and view someone's karma.`, origin);
-            } else if (message.split(" ")[1] === "mute") {
-                bot.post(`~mute:
+            } else if (message.split(" ")[2] === "mute") {
+                bot.post(`@${username} mute:
     Mutes the specified user. Must be a bot admin to do this.`, origin);
-            } else if (message.split(" ")[1] === "unmute") {
-                bot.post(`~unmute:
+            } else if (message.split(" ")[2] === "unmute") {
+                bot.post(`@${username} unmute:
     Unmutes the specified user. Must be a bot admin to do this.`, origin);
-            } else if (message.split(" ")[1] === "wordle") {
-                bot.post(`~wordle:
+            } else if (message.split(" ")[2] === "wordle") {
+                bot.post(`@${username} wordle:
     Lets you play wordle.`, origin);
-            } else if (message.split(" ")[1] === "poll") {
-                bot.post(`~poll:
+            } else if (message.split(" ")[2] === "poll") {
+                bot.post(`@${username} poll:
     Create and answer polls.`, origin);
             } else {
                 bot.post("This command doesn't exist!", origin);
@@ -101,57 +97,57 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
         }
     }
 
-    if (message.startsWith("~uptime")) {
+    if (message.startsWith(`@${username} uptime`)) {
         bot.post(`${username} was online since ${toRelative(uptime)}.`, origin);
         log(`${user} used the command ${message}`);
     }
 
-    if (message.startsWith("~uwu")) {
+    if (message.startsWith(`@${username} uwu`)) {
         bot.post("UwU", origin);
         log(`${user} used the command ${message}`);
     }
 
-    if (message.startsWith("~8ball")) {
+    if (message.startsWith(`@${username} 8ball`)) {
         let eightBall: string[] = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.", "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.", "Don't count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."];
     	bot.post(eightBall[Math.floor(Math.random() * eightBall.length)], origin);
         log(`${user} used the command ${message}`);
     }
 
-    if (message.startsWith("~zen")) {
+    if (message.startsWith(`@${username} zen`)) {
         bot.post(await fetch("https://api.github.com/zen").then(res => res.text()), origin);
         log(`${user} used the command ${message}`);
     }
 
-    if (message.startsWith("~shorten")) {
-        if (message.split(" ")[1] === undefined) {
+    if (message.startsWith(`@${username} shorten`)) {
+        if (message.split(" ")[2] === undefined) {
             bot.post("You need to specify a website to shorten!", origin);
             log(`${user} used the command ${message}`);
         } else {
-            let link: Object = await fetch(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[1]}`).then(res => res.json());
+            let link: Object = await fetch(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[2]}`).then(res => res.json());
             bot.post(link.result.full_short_link, origin);
             log(`${user} used the command ${message}`);
         }
     }
 
-    if (message.startsWith("~cat")) {
+    if (message.startsWith(`@${username} cat`)) {
         let image: Object = await fetch("https://aws.random.cat/meow").then(res => res.json());
-        bot.post(`[?format=src: ${image.file}]`, origin);
+        bot.post(`[Random cat image: ${image.file}]`, origin);
         log(`${user} used the command ${message}`);
     }
 
-    if (message.startsWith("~status")) {
-        if (message.split(" ")[1] === "set") {
-            db.set(`MDW125-STATUS-${user}`, message.split(" ").slice(2, message.split(" ").length).join(" "));
+    if (message.startsWith(`@${username} status`)) {
+        if (message.split(" ")[2] === "set") {
+            db.set(`MDW125-STATUS-${user}`, message.split(" ").slice(3, message.split(" ").length).join(" "));
             bot.post("Status successfully set!", origin);
             log(`${user} set their status with the command "${message}"`);
-        } else if (message.split(" ")[1] === "clear") {
+        } else if (message.split(" ")[2] === "clear") {
             db.delete(`MDW125-STATUS-${user}`);
             bot.post("Status successfully cleared!", origin);
             log(`${user} cleared their status with the command "${message}"`);
-        } else if (message.split(" ")[1] === "view") {
-            if (message.split(" ")[2] === user) {
+        } else if (message.split(" ")[2] === "view") {
+            if (message.split(" ")[3] === user) {
                 if (!(db.has(`MDW125-STATUS-${user}`))) {
-                    bot.post("You don't have a status set. To set one, use ~status set [message].", origin);
+                    bot.post(`You don't have a status set. To set one, use @${username} status set [message].`, origin);
                     log(`${user} tried to view their status, but they don't have one set. They used the command "[message]"`);
                 } else {
                     bot.post(`Your status:
@@ -161,10 +157,10 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             } else {
                 if (db.has(`MDW125-STATUS-${user}`)) {
                     bot.post(`@${message.split(" ")[2]}'s status:
-    ${db.get("MDW125-STATUS-" + message.split(" ")[2])}`, origin);
+    ${db.get("MDW125-STATUS-" + message.split(" ")[3])}`, origin);
                     log(`${user} viewed someone else's status with the command "${message}"`);
                 } else {
-                    bot.post(`@${message.split(" ")[2]} doesn't have a status set.`, origin);
+                    bot.post(`@${message.split(" ")[3]} doesn't have a status set.`, origin);
                     log(`${user} + " tried to view someone else's status, but they don't have one set. They used the command "${message}"`);
                 }
             }    
@@ -180,56 +176,56 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
         }
     }
 
-    if (message.startsWith("~credits")) {
+    if (message.startsWith(`@${username} credits`)) {
     	bot.post(`Creator: M.D. Walters
 Hosting: M.D. Walters (MDWalters125), JoshAtticus (MDBot)
 Bot Library: MeowerBot.js`, origin);
         log(`${user} used the command ${message}`);
     }
 
-    if (message.startsWith("~karma")) {
-    	if (message.split(" ")[1] === "upvote") {
-            if (!(db.has(`MDW125-KARMA-${message.split(" ")[2]}`))) {
-                if (message.split(" ")[2] === user) {
+    if (message.startsWith(`@${username} karma`)) {
+    	if (message.split(" ")[2] === "upvote") {
+            if (!(db.has(`MDW125-KARMA-${message.split(" ")[3]}`))) {
+                if (message.split(" ")[3] === user) {
                     bot.post("You can't upvote yourself!", origin);
                     log(`${user} tried to upvote themselves unsucessfully with the command ${message}`);
                 } else {
-                    db.set(`MDW125-KARMA-${message.split(" ")[2]}`, 1);
-                    bot.post(`Successfully upvoted @${message.split(" ")[2]}! They now have 1 karma.`, origin);
+                    db.set(`MDW125-KARMA-${message.split(" ")[3]}`, 1);
+                    bot.post(`Successfully upvoted @${message.split(" ")[3]}! They now have 1 karma.`, origin);
                     log(`${user} upvoted someone with the command "${message}"`);
                 }
             } else {
-                if (message.split(" ")[2] === user) {
+                if (message.split(" ")[3] === user) {
                     bot.post("You can't upvote yourself!", origin);
                     log(`${user} tried to upvote themselves unsucessfully with the command ${message}`);
                 } else {
-                    db.set(`MDW125-KARMA-${message.split(" ")[2]}`, (parseInt(db.get(`MDW125-KARMA-${message.split(" ")[2]}`)) + 1));
-                    bot.post(`Successfully upvoted @${message.split(" ")[2]}! They now have ${db.get("MDW125-KARMA-" + message.split(" ")[2])} karma.`, origin);
+                    db.set(`MDW125-KARMA-${message.split(" ")[3]}`, (parseInt(db.get(`MDW125-KARMA-${message.split(" ")[3]}`)) + 1));
+                    bot.post(`Successfully upvoted @${message.split(" ")[3]}! They now have ${db.get("MDW125-KARMA-" + message.split(" ")[3])} karma.`, origin);
                     log(`${user} upvoted someone with the command "${message}"`);
                 }
             }
-        } else if (message.split(" ")[1] === "downvote") {
-            if (!(db.has(`MDW125-KARMA-${message.split(" ")[2]}`))) {
-                if (message.split(" ")[2] === user) {
+        } else if (message.split(" ")[2] === "downvote") {
+            if (!(db.has(`MDW125-KARMA-${message.split(" ")[3]}`))) {
+                if (message.split(" ")[3] === user) {
                     bot.post("You can't downvote yourself!", origin);
                     log(`${user} tried to downvote themselves unsucessfully with the command "${message}"`);
                 } else {
-                    db.set(`MDW125-KARMA-${message.split(" ")[2]}`, -1);
-                    bot.post(`Successfully downvoted @${message.split(" ")[2]}. They now have -1 karma.`, origin);
+                    db.set(`MDW125-KARMA-${message.split(" ")[3]}`, -1);
+                    bot.post(`Successfully downvoted @${message.split(" ")[3]}. They now have -1 karma.`, origin);
                     log(`${user} downvoted someone with the command "${message}"`);
                 }
             } else {
-                if (message.split(" ")[2] === user) {
+                if (message.split(" ")[3] === user) {
                     bot.post("You can't downvote yourself!", origin);
                     log(`${user} tried to downvote themselves unsucessfully with the command "${message}"`);
                 } else {
-                    db.set(`MDW125-KARMA-${message.split(" ")[2]}`, (parseInt(db.get(`MDW125-KARMA-${message.split(" ")[2]}`)) - 1));
-                    bot.post(`Successfully downvoted @${message.split(" ")[2]}! They now have ${db.get("MDW125-KARMA-" + message.split(" ")[2])} karma.`, origin);
+                    db.set(`MDW125-KARMA-${message.split(" ")[3]}`, (parseInt(db.get(`MDW125-KARMA-${message.split(" ")[3]}`)) - 1));
+                    bot.post(`Successfully downvoted @${message.split(" ")[3]}! They now have ${db.get("MDW125-KARMA-" + message.split(" ")[3])} karma.`, origin);
                     log(`${user} downvoted someone with the command "${message}"`);
                 }
             }
-        } else if (message.split(" ")[1] === "view") {
-            if (message.split(" ")[2] === user) {
+        } else if (message.split(" ")[2] === "view") {
+            if (message.split(" ")[3] === user) {
                 if (!(db.has(`MDW125-KARMA-${user}`))) {
                     bot.post(`You have 0 karma.`, origin);
                     log(`${user} viewed their 0 karma with the command "${message}"`);
@@ -238,11 +234,11 @@ Bot Library: MeowerBot.js`, origin);
                     log(`${user} viewed their karma with the command "${message}"`);
                 }
             } else {
-                if (!(db.has(`MDW125-KARMA-${message.split(" ")[2]}`))) {
-                    bot.post(`@${message.split(" ")[2]} has 0 karma.`, origin);
+                if (!(db.has(`MDW125-KARMA-${message.split(" ")[3]}`))) {
+                    bot.post(`@${message.split(" ")[3]} has 0 karma.`, origin);
                     log(`${user} viewed someone else's 0 karma with the command "${message}"`);
                 } else {
-                    bot.post(`@${message.split(" ")[2]} has ${db.get("MDW125-KARMA-" + message.split(" ")[2])} karma.`, origin);
+                    bot.post(`@${message.split(" ")[3]} has ${db.get("MDW125-KARMA-" + message.split(" ")[3])} karma.`, origin);
                     log(`${user} viewed someone else's karma with the command "${message}"`);
                 }
             }
@@ -257,18 +253,18 @@ Bot Library: MeowerBot.js`, origin);
         }
     }
 
-    if (message.startsWith("~mute")) {
+    if (message.startsWith(`@${username} mute`)) {
         if (admins.includes(user)) {
-            if (db.has(`MDW125-MUTED-${message.split(" ")[1]}`)) {
-                bot.post(`@${message.split(" ")[1]} is already muted!`, origin);
+            if (db.has(`MDW125-MUTED-${message.split(" ")[2]}`)) {
+                bot.post(`@${message.split(" ")[2]} is already muted!`, origin);
                 log(`${user} tried to mute someone, but they are already muted. They used the command "${message}"`);
             } else {
                 if (message.split(" ")[2]) {
-                    db.set(`MDW125-MUTED-${message.split(" ")[1]}`, message.split(" ").slice(2, message.split(" ").length).join(" "));
+                    db.set(`MDW125-MUTED-${message.split(" ")[2]}`, message.split(" ").slice(3, message.split(" ").length).join(" "));
                 } else {
-                    db.set(`MDW125-MUTED-${message.split(" ")[1]}`, null);
+                    db.set(`MDW125-MUTED-${message.split(" ")[2]}`, null);
                 }
-                bot.post(`Successfully muted @${message.split(" ")[1]}!`, origin);
+                bot.post(`Successfully muted @${message.split(" ")[2]}!`, origin);
                 log(`${user} muted someone with the command "${message}"`);
             }
         } else {
@@ -277,14 +273,14 @@ Bot Library: MeowerBot.js`, origin);
         }
     }
 
-    if (message.startsWith("~unmute")) {
+    if (message.startsWith(`@${username} unmute`)) {
         if (admins.includes(user)) {
-            if (!(db.has(`MDW125-MUTED-${message.split(" ")[1]}`))) {
-                bot.post(`@${message.split(" ")[1]} isn't muted!`, origin);
+            if (!(db.has(`MDW125-MUTED-${message.split(" ")[2]}`))) {
+                bot.post(`@${message.split(" ")[2]} isn't muted!`, origin);
                 log(`${user} tried to unmute someone, but they weren't muted. They used the command "${message}"`);
             } else {
-                db.delete(`MDW125-MUTED-${message.split(" ")[1]}`);
-                bot.post(`Successfully unmuted @${message.split(" ")[1]}!`, origin);
+                db.delete(`MDW125-MUTED-${message.split(" ")[2]}`);
+                bot.post(`Successfully unmuted @${message.split(" ")[2]}!`, origin);
                 log(`${user} unmuted someone with the command "${message}"`);
             }
         } else {
@@ -293,14 +289,14 @@ Bot Library: MeowerBot.js`, origin);
         }
     }
 
-    if (message.startsWith("~wordle")) {
-        if (message.split(" ")[1] === "new") {
+    if (message.startsWith(`@${username} wordle`)) {
+        if (message.split(" ")[2] === "new") {
             wordle.init();
-            bot.post("New Wordle game started! Use ~wordle guess [word] to guess a word.", origin);
+            bot.post(`New Wordle game started! Use @${username} wordle guess [word] to guess a word.`, origin);
             log(`${user} started a Wordle game with the command "${message}"`);
-        } else if (message.split(" ")[1] === "guess") {
+        } else if (message.split(" ")[2] === "guess") {
             try {
-                wordle.guess(message.split(" ")[2]);
+                wordle.guess(message.split(" ")[3]);
                 bot.post(`${wordle.grid[0].join("")}
 ${wordle.grid[1].join("")}
 ${wordle.grid[2].join("")}
@@ -311,7 +307,7 @@ ${wordle.grid[5].join("")}
             } catch(e) {
                 bot.post(`${e}`, origin);
             }
-        } else if (message.split(" ")[1] === "grid") {
+        } else if (message.split(" ")[3] === "grid") {
             bot.post(`${wordle.grid[0].join("")}
 ${wordle.grid[1].join("")} 
 ${wordle.grid[2].join("")}
@@ -377,6 +373,6 @@ bot.onClose(() => {
 
 bot.onLogin(() => {
     log(`Logged on as user ${username}`);
-    bot.post(`${username} is now online! Use ~help to see a list of commands.`);
+    bot.post(`${username} is now online! Use @${username} help to see a list of commands.`);
 });
 
