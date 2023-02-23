@@ -14,8 +14,28 @@ dotenv.config();
 const username = process.env["MDW125_USERNAME"];
 const password = process.env["MDW125_PASSWORD"];
 const uptime: number = new Date().getTime();
-const help: string[] = [`@${username} help`, `@${username} uptime`, `@${username} uwu`, `@${username} 8ball`, `@${username} zen`, `@${username} shorten`, `@${username} cat`, `@${username} status`, `@${username} credits`, `@${username} karma`, `@${username} mute`, `@${username} unmute`, `@${username} wordle`, `@${username} poll`];
-const admins: string[] = ["mdwalters", "m", "JoshAtticus", "AltJosh"];
+const help: string[] = [
+    `@${username} help`,
+    `@${username} uptime`,
+    `@${username} uwu`,
+    `@${username} 8ball`,
+    `@${username} zen`,
+    `@${username} shorten`,
+    `@${username} cat`,
+    `@${username} status`,
+    `@${username} credits`,
+    `@${username} karma`,
+    `@${username} mute`,
+    `@${username} unmute`,
+    `@${username} wordle`,
+    `@${username} poll`
+];
+const admins: string[] = [
+    "mdwalters",
+    "m",
+    "JoshAtticus",
+    "AltJosh"
+];
 const db = new JSONdb("./../db.json");
 const bot = new Bot(username, password);
 const wordle = new Wordle();
@@ -37,7 +57,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
         return;
     }
 
-    if (message.startsWith(`@${username} `) && !(help.includes(message.split(" ")[0]))) {
+    if (message.startsWith(`@${username} `) && !(help.includes(message.split(" ")[2]))) {
         bot.post(`That command doesn't exist! Use @${username} help to see a list of commands.`, origin);
         log(`${user} tried to use a command that does not exist. The command was "${message}"`);
         return;
