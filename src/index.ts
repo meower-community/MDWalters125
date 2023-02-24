@@ -386,7 +386,8 @@ ${wordle.grid[5].join("")}
     }
 
     if (message.startsWith(`@${username} whois`)) {
-        let user: Promise<string> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}`).then(res => res.json());
+        let user: Promise<Object> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}`).then(res => res.json());
+        let user_posts: Promise<Object> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}/posts?autoget`).then(res => res.json());
 
         if (user.error == true) {
             bot.post("This user doesn't exist!", origin);
@@ -395,7 +396,8 @@ ${wordle.grid[5].join("")}
     ${(user.banned ? "Banned" : "Not banned")}
     Created ${toRelative(user.created * 1000)}
     Quote: "${user.quote}"
-    Profile picture is ${pfp[user.pfp_data - 1]}`, origin);
+    Profile picture is ${pfp[user.pfp_data - 1]}
+    Last seen ${toRelative(user_posts.autoget[0].t.e * 1000)}`, origin);
         }
     }
 });
