@@ -395,9 +395,10 @@ ${wordle.grid[5].join("")}
             bot.post(`${user._id} (${lvl[user.lvl]}):
     ${(user.banned ? "Banned" : "Not banned")}
     Created ${toRelative(user.created * 1000)}
-    Quote: "${user.quote}"
+    ${(user.quote != "" ? `Quote: "${user.quote}"` : "User doesn't have a quote")}
     Profile picture is ${pfp[user.pfp_data - 1]}
-    Last seen ${toRelative(user_posts.autoget[0].t.e * 1000)}`, origin);
+    Last seen ${toRelative(user_posts.autoget[0].t.e * 1000)}
+    ${(db.get(`MDW125-STATUS-${user._id}`) != null ? `Status: "${db.get(`MDW125-STATUS-${user._id}`)}"` : "User doesn't have a status")}`, origin);
         }
     }
 });
