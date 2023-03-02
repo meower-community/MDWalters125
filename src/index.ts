@@ -134,7 +134,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
     }
 
     if (message.startsWith(`@${username} 8ball`)) {
-        let eightBall: string[] = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.", "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.", "Don't count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."];
+        const eightBall: string[] = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.", "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.", "Don't count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."];
     	bot.post(eightBall[Math.floor(Math.random() * eightBall.length)], origin);
         log(`${user} used the command ${message}`);
     }
@@ -149,14 +149,14 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             bot.post("You need to specify a website to shorten!", origin);
             log(`${user} used the command ${message}`);
         } else {
-            let link: Object = await fetch(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[2]}`).then(res => res.json());
+            const link: object = await fetch(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[2]}`).then(res => res.json());
             bot.post(link.result.full_short_link, origin);
             log(`${user} used the command ${message}`);
         }
     }
 
     if (message.startsWith(`@${username} cat`)) {
-        let image: Object = await fetch("https://aws.random.cat/meow").then(res => res.json());
+        const image: object = await fetch("https://aws.random.cat/meow").then(res => res.json());
         bot.post(`[Random cat image: ${image.file}]`, origin);
         log(`${user} used the command ${message}`);
     }
@@ -253,7 +253,7 @@ Bot Library: MeowerBot.js`, origin);
         } else if (message.split(" ")[2] === "view") {
             if (message.split(" ")[3] === user) {
                 if (!(db.has(`MDW125-KARMA-${user}`))) {
-                    bot.post(`You have 0 karma.`, origin);
+                    bot.post("You have 0 karma.", origin);
                     log(`${user} viewed their 0 karma with the command "${message}"`);
                 } else {
                     bot.post(`You have ${db.get("MDW125-KARMA-" + user)} karma.`, origin);
@@ -270,7 +270,7 @@ Bot Library: MeowerBot.js`, origin);
             }
         } else {
             if (!(db.has(`MDW125-KARMA-${user}`))) {
-                bot.post(`You have 0 karma.`, origin);
+                bot.post("You have 0 karma.", origin);
                 log(`${user} viewed their 0 karma with the command "${message}"`);
             } else {
                 bot.post(`You have ${db.get("MDW125-KARMA-" + user)} karma.`, origin);
@@ -346,13 +346,13 @@ ${wordle.grid[5].join("")}
 
     if (message.startsWith(`@${username} poll`)) {
         if (message.split(" ")[2] === "new") {
-            let polls: Object[] = db.get("MDW125-POLLS");
+            const polls: object[] = db.get("MDW125-POLLS");
             polls.push({ "question": message.split(" ").slice(3, message.split(" ").length).join(" "), "id": polls.length + 1, "answers": [], "username": user });
             db.set("MDW125-POLLS", polls);
             bot.post(`Succesfully created new poll! For others to answer this poll, use @${username} poll ${polls.length} [answer].`, origin);
             log(`${user} created a new poll with the command "${message}"`);
         } else if (message.split(" ")[2] === "answer") {
-            let polls: Object[] = db.get("MDW125-POLLS");
+            const polls: object[] = db.get("MDW125-POLLS");
             if (user == polls[message.split(" ")[3] - 1].username) {
                 bot.post("You can't answer a poll you made!", origin);
                 log(`${user} tried to answer a poll they created with the command "${message}"`);
@@ -365,15 +365,15 @@ ${wordle.grid[5].join("")}
                 log(`${user} answered a poll with the command "${message}"`);
             }
         } else {
-            let polls: Object[] = db.get("MDW125-POLLS");
+            const polls: object[] = db.get("MDW125-POLLS");
 
-            for (let i in polls) {
+            for (const i in polls) {
                 if (polls[i].username == user) {
                     polls.splice(i, 1);
                 }
             }
 
-            let randomPoll = polls[Math.floor(Math.random() * polls.length)];
+            const randomPoll = polls[Math.floor(Math.random() * polls.length)];
 
             try {
                 bot.post(`Random poll: ${randomPoll.question}
@@ -386,8 +386,8 @@ ${wordle.grid[5].join("")}
     }
 
     if (message.startsWith(`@${username} whois`)) {
-        let user: Promise<Object> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}`).then(res => res.json());
-        let user_posts: Promise<Object> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}/posts?autoget`).then(res => res.json());
+        const user: Promise<object> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}`).then(res => res.json());
+        const user_posts: Promise<object> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}/posts?autoget`).then(res => res.json());
 
         if (user.error == true) {
             bot.post("This user doesn't exist!", origin);
@@ -408,7 +408,7 @@ bot.onMessage((messageData: string) => {
 });
 
 bot.onClose(() => {
-    let command = exec("npm run start");
+    const command = exec("npm run start");
     command.stdout.on("data", (output) => {
         console.log(output.toString());
     });

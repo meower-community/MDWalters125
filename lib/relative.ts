@@ -1,11 +1,11 @@
 export function toRelative(timestamp: number): string {
-    let msPerMinute: number = 60 * 1000;
-    let msPerHour: number = msPerMinute * 60;
-    let msPerDay: number = msPerHour * 24;
-    let msPerMonth: number = msPerDay * 30;
-    let msPerYear: number = msPerDay * 365;
-    let current: number = new Date().getTime();
-    let elapsed: number = current - timestamp;
+    const msPerMinute: number = 60 * 1000;
+    const msPerHour: number = msPerMinute * 60;
+    const msPerDay: number = msPerHour * 24;
+    const msPerMonth: number = msPerDay * 30;
+    const msPerYear: number = msPerDay * 365;
+    const current: number = new Date().getTime();
+    const elapsed: number = current - timestamp;
 
     if (elapsed < msPerMinute) {
         if (1 < Math.round(elapsed/1000)) {

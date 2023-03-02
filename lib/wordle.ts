@@ -30,7 +30,7 @@ export default class Wordle {
     }
 
     guess(word): void {
-        let letters = word.toLowerCase().split("");
+        const letters = word.toLowerCase().split("");
 
         if (!(this.ready)) {
             throw "You didn't start a new Wordle game yet! Use ~wordle new to start a new Wordle.";
@@ -50,10 +50,10 @@ export default class Wordle {
             throw "The Wordle game has finished! Use ~wordle new to start a new Wordle.";
             return;
         } else {
-            this.tries++
+            this.tries++;
         }
         
-        for (let i in letters) {
+        for (const i in letters) {
             if (letters[i] == this.word.split("")[i]) {
                 this.grid[this.tries][i] = "🟩";
             } else if (this.word.indexOf(letters[i]) != -1) {
