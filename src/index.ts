@@ -109,7 +109,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             case "status":
                 bot.post(`@${username} status:
     Lets you view, and set a status.`, origin);
-                    break;
+                break;
             case "credits":
                 bot.post(`@${username} credits:
     Lists everyone behind ${username}!`, origin);
