@@ -77,51 +77,66 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             bot.post(`Commands:
     ${help.join("\n    ")}`, origin);
         } else {
-            if (message.split(" ")[2] === "help") {
-                bot.post(`@${username} help:
+            switch(message.split(" ")[2]) {
+                case "help":
+                    bot.post(`@${username} help:
     Shows you a list of commands.`, origin);
-            } else if (message.split(" ")[2] === "uptime") {
-                bot.post(`@${username} uptime:
+                    break;
+                case "uptime":
+                    bot.post(`@${username} uptime:
     Shows you how long the bot was online for.`, origin);
-            } else if (message.split(" ")[2] === "uwu") {
-                bot.post(`@${username} uwu:
+                    break;
+                case "uwu":
+                    bot.post(`@${username} uwu:
     Posts "UwU".`, origin);
-            } else if (message.split(" ")[2] === "8ball") {
-                bot.post(`@${username} 8ball:
+                    break;
+                case "8ball":
+                    bot.post(`@${username} 8ball:
     Makes a prediction.`, origin);
-            } else if (message.split(" ")[2] === "zen") {
-                bot.post(`@${username} zen:
+                    break;
+                case "zen":
+                    bot.post(`@${username} zen:
     Posts zen quotes from GitHub's API.`, origin);
-            } else if (message.split(" ")[2] === "shorten") {
-                bot.post(`@${username} shorten:
+                    break;
+                case "shorten":
+                    bot.post(`@${username} shorten:
     Shortens links via shortco.de's API.`, origin);
-            } else if (message.split(" ")[2] === "zen") {
-                bot.post(`@${username} cat:
+                    break;
+                case "zen":
+                    bot.post(`@${username} cat:
     Posts random cat pictures.`, origin);
-            } else if (message.split(" ")[2] === "zen") {
-                bot.post(`@${username} status:
+                    break;
+                case "zen":
+                    bot.post(`@${username} status:
     Lets you view, and set a status.`, origin);
-            } else if (message.split(" ")[2] === "credits") {
-                bot.post(`@${username} credits:
+                    break;
+                case "credits":
+                    bot.post(`@${username} credits:
     Lists everyone behind ${username}!`, origin);
-            } else if (message.split(" ")[2] === "karma") {
-                bot.post(`@${username} karma:
+                    break;
+                case "karma":
+                    bot.post(`@${username} karma:
     Upvote, downvote, and view someone's karma.`, origin);
-            } else if (message.split(" ")[2] === "mute") {
-                bot.post(`@${username} mute:
+                    break;
+                case "mute":
+                    bot.post(`@${username} mute:
     Mutes the specified user. Must be a bot admin to do this.`, origin);
-            } else if (message.split(" ")[2] === "unmute") {
-                bot.post(`@${username} unmute:
+                    break;
+                case "unmute":
+                    bot.post(`@${username} unmute:
     Unmutes the specified user. Must be a bot admin to do this.`, origin);
-            } else if (message.split(" ")[2] === "wordle") {
-                bot.post(`@${username} wordle:
+                    break;
+                case "wordle":
+                    bot.post(`@${username} wordle:
     Lets you play wordle.`, origin);
-            } else if (message.split(" ")[2] === "poll") {
-                bot.post(`@${username} poll:
+                    break;
+                case "poll":
+                    bot.post(`@${username} poll:
     Create and answer polls.`, origin);
-            } else {
-                bot.post("This command doesn't exist!", origin);
-                log(`${user} tried to get help on a command that does not exist. The command was "${message}"`);
+                    break;
+                default:
+                    bot.post("This command doesn't exist!", origin);
+                    log(`${user} tried to get help on a command that does not exist. The command was "${message}"`);
             }
         }
     }
@@ -206,14 +221,14 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
     }
 
     if (message.startsWith(`@${username} credits`)) {
-    	bot.post(`Creator: M.D. Walters
+        bot.post(`Creator: M.D. Walters
 Hosting: M.D. Walters (MDWalters125), JoshAtticus (MDBot)
 Bot Library: MeowerBot.js`, origin);
         log(`${user} used the command ${message}`);
     }
 
     if (message.startsWith(`@${username} karma`)) {
-    	if (message.split(" ")[2] === "upvote") {
+        if (message.split(" ")[2] === "upvote") {
             if (!(db.has(`MDW125-KARMA-${message.split(" ")[3]}`))) {
                 if (message.split(" ")[3] === user) {
                     bot.post("You can't upvote yourself!", origin);
