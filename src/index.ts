@@ -40,6 +40,10 @@ const admins: string[] = [
     "JoshAtticus",
     "AltJosh"
 ];
+const welcome_msg: string[] = [
+    `${username} VERSION 0.0.0 IS NOW ONLINE!!!1!!!!1`,
+    "Hi."
+];
 const db = new JSONdb("./../db.json");
 const bot = new Bot(username, password);
 const wordle = new Wordle();
@@ -503,6 +507,7 @@ bot.onClose(() => {
 
 bot.onLogin(() => {
     log(`Logged on as user ${username}`);
-    bot.post(`${username} is now online! Use @${username} help to see a list of commands.`);
+    bot.post(`${welcome_msg[Math.floor(Math.random() * welcome_msg.length)]}
+Use @${username} help to see a list of commands.`);
 });
 
