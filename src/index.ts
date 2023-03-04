@@ -42,7 +42,8 @@ const admins: string[] = [
 ];
 const welcome_msg: string[] = [
     `${username} VERSION 0.0.0 IS NOW ONLINE!!!1!!!!1`,
-    "Hi."
+    "Hi.",
+    "Hello, I am online, please use me."
 ];
 const db = new JSONdb("./../db.json");
 const bot = new Bot(username, password);
