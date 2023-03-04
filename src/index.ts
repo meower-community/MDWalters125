@@ -134,6 +134,10 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
                     bot.post(`@${username} poll:
     Create and answer polls.`, origin);
                     break;
+                case "place":
+                        bot.post(`@${username} place:
+    Lets you make pixel art on a public canvas.`, origin);
+                        break;
                 default:
                     bot.post("This command doesn't exist!", origin);
                     log(`${user} tried to get help on a command that does not exist. The command was "${message}"`);
