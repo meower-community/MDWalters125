@@ -17,22 +17,22 @@ const username = process.env["MDW125_USERNAME"];
 const password = process.env["MDW125_PASSWORD"];
 const uptime: number = new Date().getTime();
 const help: string[] = [
-    `help`,
-    `uptime`,
-    `uwu`,
-    `8ball`,
-    `zen`,
-    `shorten`,
-    `cat`,
-    `status`,
-    `credits`,
-    `karma`,
-    `mute`,
-    `unmute`,
-    `wordle`,
-    `poll`,
-    `whois`,
-    `place`
+    "help",
+    "uptime",
+    "uwu",
+    "8ball",
+    "zen",
+    "shorten",
+    "cat",
+    "status",
+    "credits",
+    "karma",
+    "mute",
+    "unmute",
+    "wordle",
+    "poll",
+    "whois",
+    "place"
 ];
 const admins: string[] = [
     "mdwalters",
@@ -41,7 +41,7 @@ const admins: string[] = [
     "AltJosh"
 ];
 const db = new JSONdb("./../db.json");
-const bot = new Bot(username, password);
+const bot = new Bot(username, password, "wss://botserver.bettermeower.app/");
 const wordle = new Wordle();
 const place = new Place();
 
