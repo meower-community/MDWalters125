@@ -78,69 +78,69 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
     ${help.join("\n    ")}`, origin);
         } else {
             switch(message.split(" ")[2]) {
-                case "help":
-                    bot.post(`@${username} help:
+            case "help":
+                bot.post(`@${username} help:
     Shows you a list of commands.`, origin);
-                    break;
-                case "uptime":
-                    bot.post(`@${username} uptime:
+                break;
+            case "uptime":
+                bot.post(`@${username} uptime:
     Shows you how long the bot was online for.`, origin);
-                    break;
-                case "uwu":
-                    bot.post(`@${username} uwu:
+                break;
+            case "uwu":
+                bot.post(`@${username} uwu:
     Posts "UwU".`, origin);
-                    break;
-                case "8ball":
-                    bot.post(`@${username} 8ball:
+                break;
+            case "8ball":
+                bot.post(`@${username} 8ball:
     Makes a prediction.`, origin);
-                    break;
-                case "zen":
-                    bot.post(`@${username} zen:
+                break;
+            case "zen":
+                bot.post(`@${username} zen:
     Posts zen quotes from GitHub's API.`, origin);
-                    break;
-                case "shorten":
-                    bot.post(`@${username} shorten:
+                break;
+            case "shorten":
+                bot.post(`@${username} shorten:
     Shortens links via shortco.de's API.`, origin);
-                    break;
-                case "zen":
-                    bot.post(`@${username} cat:
+                break;
+            case "zen":
+                bot.post(`@${username} cat:
     Posts random cat pictures.`, origin);
-                    break;
-                case "zen":
-                    bot.post(`@${username} status:
+                break;
+            case "zen":
+                bot.post(`@${username} status:
     Lets you view, and set a status.`, origin);
-                    break;
-                case "credits":
-                    bot.post(`@${username} credits:
+                break;
+            case "credits":
+                bot.post(`@${username} credits:
     Lists everyone behind ${username}!`, origin);
-                    break;
-                case "karma":
-                    bot.post(`@${username} karma:
+                break;
+            case "karma":
+                bot.post(`@${username} karma:
     Upvote, downvote, and view someone's karma.`, origin);
-                    break;
-                case "mute":
-                    bot.post(`@${username} mute:
+                break;
+            case "mute":
+                bot.post(`@${username} mute:
     Mutes the specified user. Must be a bot admin to do this.`, origin);
-                    break;
-                case "unmute":
-                    bot.post(`@${username} unmute:
+                break;
+            case "unmute":
+                bot.post(`@${username} unmute:
     Unmutes the specified user. Must be a bot admin to do this.`, origin);
-                    break;
-                case "wordle":
-                    bot.post(`@${username} wordle:
+                break;
+            case "wordle":
+                bot.post(`@${username} wordle:
     Lets you play wordle.`, origin);
-                    break;
-                case "poll":
-                    bot.post(`@${username} poll:
+                break;
+            case "poll":
+                bot.post(`@${username} poll:
     Create and answer polls.`, origin);
-                    break;
-                case "place":
-                        bot.post(`@${username} place:
+                break;
+            case "place":
+                bot.post(`@${username} place:
     Lets you make pixel art on a public canvas.`, origin);
-                        break;
-                default:
-                    bot.post("This command doesn't exist!", origin);
-                    log(`${user} tried to get help on a command that does not exist. The command was "${message}"`);
+                break;
+            default:
+                bot.post("This command doesn't exist!", origin);
+                log(`${user} tried to get help on a command that does not exist. The command was "${message}"`);
             }
         }
     }
