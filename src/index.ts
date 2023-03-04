@@ -9,6 +9,7 @@ import { log } from "./../lib/logs.js";
 import Wordle from "./../lib/wordle.js";
 import { toRelative } from "./../lib/relative.js";
 import { pfp, lvl } from "./../lib/whois-utils.js";
+import Place from "./../lib/place.js";
 
 dotenv.config();
 
@@ -16,21 +17,22 @@ const username = process.env["MDW125_USERNAME"];
 const password = process.env["MDW125_PASSWORD"];
 const uptime: number = new Date().getTime();
 const help: string[] = [
-    `@${username} help`,
-    `@${username} uptime`,
-    `@${username} uwu`,
-    `@${username} 8ball`,
-    `@${username} zen`,
-    `@${username} shorten`,
-    `@${username} cat`,
-    `@${username} status`,
-    `@${username} credits`,
-    `@${username} karma`,
-    `@${username} mute`,
-    `@${username} unmute`,
-    `@${username} wordle`,
-    `@${username} poll`,
-    `@${username} whois`
+    `help`,
+    `uptime`,
+    `uwu`,
+    `8ball`,
+    `zen`,
+    `shorten`,
+    `cat`,
+    `status`,
+    `credits`,
+    `karma`,
+    `mute`,
+    `unmute`,
+    `wordle`,
+    `poll`,
+    `whois`,
+    `place`
 ];
 const admins: string[] = [
     "mdwalters",
@@ -41,6 +43,7 @@ const admins: string[] = [
 const db = new JSONdb("./../db.json");
 const bot = new Bot(username, password);
 const wordle = new Wordle();
+const place = new Place();
 
 if (!(db.has("MDW125-POLLS"))) {
     db.set("MDW125-POLLS", []);
@@ -63,7 +66,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
         return;
     }
 
-    if (message.startsWith(`@${username} `) && !(help.includes(`@${username} ${message.split(" ")[1]}`))) {
+    if (message.startsWith(`@${username} `) && !(help.includes(`${message.split(" ")[1]}`))) {
         bot.post(`That command doesn't exist! Use @${username} help to see a list of commands.`, origin);
         log(`${user} tried to use a command that does not exist. The command was "${message}"`);
         return;
@@ -341,6 +344,11 @@ ${wordle.grid[3].join("")}
 ${wordle.grid[4].join("")}
 ${wordle.grid[5].join("")}          
 `, origin);
+        } else {
+            bot.post(`Commands:
+    @${username} wordle new
+    @${username} wordle guess [word]
+    @${username} wordle grid`);
         }
     }
 
@@ -399,6 +407,33 @@ ${wordle.grid[5].join("")}
     Profile picture is ${pfp[user.pfp_data - 1]}
     Last seen ${toRelative(user_posts.autoget[0].t.e * 1000)}
     ${(db.get(`MDW125-STATUS-${user._id}`) != null ? `Status: "${db.get(`MDW125-STATUS-${user._id}`)}"` : "User doesn't have a status")}`, origin);
+        }
+    }
+
+    if (message.startsWith(`@${username} place`)) {
+        if (message.split(" ")[2] === "pixel") {
+            try {
+                place.set(parseInt(message.split(" ")[3]) + 1, parseInt(message.split(" ")[4]) + 1, message.split(" ")[5]);
+                bot.post(`
+${place.grid()[0].join("")}
+${place.grid()[1].join("")}
+${place.grid()[2].join("")}
+${place.grid()[3].join("")}
+${place.grid()[4].join("")}
+${place.grid()[5].join("")}
+${place.grid()[6].join("")}
+${place.grid()[7].join("")}
+${place.grid()[8].join("")}
+${place.grid()[9].join("")}
+`, origin);
+            } catch(e) {
+                console.error(e);
+                bot.post(`An error occured while placing a pixel!
+    ${e}`, origin);
+            }
+        } else {
+            bot.post(`Commands:
+    @${username} place pixel [x] [y] [colour]`, origin);
         }
     }
 });
