@@ -41,7 +41,7 @@ const admins: string[] = [
     "AltJosh"
 ];
 const db = new JSONdb("./../db.json");
-const bot = new Bot(username, password, "wss://botserver.bettermeower.app/");
+const bot = new Bot(username, password);
 const wordle = new Wordle();
 const place = new Place();
 
