@@ -102,14 +102,14 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
                 bot.post(`@${username} shorten:
     Shortens links via shortco.de's API.`, origin);
                 break;
-            case "zen":
+            case "cat":
                 bot.post(`@${username} cat:
     Posts random cat pictures.`, origin);
                 break;
             case "status":
                 bot.post(`@${username} status:
     Lets you view, and set a status.`, origin);
-                break;
+                    break;
             case "credits":
                 bot.post(`@${username} credits:
     Lists everyone behind ${username}!`, origin);
@@ -157,7 +157,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
 
     if (message.startsWith(`@${username} 8ball`)) {
         const eightBall: string[] = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.", "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.", "Don't count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."];
-    	bot.post(eightBall[Math.floor(Math.random() * eightBall.length)], origin);
+        bot.post(eightBall[Math.floor(Math.random() * eightBall.length)], origin);
         log(`${user} used the command ${message}`);
     }
 
