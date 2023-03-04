@@ -413,9 +413,8 @@ ${wordle.grid[5].join("")}
     if (message.startsWith(`@${username} place`)) {
         if (message.split(" ")[2] === "pixel") {
             try {
-                place.set(parseInt(message.split(" ")[3]) + 1, parseInt(message.split(" ")[4]) + 1, message.split(" ")[5]);
-                bot.post(`
-${place.grid()[0].join("")}
+                place.set(parseInt(message.split(" ")[3]) - 1, parseInt(message.split(" ")[4]) - 1, message.split(" ")[5], user);
+                bot.post(`${place.grid()[0].join("")}
 ${place.grid()[1].join("")}
 ${place.grid()[2].join("")}
 ${place.grid()[3].join("")}
@@ -424,16 +423,27 @@ ${place.grid()[5].join("")}
 ${place.grid()[6].join("")}
 ${place.grid()[7].join("")}
 ${place.grid()[8].join("")}
-${place.grid()[9].join("")}
-`, origin);
+${place.grid()[9].join("")}`, origin);
             } catch(e) {
                 console.error(e);
                 bot.post(`An error occured while placing a pixel!
     ${e}`, origin);
             }
+        } else if (message.split(" ")[2] === "grid") {
+            bot.post(`${place.grid()[0].join("")}
+${place.grid()[1].join("")}
+${place.grid()[2].join("")}
+${place.grid()[3].join("")}
+${place.grid()[4].join("")}
+${place.grid()[5].join("")}
+${place.grid()[6].join("")}
+${place.grid()[7].join("")}
+${place.grid()[8].join("")}
+${place.grid()[9].join("")}`, origin);
         } else {
             bot.post(`Commands:
-    @${username} place pixel [x] [y] [colour]`, origin);
+    @${username} place pixel [x] [y] [colour]
+    @${username} grid`, origin);
         }
     }
 });

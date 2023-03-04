@@ -32,7 +32,6 @@ export default class Place {
                     ["⬜", "⬜", "⬜", "⬜", "⬜", "⬜", "⬜", "⬜", "⬜", "⬜"],
                     ["⬜", "⬜", "⬜", "⬜", "⬜", "⬜", "⬜", "⬜", "⬜", "⬜"],
                 ],
-                "created": new Date().getTime(),
                 "contributors": []
             });
         }
@@ -46,9 +45,14 @@ export default class Place {
         return this.db.get("MDW125-PLACE").contributors;
     }
 
-    set(x: number, y: number, colour: string): void {
-        const map: string[][] = this.db.get("MDW125-PLACE").map;
+    set(x: number, y: number, colour: string, username: string): void {
+        const place: object = this.db.get("MDW125-PLACE");
 
-        map[y][x] = this.colours[colour];
+        if (!(place.contributors.includes(username))) {
+            place.contributors.push(username);
+        }
+
+        place.map[y][x] = this.colours[colour];
+        this.db.set("MDW125-PLACE", place);
     }
 }
