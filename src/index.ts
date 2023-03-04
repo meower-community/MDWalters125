@@ -105,9 +105,9 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             case "zen":
                 bot.post(`@${username} cat:
     Posts random cat pictures.`, origin);
-                break;
-            case "zen":
-                bot.post(`@${username} status:
+                    break;
+                case "status":
+                    bot.post(`@${username} status:
     Lets you view, and set a status.`, origin);
                 break;
             case "credits":
