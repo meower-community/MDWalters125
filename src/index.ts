@@ -43,7 +43,8 @@ const admins: string[] = [
 const welcome_msg: string[] = [
     `${username} VERSION 0.0.0 IS NOW ONLINE!!!1!!!!1`,
     "Hi.",
-    "Hello, I am online, please use me."
+    "Hello, I am online, please use me.",
+    "The world's first Meower bot written in TypeScript is now online, fear me!"
 ];
 const db = new JSONdb("./../db.json");
 const bot = new Bot(username, password);
