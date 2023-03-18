@@ -64,7 +64,7 @@ export default class Wordle {
         }
     } 
 
-    grid(): string[] {
+    grid(): string[][] {
         return this.grid;
     }
 }
