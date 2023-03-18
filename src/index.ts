@@ -52,7 +52,7 @@ const welcome_msg: string[] = [
 const db = new JSONdb("./../db.json");
 const bot = new Bot(username, password);
 const wordle = new Wordle();
-const place = new Place();
+const place = new Place(db);
 
 if (!(db.has("MDW125-POLLS"))) {
     db.set("MDW125-POLLS", []);
