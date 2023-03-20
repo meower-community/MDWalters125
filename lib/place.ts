@@ -4,8 +4,8 @@ import JSONdb from "simple-json-db";
 export default class Place {    
     colours: object;
 
-    constructor() {
-        this.db = new JSONdb("./../db.json");
+    constructor(db) {
+        this.db = db;
         this.colours = {
             "red": "🟥",
             "white": "⬜",

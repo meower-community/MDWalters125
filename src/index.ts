@@ -5,11 +5,12 @@ import { exec } from "child_process";
 import * as dotenv from "dotenv";
 import JSONdb from "simple-json-db";
 
-import { log } from "./../lib/logs.js";
-import Wordle from "./../lib/wordle.js";
-import { toRelative } from "./../lib/relative.js";
-import { pfp, lvl } from "./../lib/whois-utils.js";
-import Place from "./../lib/place.js";
+import { log } from "../lib/logs.js";
+import Wordle from "../lib/wordle.js";
+import { toRelative } from "../lib/relative.js";
+import { pfp, lvl } from "../lib/whois-utils.js";
+import Place from "../lib/place.js";
+import { welcome_msg } from "../lib/welcome.js";
 
 dotenv.config();
 
@@ -37,19 +38,12 @@ const help: string[] = [
 const admins: string[] = [
     "mdwalters",
     "m",
-    "JoshAtticus",
-    "AltJosh"
-];
-const welcome_msg: string[] = [
-    `${username} VERSION 0.0.0 IS NOW ONLINE!!!1!!!!1`,
-    "Hi.",
-    "Hello, I am online, please use me.",
-    "The world's first Meower bot written in TypeScript is now online, fear me!"
+    "JoshAtticus"
 ];
 const db = new JSONdb("./../db.json");
 const bot = new Bot(username, password);
 const wordle = new Wordle();
-const place = new Place();
+const place = new Place(db);
 
 if (!(db.has("MDW125-POLLS"))) {
     db.set("MDW125-POLLS", []);
@@ -184,9 +178,11 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             "Outlook not so good.",
             "Very doubtful.",
             "No.",
-            "What do you mean?"
+            "What do you mean?",
+            "What?"
         ];
-        bot.post(eightBall[Math.floor(Math.random() * eightBall.length)], origin);
+        bot.post(`The Eight-Ball says...
+    ${eightBall[Math.floor(Math.random() * eightBall.length)]}`, origin);
         log(`${user} used the command ${message}`);
     }
 
@@ -446,7 +442,7 @@ ${wordle.grid[5].join("")}
         const user_posts: Promise<object> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}/posts?autoget`).then(res => res.json());
 
         if (user.error == true) {
-            bot.post("This user doesn't exist!", origin);
+            bot.post("This user doesn't exist! Dare to namesnipe?", origin);
         } else {
             bot.post(`${user._id} (${lvl[user.lvl]}):
     ${(user.banned ? "Banned" : "Not banned")}
@@ -454,7 +450,7 @@ ${wordle.grid[5].join("")}
     ${(user.quote != "" ? `Quote: "${user.quote}"` : "User doesn't have a quote")}
     Profile picture is ${pfp[user.pfp_data - 1]}
     Last seen ${toRelative(user_posts.autoget[0].t.e * 1000)}
-    ${(db.get(`MDW125-STATUS-${user._id}`) != null ? `Status: "${db.get(`MDW125-STATUS-${user._id}`)}"` : "User doesn't have a status")}`, origin);
+    ${(db.has(`MDW125-STATUS-${user._id}`) ? `Status: "${db.get(`MDW125-STATUS-${user._id}`)}"` : "User doesn't have a status")}`, origin);
         }
     }
 
@@ -491,7 +487,7 @@ ${place.grid()[9].join("")}`, origin);
         } else {
             bot.post(`Commands:
     @${username} place pixel [x] [y] [colour]
-    @${username} grid`, origin);
+    @${username} place grid`, origin);
         }
     }
 });
