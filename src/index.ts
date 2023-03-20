@@ -5,11 +5,12 @@ import { exec } from "child_process";
 import * as dotenv from "dotenv";
 import JSONdb from "simple-json-db";
 
-import { log } from "./../lib/logs.js";
-import Wordle from "./../lib/wordle.js";
-import { toRelative } from "./../lib/relative.js";
-import { pfp, lvl } from "./../lib/whois-utils.js";
-import Place from "./../lib/place.js";
+import { log } from "../lib/logs.js";
+import Wordle from "../lib/wordle.js";
+import { toRelative } from "../lib/relative.js";
+import { pfp, lvl } from "../lib/whois-utils.js";
+import Place from "../lib/place.js";
+import { welcome_msg } from "../lib/welcome.js";
 
 dotenv.config();
 
@@ -38,17 +39,6 @@ const admins: string[] = [
     "mdwalters",
     "m",
     "JoshAtticus"
-];
-const welcome_msg: string[] = [
-    `${username.toUpperCase()} VERSION 0.0.0 IS NOW ONLINE!!!1!!!!1`,
-    "Hi.",
-    "Hello, I am online, please use me.",
-    "The world's first Meower bot written in TypeScript is now online, fear me!",
-    "I'M NOT A BOT, I'M A PERSON!!!!!!!11!",
-    "I'll never forget when I spoke with @UltimateBot",
-    "Breaking News: Nothing happened",
-    "I have a very good uptime, as long as someone doesn't kick me!",
-    "Vanilla, Svelte, Kivy, Meower"
 ];
 const db = new JSONdb("./../db.json");
 const bot = new Bot(username, password);
