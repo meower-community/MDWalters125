@@ -3,6 +3,7 @@ import Bot from "meowerbot";
 import fetch from "node-fetch";
 import { exec } from "child_process";
 import * as dotenv from "dotenv";
+import JSONdb from "simple-json-db";
 import { MongoClient } from "simple-json-db";
 
 import { log } from "../lib/logs.js";
@@ -40,14 +41,11 @@ const admins: string[] = [
     "m",
     "JoshAtticus"
 ];
-const db = new MongoClient(process.env["MDW125_MONGODB_URL"]);
+const db = new JSONdb("../db.json");
+const mongodb = new MongoClient(process.env["MDW125_MONGODB_URL"]).db("MDWalters125");
 const bot = new Bot(username, password);
 const wordle = new Wordle();
 const place = new Place(db);
-
-if (!(db.has("MDW125-POLLS"))) {
-    db.set("MDW125-POLLS", []);
-}
 
 bot.onPost(async (user: string, message: string, origin: string | null) => {
     if (message.startsWith(`@${username} `) && db.has(`MDW125-MUTED-${user}`)) {
@@ -196,25 +194,34 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             bot.post("You need to specify a website to shorten!", origin);
             log(`${user} used the command ${message}`);
         } else {
-            const link: object = await fetch(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[2]}`).then(res => res.json());
+            const link: Promise<object> = await fetch(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[2]}`).then(res => res.json());
             bot.post(link.result.full_short_link, origin);
             log(`${user} used the command ${message}`);
         }
     }
 
     if (message.startsWith(`@${username} cat`)) {
-        const image: object = await fetch("https://aws.random.cat/meow").then(res => res.json());
+        const image: Promise<object> = await fetch("https://aws.random.cat/meow").then(res => res.json());
         bot.post(`[Random cat image: ${image.file}]`, origin);
         log(`${user} used the command ${message}`);
     }
 
     if (message.startsWith(`@${username} status`)) {
         if (message.split(" ")[2] === "set") {
-            db.set(`MDW125-STATUS-${user}`, message.split(" ").slice(3, message.split(" ").length).join(" "));
+            mongodb.collection("status").updateOne({
+                username: user
+            }, {
+                $set: {
+                    username: user,
+                    status: message.split(" ").slice(3, message.split(" ").length).join(" ")
+                }
+            }, {
+                upsert: true
+            });
             bot.post("Status successfully set!", origin);
             log(`${user} set their status with the command "${message}"`);
         } else if (message.split(" ")[2] === "clear") {
-            db.delete(`MDW125-STATUS-${user}`);
+            mongodb.collection("status").deleteOne({ username: user });
             bot.post("Status successfully cleared!", origin);
             log(`${user} cleared their status with the command "${message}"`);
         } else if (message.split(" ")[2] === "view") {
@@ -328,7 +335,7 @@ Bot Library: MeowerBot.js`, origin);
 
     if (message.startsWith(`@${username} mute`)) {
         if (admins.includes(user)) {
-            if (db.has(`MDW125-MUTED-${message.split(" ")[2]}`)) {
+            if (mongodbdb.has(`MDW125-MUTED-${message.split(" ")[2]}`)) {
                 bot.post(`@${message.split(" ")[2]} is already muted!`, origin);
                 log(`${user} tried to mute someone, but they are already muted. They used the command "${message}"`);
             } else {
