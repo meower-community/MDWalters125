@@ -1,5 +1,4 @@
 export const welcome_msg: string[] = [
-    `${username.toUpperCase()} VERSION 0.0.0 IS NOW ONLINE!!!1!!!!1`,
     "Hi.",
     "Hello, I am online, please use me.",
     "The world's first Meower bot written in TypeScript is now online, fear me!",
