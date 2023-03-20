@@ -201,9 +201,13 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
     }
 
     if (message.startsWith(`@${username} cat`)) {
-        const image: Promise<object> = await fetch("https://aws.random.cat/meow").then(res => res.json());
-        bot.post(`[Random cat image: ${image.file}]`, origin);
-        log(`${user} used the command ${message}`);
+        if (Math.floor(Math.random() * 1) == 1) {
+            bot.post("[@cat: https://arrow.pages.dev/favicon.png]", origin);
+        } else {
+            const image: Promise<object> = await fetch("https://aws.random.cat/meow").then(res => res.json());
+            bot.post(`[Random cat image: ${image.file}]`, origin);
+            log(`${user} used the command ${message}`);
+        }
     }
 
     if (message.startsWith(`@${username} status`)) {
