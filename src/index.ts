@@ -11,7 +11,7 @@ import { toRelative } from "../lib/relative.js";
 import { pfp, lvl } from "../lib/whois-utils.js";
 import Place from "../lib/place.js";
 import { welcome_msg } from "../lib/welcome.js";
-import { Status, Karma, Place } from "../lib/interfaces.js";
+import { Status, Karma, Place, Mute } from "../lib/interfaces.js";
 
 dotenv.config();
 
@@ -36,11 +36,7 @@ const help: string[] = [
     "whois",
     "place"
 ];
-const admins: string[] = [
-    "mdwalters",
-    "m",
-    "JoshAtticus"
-];
+const admins: string[] = ["mdwalters", "m", "JoshAtticus", "AltJosh"];
 const db = new MongoClient(process.env["MDW125_MONGODB_URL"]).db("MDWalters125");
 const bot = new Bot(username, password);
 const wordle = new Wordle();
@@ -176,7 +172,8 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             "Very doubtful.",
             "No.",
             "What do you mean?",
-            "What?"
+            "What?",
+            "Highly unlikely.",
         ];
         bot.post(`The Eight-Ball says...
     ${eightBall[Math.floor(Math.random() * eightBall.length)]}`, origin);
