@@ -231,7 +231,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
         } else if (message.split(" ")[2] === "view") {
             const status: Promise<object> = await mongodb.collection("status").findOne({ username: user });
             if (message.split(" ")[3] === user) {
-                if (Object.keys(status).length == 0) {
+                if (!status) {
                     bot.post(`You don't have a status set. To set one, use @${username} status set [message].`, origin);
                     log(`${user} tried to view their status, but they don't have one set. They used the command "[message]"`);
                 } else {
@@ -241,7 +241,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
                 }
             } else {
                 const status: Promise<object> = await mongodb.collection("status").findOne({ username: message.split(" ")[3] });
-                if (!Object.keys(status).length == 0) {
+                if (status) {
                     bot.post(`@${message.split(" ")[3]}'s status:
     ${status.status}`, origin);
                     log(`${user} viewed someone else's status with the command "${message}"`);
@@ -252,7 +252,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             }    
         } else {
             const status: Promise<object> = await mongodb.collection("status").findOne({ username: user });
-            if (Object.keys(status).length == 0) {
+            if (!status) {
                 bot.post(`You don't have a status set. To set one, use @${username} status set [message].`, origin);
                 log(`${user} tried to view their status, but they don't have one set. They used the command "${message}"`);
             } else {
