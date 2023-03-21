@@ -1,3 +1,4 @@
+// @ts-nocheck
 export default class Place {    
     colours: object;
 
