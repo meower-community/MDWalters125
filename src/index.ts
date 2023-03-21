@@ -254,7 +254,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
                 log(`${user} tried to view their status, but they don't have one set. They used the command "${message}"`);
             } else {
                 bot.post(`Your status:
-    ${await mongodb.collection("status").findOne({ username: user })}`, origin);
+    ${await mongodb.collection("status").findOne({ username: user }).status}`, origin);
                 log(`${user} viewed their status with the command "${message}"`);
             }
         }
