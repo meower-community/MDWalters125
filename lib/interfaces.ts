@@ -10,10 +10,14 @@ export interface Karma {
     karma: string;
 }
 
-/* Comming soon
-interface Place {
+export interface Place {
+    _id: string;
+    map: string[][];
+    contributors: string[];
+}
+
+export interface Mute {
     _id: string;
     username: string;
-    status: string;
+    reason?: string;
 }
-*/

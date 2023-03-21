@@ -4,7 +4,7 @@ import fetch from "node-fetch";
 import { exec } from "child_process";
 import * as dotenv from "dotenv";
 import JSONdb from "simple-json-db";
-import { MongoClient } from "mongodb";
+import { MongoClient } from "db";
 
 import { log } from "../lib/logs.js";
 import Wordle from "../lib/wordle.js";
@@ -12,7 +12,7 @@ import { toRelative } from "../lib/relative.js";
 import { pfp, lvl } from "../lib/whois-utils.js";
 import Place from "../lib/place.js";
 import { welcome_msg } from "../lib/welcome.js";
-import { Status, Karma } from "../lib/interfaces.js";
+import { Status, Karma, Place } from "../lib/interfaces.js";
 
 dotenv.config();
 
@@ -42,8 +42,7 @@ const admins: string[] = [
     "m",
     "JoshAtticus"
 ];
-const db = new JSONdb("../db.json");
-const mongodb = new MongoClient(process.env["MDW125_MONGODB_URL"]).db("MDWalters125");
+const db = new MongoClient(process.env["MDW125_db_URL"]).db("MDWalters125");
 const bot = new Bot(username, password);
 const wordle = new Wordle();
 const place = new Place(db);
@@ -213,7 +212,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
 
     if (message.startsWith(`@${username} status`)) {
         if (message.split(" ")[2] === "set") {
-            mongodb.collection("status").updateOne({
+            db.collection("status").updateOne({
                 username: user
             }, {
                 $set: {
@@ -226,11 +225,11 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             bot.post("Status successfully set!", origin);
             log(`${user} set their status with the command "${message}"`);
         } else if (message.split(" ")[2] === "clear") {
-            mongodb.collection("status").deleteOne({ username: user });
+            db.collection("status").deleteOne({ username: user });
             bot.post("Status successfully cleared!", origin);
             log(`${user} cleared their status with the command "${message}"`);
         } else if (message.split(" ")[2] === "view") {
-            const status: Promise<Status | null> = await mongodb.collection("status").findOne({ username: user });
+            const status: Promise<Status | null> = await db.collection("status").findOne({ username: user });
             if (message.split(" ")[3] === user) {
                 if (!status) {
                     bot.post(`You don't have a status set. To set one, use @${username} status set [message].`, origin);
@@ -241,7 +240,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
                     log(`${user} viewed their status with the command "${message}"`);
                 }
             } else {
-                const status: Promise<Status | null> = await mongodb.collection("status").findOne({ username: message.split(" ")[3] });
+                const status: Promise<Status | null> = await db.collection("status").findOne({ username: message.split(" ")[3] });
                 if (status) {
                     bot.post(`@${message.split(" ")[3]}'s status:
     ${status.status}`, origin);
@@ -252,7 +251,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
                 }
             }    
         } else {
-            const status: Promise<Status | null> = await mongodb.collection("status").findOne({ username: user });
+            const status: Promise<Status | null> = await db.collection("status").findOne({ username: user });
             if (!status) {
                 bot.post(`You don't have a status set. To set one, use @${username} status set [message].`, origin);
                 log(`${user} tried to view their status, but they don't have one set. They used the command "${message}"`);
@@ -273,13 +272,13 @@ Bot Library: MeowerBot.js`, origin);
 
     if (message.startsWith(`@${username} karma`)) {
         if (message.split(" ")[2] === "upvote") {
-            const karma: Promise<Karma | null> = await mongodb.collection("karma").findOne({ username: user });
+            const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: user });
             if (!karma) {
                 if (message.split(" ")[3] === user) {
                     bot.post("You can't upvote yourself!", origin);
                     log(`${user} tried to upvote themselves unsucessfully with the command ${message}`);
                 } else {
-                    mongodb.collection("karma").updateOne({
+                    db.collection("karma").updateOne({
                         username: user
                     }, {
                         $set: {
@@ -353,7 +352,7 @@ Bot Library: MeowerBot.js`, origin);
 
     if (message.startsWith(`@${username} mute`)) {
         if (admins.includes(user)) {
-            if (mongodbdb.has(`MDW125-MUTED-${message.split(" ")[2]}`)) {
+            if (dbdb.has(`MDW125-MUTED-${message.split(" ")[2]}`)) {
                 bot.post(`@${message.split(" ")[2]} is already muted!`, origin);
                 log(`${user} tried to mute someone, but they are already muted. They used the command "${message}"`);
             } else {
