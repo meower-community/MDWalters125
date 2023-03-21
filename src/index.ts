@@ -12,6 +12,7 @@ import { toRelative } from "../lib/relative.js";
 import { pfp, lvl } from "../lib/whois-utils.js";
 import Place from "../lib/place.js";
 import { welcome_msg } from "../lib/welcome.js";
+import { Status, Karma } from "../lib/interfaces.js";
 
 dotenv.config();
 
@@ -229,7 +230,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             bot.post("Status successfully cleared!", origin);
             log(`${user} cleared their status with the command "${message}"`);
         } else if (message.split(" ")[2] === "view") {
-            const status: Promise<object> = await mongodb.collection("status").findOne({ username: user });
+            const status: Promise<Status | null> = await mongodb.collection("status").findOne({ username: user });
             if (message.split(" ")[3] === user) {
                 if (!status) {
                     bot.post(`You don't have a status set. To set one, use @${username} status set [message].`, origin);
@@ -240,7 +241,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
                     log(`${user} viewed their status with the command "${message}"`);
                 }
             } else {
-                const status: Promise<object> = await mongodb.collection("status").findOne({ username: message.split(" ")[3] });
+                const status: Promise<Status | null> = await mongodb.collection("status").findOne({ username: message.split(" ")[3] });
                 if (status) {
                     bot.post(`@${message.split(" ")[3]}'s status:
     ${status.status}`, origin);
@@ -251,7 +252,7 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
                 }
             }    
         } else {
-            const status: Promise<object> = await mongodb.collection("status").findOne({ username: user });
+            const status: Promise<Status | null> = await mongodb.collection("status").findOne({ username: user });
             if (!status) {
                 bot.post(`You don't have a status set. To set one, use @${username} status set [message].`, origin);
                 log(`${user} tried to view their status, but they don't have one set. They used the command "${message}"`);
@@ -272,13 +273,23 @@ Bot Library: MeowerBot.js`, origin);
 
     if (message.startsWith(`@${username} karma`)) {
         if (message.split(" ")[2] === "upvote") {
-            if (!(db.has(`MDW125-KARMA-${message.split(" ")[3]}`))) {
+            const karma: Promise<Karma | null> = await mongodb.collection("karma").findOne({ username: user });
+            if (!karma) {
                 if (message.split(" ")[3] === user) {
                     bot.post("You can't upvote yourself!", origin);
                     log(`${user} tried to upvote themselves unsucessfully with the command ${message}`);
                 } else {
-                    db.set(`MDW125-KARMA-${message.split(" ")[3]}`, 1);
-                    bot.post(`Successfully upvoted @${message.split(" ")[3]}! They now have 1 karma.`, origin);
+                    mongodb.collection("karma").updateOne({
+                        username: user
+                    }, {
+                        $set: {
+                            username: user,
+                            karma: 2
+                        }
+                    }, {
+                        upsert: true
+                    });
+                    bot.post(`Successfully upvoted @${message.split(" ")[3]}! They now have 2 karma.`, origin);
                     log(`${user} upvoted someone with the command "${message}"`);
                 }
             } else {
@@ -298,7 +309,7 @@ Bot Library: MeowerBot.js`, origin);
                     log(`${user} tried to downvote themselves unsucessfully with the command "${message}"`);
                 } else {
                     db.set(`MDW125-KARMA-${message.split(" ")[3]}`, -1);
-                    bot.post(`Successfully downvoted @${message.split(" ")[3]}. They now have -1 karma.`, origin);
+                    bot.post(`Successfully downvoted @${message.split(" ")[3]}. They now have 0 karma.`, origin);
                     log(`${user} downvoted someone with the command "${message}"`);
                 }
             } else {
