@@ -230,18 +230,18 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             log(`${user} cleared their status with the command "${message}"`);
         } else if (message.split(" ")[2] === "view") {
             if (message.split(" ")[3] === user) {
-                if (!(mongodb.collection("status").findOne({ username: user }))) {
+                if (Object.keys(await mongodb.collection("status").findOne({ username: user })).length == 0) {
                     bot.post(`You don't have a status set. To set one, use @${username} status set [message].`, origin);
                     log(`${user} tried to view their status, but they don't have one set. They used the command "[message]"`);
                 } else {
                     bot.post(`Your status:
-    ${mongodb.collection("status").findOne({ username: user }).status}`, origin);
+    ${await mongodb.collection("status").findOne({ username: user }).status}`, origin);
                     log(`${user} viewed their status with the command "${message}"`);
                 }
             } else {
-                if (!(mongodb.collection("status").findOne({ username: message.split(" ")[3] }))) {
+                if (!Object.keys(await mongodb.collection("status").findOne({ username: message.split(" ")[3] })).length == 0) {
                     bot.post(`@${message.split(" ")[3]}'s status:
-    ${mongodb.collection("status").findOne({ username: message.split(" ")[3] }).status}`, origin);
+    ${await mongodb.collection("status").findOne({ username: message.split(" ")[3] }).status}`, origin);
                     log(`${user} viewed someone else's status with the command "${message}"`);
                 } else {
                     bot.post(`@${message.split(" ")[3]} doesn't have a status set.`, origin);
@@ -249,12 +249,12 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
                 }
             }    
         } else {
-            if (!(mongodb.collection("status").findOne({ username: user }))) {
+            if (Object.keys(await mongodb.collection("status").findOne({ username: user })).length == 0) {
                 bot.post("You don't have a status set. To set one, use ~status set [message].", origin);
                 log(`${user} tried to view their status, but they don't have one set. They used the command "${message}"`);
             } else {
                 bot.post(`Your status:
-    ${mongodb.collection("status").findOne({ username: user })}`, origin);
+    ${await mongodb.collection("status").findOne({ username: user })}`, origin);
                 log(`${user} viewed their status with the command "${message}"`);
             }
         }
