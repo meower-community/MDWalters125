@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Bot from "meowerbot";
 import fetch from "node-fetch";
 import { exec } from "child_process";

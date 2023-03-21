@@ -1,6 +1,3 @@
-// @ts-nocheck
-import JSONdb from "simple-json-db";
-
 export default class Place {    
     colours: object;
 
