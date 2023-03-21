@@ -3,8 +3,7 @@ import Bot from "meowerbot";
 import fetch from "node-fetch";
 import { exec } from "child_process";
 import * as dotenv from "dotenv";
-import JSONdb from "simple-json-db";
-import { MongoClient } from "db";
+import { MongoClient } from "mongodb";
 
 import { log } from "../lib/logs.js";
 import Wordle from "../lib/wordle.js";
@@ -42,7 +41,7 @@ const admins: string[] = [
     "m",
     "JoshAtticus"
 ];
-const db = new MongoClient(process.env["MDW125_db_URL"]).db("MDWalters125");
+const db = new MongoClient(process.env["MDW125_MONGODB_URL"]).db("MDWalters125");
 const bot = new Bot(username, password);
 const wordle = new Wordle();
 const place = new Place(db);
