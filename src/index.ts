@@ -10,7 +10,7 @@ import { toRelative } from "../lib/relative.js";
 import { pfp, lvl } from "../lib/whois-utils.js";
 import Place from "../lib/place.js";
 import { welcome_msg } from "../lib/welcome.js";
-import { Status, Karma, Place, Mute } from "../lib/interfaces.js";
+import { Status, Karma, Place, Mute, Poll, PollAnswer } from "../lib/interfaces.js";
 
 dotenv.config();
 
@@ -406,7 +406,7 @@ Bot Library: MeowerBot.js`, origin);
 
     if (message.startsWith(`@${username} unmute`)) {
         if (admins.includes(user)) {
-            const muted: object | null = await db.collection("mutes").find({ username: message.split(" ")[2] });
+            const muted: Promise<Mute | null> = await db.collection("mutes").find({ username: message.split(" ")[2] });
             if (muted) {
                 db.collection("mutes").deleteOne({ username: message.split(" ")[2] });
                 bot.post(`Successfully unmuted @${message.split(" ")[2]}!`, origin);
@@ -459,8 +459,8 @@ ${wordle.grid[5].join("")}
         if (message.split(" ")[2] === "new") {
             const total_polls: Promise<number> = await db.collection("polls").countDocuments({ deleted: false });
             db.collection("polls").insertOne({
+                "_id": total_polls + 1,
                 "question": message.split(" ").slice(3, message.split(" ").length).join(" "),
-                "id": total_polls + 1,
                 "answers": [],
                 "username": user,
                 "deleted": false
@@ -468,7 +468,7 @@ ${wordle.grid[5].join("")}
             bot.post(`Succesfully created new poll! For others to answer your poll, use @${username} poll answer ${total_polls + 1} [answer].`, origin);
             log(`${user} created a new poll with the command "${message}"`);
         } else if (message.split(" ")[2] === "answer") {
-            const polls: object[] = db.get("MDW125-POLLS");
+            const muted: Promise<Poll | null> = await db.collection("polls").find({ id: message.split(" ")[2] });
             if (user == polls[message.split(" ")[3] - 1].username) {
                 bot.post("You can't answer a poll you made!", origin);
                 log(`${user} tried to answer a poll they created with the command "${message}"`);

@@ -33,3 +33,22 @@ export interface Mute {
     username: string;
     reason: string | null;
 }
+
+/**
+* The interface for mutes 
+*/
+export interface Poll {
+    _id: number;
+    question: string;
+    answers: object[];
+    username: string;
+    deleted: boolean;
+}
+
+/**
+* The interface for poll answers 
+*/
+export interface PollAnswer {
+    username: string;
+    answer: string;
+}
