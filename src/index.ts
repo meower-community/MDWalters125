@@ -358,18 +358,18 @@ Bot Library: MeowerBot.js`, origin);
     if (message.startsWith(`@${username} mute`)) {
         if (admins.includes(user)) {
             const muted: Promise<Mute | null> = await db.collection("mutes").find({ username: user });
-            if (muted) {
+            if (!muted) {
                 bot.post(`@${message.split(" ")[2]} is already muted!`, origin);
                 log(`${user} tried to mute someone, but they are already muted. They used the command "${message}"`);
             } else {
-                if (message.split(" ")[2]) {
+                if (message.split(" ")[3]) {
                     db.collection("mutes").insertOne({
-                        "username": user,
+                        "username": message.split(" ")[2],
                         "reason": message.split(" ").slice(3, message.split(" ").length).join(" ")
                     });
                 } else {
                     db.collection("mutes").insertOne({
-                        "username": user,
+                        "username": message.split(" ")[2],
                         "reason": null
                     });
                 }
@@ -384,14 +384,14 @@ Bot Library: MeowerBot.js`, origin);
 
     if (message.startsWith(`@${username} unmute`)) {
         if (admins.includes(user)) {
-            const muted: object | null = await db.collection("mutes").find({ username: user });
-            if (!muted) {
-                bot.post(`@${message.split(" ")[2]} isn't muted!`, origin);
-                log(`${user} tried to unmute someone, but they weren't muted. They used the command "${message}"`);
-            } else {
+            const muted: object | null = await db.collection("mutes").find({ username: message.split(" ")[2] });
+            if (muted) {
                 db.collection("mutes").deleteOne({ username: message.split(" ")[2] });
                 bot.post(`Successfully unmuted @${message.split(" ")[2]}!`, origin);
                 log(`${user} unmuted someone with the command "${message}"`);
+            } else {
+                bot.post(`@${message.split(" ")[2]} isn't muted!`, origin);
+                log(`${user} tried to unmute someone, but they weren't muted. They used the command "${message}"`);
             }
         } else {
             bot.post("You don't have the permissions to run this command.", origin);
