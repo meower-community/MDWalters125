@@ -1,7 +1,6 @@
 // @ts-nocheck
 import Bot from "meowerbot";
 import fetch from "node-fetch";
-import { exec } from "child_process";
 import * as dotenv from "dotenv";
 import { MongoClient } from "mongodb";
 
@@ -40,19 +39,23 @@ const admins: string[] = ["mdwalters", "m", "JoshAtticus", "AltJosh"];
 const db = new MongoClient(process.env["MDW125_MONGODB_URL"]).db("MDWalters125");
 const bot = new Bot();
 const wordle = new Wordle();
-const place = new Place(db);
+// const place = new Place(db);
 
 bot.onPost(async (user: string, message: string, origin: string | null) => {
-    if (message.startsWith(`@${username} `) && db.has(`MDW125-MUTED-${user}`)) {
-        if (db.get(`MDW125-MUTED-${user}`)) {
-            bot.post(`You are currently muted from ${username}.
-Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
-            log(`${user} tried to use the command "${message}", but they are muted from ${username} for "${db.get(`MDW125-MUTED-${user}`)}"`);
-        } else {
-            bot.post(`You are currently muted from ${username}.`, origin);
-            log(`${user} tried to use the command "${message}", but they are muted from ${username}`);
+    if (message.startsWith(`@${username} `)) {
+        const muted: Promise<Mute | null> = await db.collection("mutes").find({ username: user });
+        if (!muted) {
+            if (muted.reason) {
+                bot.post(`You are currently muted from ${username}.
+Reason: "${muted.reason}"`, origin);
+                log(`${user} tried to use the command "${message}", but they are muted from ${username} for "${muted.reason}"`);
+                return;
+            } else {
+                bot.post(`You are currently muted from ${username}.`, origin);
+                log(`${user} tried to use the command "${message}", but they are muted from ${username}`);
+                return;
+            }
         }
-        return;
     }
 
     if (message.startsWith(`@${username} `) && !(help.includes(`${message.split(" ")[1]}`))) {
@@ -288,8 +291,18 @@ Bot Library: MeowerBot.js`, origin);
                     bot.post("You can't upvote yourself!", origin);
                     log(`${user} tried to upvote themselves unsucessfully with the command ${message}`);
                 } else {
-                    db.set(`MDW125-KARMA-${message.split(" ")[3]}`, (parseInt(db.get(`MDW125-KARMA-${message.split(" ")[3]}`)) + 1));
-                    bot.post(`Successfully upvoted @${message.split(" ")[3]}! They now have ${db.get("MDW125-KARMA-" + message.split(" ")[3])} karma.`, origin);
+                    const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: message.split(" ")[3] });
+                    db.collection("karma").updateOne({
+                        username: user
+                    }, {
+                        $set: {
+                            username: message.split(" ")[3],
+                            karma: karma.karma + 1
+                        }
+                    }, {
+                        upsert: true
+                    });
+                    bot.post(`Successfully upvoted @${message.split(" ")[3]}! They now have ${karma.karma + 1} karma.`, origin);
                     log(`${user} upvoted someone with the command "${message}"`);
                 }
             }
@@ -344,14 +357,21 @@ Bot Library: MeowerBot.js`, origin);
 
     if (message.startsWith(`@${username} mute`)) {
         if (admins.includes(user)) {
-            if (dbdb.has(`MDW125-MUTED-${message.split(" ")[2]}`)) {
+            const muted: Promise<Mute | null> = await db.collection("mutes").find({ username: user });
+            if (muted) {
                 bot.post(`@${message.split(" ")[2]} is already muted!`, origin);
                 log(`${user} tried to mute someone, but they are already muted. They used the command "${message}"`);
             } else {
                 if (message.split(" ")[2]) {
-                    db.set(`MDW125-MUTED-${message.split(" ")[2]}`, message.split(" ").slice(3, message.split(" ").length).join(" "));
+                    db.collection("mutes").insertOne({
+                        "username": user,
+                        "reason": message.split(" ").slice(3, message.split(" ").length).join(" ")
+                    });
                 } else {
-                    db.set(`MDW125-MUTED-${message.split(" ")[2]}`, null);
+                    db.collection("mutes").insertOne({
+                        "username": user,
+                        "reason": null
+                    });
                 }
                 bot.post(`Successfully muted @${message.split(" ")[2]}!`, origin);
                 log(`${user} muted someone with the command "${message}"`);
@@ -364,11 +384,12 @@ Bot Library: MeowerBot.js`, origin);
 
     if (message.startsWith(`@${username} unmute`)) {
         if (admins.includes(user)) {
-            if (!(db.has(`MDW125-MUTED-${message.split(" ")[2]}`))) {
+            const muted: object | null = await db.collection("mutes").find({ username: user });
+            if (!muted) {
                 bot.post(`@${message.split(" ")[2]} isn't muted!`, origin);
                 log(`${user} tried to unmute someone, but they weren't muted. They used the command "${message}"`);
             } else {
-                db.delete(`MDW125-MUTED-${message.split(" ")[2]}`);
+                db.collection("mutes").deleteOne({ username: message.split(" ")[2] });
                 bot.post(`Successfully unmuted @${message.split(" ")[2]}!`, origin);
                 log(`${user} unmuted someone with the command "${message}"`);
             }
