@@ -346,29 +346,32 @@ Bot Library: MeowerBot.js`, origin);
                 }
             }
         } else if (message.split(" ")[2] === "view") {
+            const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: message.split(" ")[3] });
             if (message.split(" ")[3] === user) {
-                if (!(db.has(`MDW125-KARMA-${user}`))) {
-                    bot.post("You have 0 karma.", origin);
-                    log(`${user} viewed their 0 karma with the command "${message}"`);
+                if (!karma) {
+                    bot.post("You have 1 karma.", origin);
+                    log(`${user} viewed their 1 karma with the command "${message}"`);
                 } else {
-                    bot.post(`You have ${db.get("MDW125-KARMA-" + user)} karma.`, origin);
+                    bot.post(`You have ${karma.karma} karma.`, origin);
                     log(`${user} viewed their karma with the command "${message}"`);
                 }
             } else {
-                if (!(db.has(`MDW125-KARMA-${message.split(" ")[3]}`))) {
-                    bot.post(`@${message.split(" ")[3]} has 0 karma.`, origin);
-                    log(`${user} viewed someone else's 0 karma with the command "${message}"`);
+                const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: message.split(" ")[3] });
+                if (!karma) {
+                    bot.post(`@${message.split(" ")[3]} has 1 karma.`, origin);
+                    log(`${user} viewed someone else's 1 karma with the command "${message}"`);
                 } else {
-                    bot.post(`@${message.split(" ")[3]} has ${db.get("MDW125-KARMA-" + message.split(" ")[3])} karma.`, origin);
+                    bot.post(`@${message.split(" ")[3]} has ${karma.karma} karma.`, origin);
                     log(`${user} viewed someone else's karma with the command "${message}"`);
                 }
             }
         } else {
-            if (!(db.has(`MDW125-KARMA-${user}`))) {
+            const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: message.split(" ")[3] });
+            if (!karma) {
                 bot.post("You have 0 karma.", origin);
                 log(`${user} viewed their 0 karma with the command "${message}"`);
             } else {
-                bot.post(`You have ${db.get("MDW125-KARMA-" + user)} karma.`, origin);
+                bot.post(`You have ${karma.karma} karma.`, origin);
                 log(`${user} viewed their karma with the command "${message}"`);
             }
         }
