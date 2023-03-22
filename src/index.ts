@@ -368,8 +368,8 @@ Bot Library: MeowerBot.js`, origin);
         } else {
             const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: message.split(" ")[3] });
             if (!karma) {
-                bot.post("You have 0 karma.", origin);
-                log(`${user} viewed their 0 karma with the command "${message}"`);
+                bot.post("You have 1 karma.", origin);
+                log(`${user} viewed their 1 karma with the command "${message}"`);
             } else {
                 bot.post(`You have ${karma.karma} karma.`, origin);
                 log(`${user} viewed their karma with the command "${message}"`);
@@ -457,10 +457,15 @@ ${wordle.grid[5].join("")}
 
     if (message.startsWith(`@${username} poll`)) {
         if (message.split(" ")[2] === "new") {
-            const polls: object[] = db.get("MDW125-POLLS");
-            polls.push({ "question": message.split(" ").slice(3, message.split(" ").length).join(" "), "id": polls.length + 1, "answers": [], "username": user });
-            db.set("MDW125-POLLS", polls);
-            bot.post(`Succesfully created new poll! For others to answer this poll, use @${username} poll ${polls.length} [answer].`, origin);
+            const total_polls: Promise<number> = await db.collection("polls").countDocuments({ deleted: false });
+            db.collection("polls").insertOne({
+                "question": message.split(" ").slice(3, message.split(" ").length).join(" "),
+                "id": total_polls + 1,
+                "answers": [],
+                "username": user,
+                "deleted": false
+            });
+            bot.post(`Succesfully created new poll! For others to answer your poll, use @${username} poll answer ${total_polls + 1} [answer].`, origin);
             log(`${user} created a new poll with the command "${message}"`);
         } else if (message.split(" ")[2] === "answer") {
             const polls: object[] = db.get("MDW125-POLLS");
