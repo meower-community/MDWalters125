@@ -274,10 +274,10 @@ Bot Library: MeowerBot.js`, origin);
                     log(`${user} tried to upvote themselves unsucessfully with the command ${message}`);
                 } else {
                     db.collection("karma").updateOne({
-                        username: user
+                        username: message.split(" ")[3]
                     }, {
                         $set: {
-                            username: user,
+                            username: message.split(" ")[3],
                             karma: 2
                         }
                     }, {
@@ -293,7 +293,7 @@ Bot Library: MeowerBot.js`, origin);
                 } else {
                     const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: message.split(" ")[3] });
                     db.collection("karma").updateOne({
-                        username: user
+                        username: message.split(" ")[3]
                     }, {
                         $set: {
                             username: message.split(" ")[3],
@@ -312,7 +312,16 @@ Bot Library: MeowerBot.js`, origin);
                     bot.post("You can't downvote yourself!", origin);
                     log(`${user} tried to downvote themselves unsucessfully with the command "${message}"`);
                 } else {
-                    db.set(`MDW125-KARMA-${message.split(" ")[3]}`, -1);
+                    db.collection("karma").updateOne({
+                        username: message.split(" ")[3]
+                    }, {
+                        $set: {
+                            username: message.split(" ")[3],
+                            karma: 0
+                        }
+                    }, {
+                        upsert: true
+                    });
                     bot.post(`Successfully downvoted @${message.split(" ")[3]}. They now have 0 karma.`, origin);
                     log(`${user} downvoted someone with the command "${message}"`);
                 }
@@ -321,7 +330,17 @@ Bot Library: MeowerBot.js`, origin);
                     bot.post("You can't downvote yourself!", origin);
                     log(`${user} tried to downvote themselves unsucessfully with the command "${message}"`);
                 } else {
-                    db.set(`MDW125-KARMA-${message.split(" ")[3]}`, (parseInt(db.get(`MDW125-KARMA-${message.split(" ")[3]}`)) - 1));
+                    const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: message.split(" ")[3] });
+                    db.collection("karma").updateOne({
+                        username: message.split(" ")[3]
+                    }, {
+                        $set: {
+                            username: message.split(" ")[3],
+                            karma: karma.karma - 1
+                        }
+                    }, {
+                        upsert: true
+                    });
                     bot.post(`Successfully downvoted @${message.split(" ")[3]}! They now have ${db.get("MDW125-KARMA-" + message.split(" ")[3])} karma.`, origin);
                     log(`${user} downvoted someone with the command "${message}"`);
                 }
