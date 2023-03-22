@@ -38,7 +38,7 @@ const help: string[] = [
 ];
 const admins: string[] = ["mdwalters", "m", "JoshAtticus", "AltJosh"];
 const db = new MongoClient(process.env["MDW125_MONGODB_URL"]).db("MDWalters125");
-const bot = new Bot(username, password);
+const bot = new Bot();
 const wordle = new Wordle();
 const place = new Place(db);
 
@@ -52,10 +52,6 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             bot.post(`You are currently muted from ${username}.`, origin);
             log(`${user} tried to use the command "${message}", but they are muted from ${username}`);
         }
-        return;
-    }
-
-    if (message === `@${username}`) {
         return;
     }
 
@@ -517,10 +513,7 @@ bot.onMessage((messageData: string) => {
 });
 
 bot.onClose(() => {
-    const command = exec("npm run start");
-    command.stdout.on("data", (output) => {
-        console.log(output.toString());
-    });
+    bot.login(username, password);
 });
 
 bot.onLogin(() => {
@@ -529,3 +522,4 @@ bot.onLogin(() => {
 Use @${username} help to see a list of commands.`);
 });
 
+bot.login(username, password);
