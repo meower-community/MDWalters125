@@ -468,20 +468,31 @@ ${wordle.grid[5].join("")}
             bot.post(`Succesfully created new poll! For others to answer your poll, use @${username} poll answer ${total_polls + 1} [answer].`, origin);
             log(`${user} created a new poll with the command "${message}"`);
         } else if (message.split(" ")[2] === "answer") {
-            const muted: Promise<Poll | null> = await db.collection("polls").find({ id: message.split(" ")[2] });
-            if (user == polls[message.split(" ")[3] - 1].username) {
+            const poll: Promise<Poll | null> = await db.collection("polls").find({ id: message.split(" ")[2] });
+            if (user == poll.username) {
                 bot.post("You can't answer a poll you made!", origin);
                 log(`${user} tried to answer a poll they created with the command "${message}"`);
-            } else if (polls[message.split(" ")[3] - 1] == undefined) {
+            } else if (!poll) {
                 bot.post("This poll doesn't exist!");
             } else {
-                polls[message.split(" ")[3] - 1].answers.push({ "username": user, "answer": message.split(" ").slice(4, message.split(" ").length).join(" ") });
-                db.set("MDW125-POLLS", polls);
+                poll.answers.push({
+                    "username": user,
+                    "answer": message.split(" ").slice(4, message.split(" ").length).join(" ")
+                });
+                db.collection("polls").updateOne({
+                    id: message.split(" ")[2]
+                }, {
+                    $set: {
+                        answers: poll.answers
+                    }
+                });
                 bot.post("Successfully answered poll!", origin);
                 log(`${user} answered a poll with the command "${message}"`);
             }
         } else {
-            const polls: object[] = db.get("MDW125-POLLS");
+            const polls: Polls[] = db.collection("polls").find({
+                deleted: false
+            });
 
             for (const i in polls) {
                 if (polls[i].username == user) {

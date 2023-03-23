@@ -40,7 +40,7 @@ export interface Mute {
 export interface Poll {
     _id: number;
     question: string;
-    answers: object[];
+    answers: PollAnswer[];
     username: string;
     deleted: boolean;
 }
