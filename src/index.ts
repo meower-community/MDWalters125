@@ -494,20 +494,20 @@ ${wordle.grid[5].join("")}
                 deleted: false
             });
 
-            for (const i in polls) {
-                if (polls[i].username == user) {
-                    polls.splice(i, 1);
-                }
-            }
-
-            const randomPoll = polls[Math.floor(Math.random() * polls.length)];
-
             try {
+                for (const i in polls) {
+                    if (polls[i].username == user) {
+                        polls.splice(i, 1);
+                    }
+                }
+    
+                const randomPoll = polls[Math.floor(Math.random() * polls.length)];
+
                 bot.post(`Random poll: ${randomPoll.question}
     To answer this poll, use @${username} poll answer ${randomPoll.id} [answer].`, origin);
                 log(`${user} found a random poll with the command "${message}"`);
             } catch(e) {
-                bot.post(`There are no polls to answer! Check back later or create a poll with ${username} poll new [poll].`, origin);
+                bot.post(`There are no polls to answer! Check back later or create a poll with @${username} poll new [poll].`, origin);
             }
         }
     }
