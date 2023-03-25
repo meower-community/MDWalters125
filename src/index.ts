@@ -341,7 +341,7 @@ Bot Library: MeowerBot.js`, origin);
                     }, {
                         upsert: true
                     });
-                    bot.post(`Successfully downvoted @${message.split(" ")[3]}! They now have ${db.get("MDW125-KARMA-" + message.split(" ")[3])} karma.`, origin);
+                    bot.post(`Successfully downvoted @${message.split(" ")[3]}! They now have ${karma.karma} karma.`, origin);
                     log(`${user} downvoted someone with the command "${message}"`);
                 }
             }
