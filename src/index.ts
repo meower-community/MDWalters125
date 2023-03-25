@@ -1,16 +1,16 @@
 // @ts-nocheck
 import Bot from "meowerbot";
 import fetch from "node-fetch";
-import { exec } from "child_process";
 import * as dotenv from "dotenv";
-import JSONdb from "simple-json-db";
+import { MongoClient } from "mongodb";
 
 import { log } from "../lib/logs.js";
 import Wordle from "../lib/wordle.js";
 import { toRelative } from "../lib/relative.js";
 import { pfp, lvl } from "../lib/whois-utils.js";
-import Place from "../lib/place.js";
+// import Place from "../lib/place.js";
 import { welcome_msg } from "../lib/welcome.js";
+import { Status, Karma, Place, Mute, Poll, PollAnswer, User, UserPosts } from "../lib/interfaces.js";
 
 dotenv.config();
 
@@ -35,35 +35,27 @@ const help: string[] = [
     "whois",
     "place"
 ];
-const admins: string[] = [
-    "mdwalters",
-    "m",
-    "JoshAtticus"
-];
-const db = new JSONdb("./../db.json");
-const bot = new Bot(username, password);
+const admins: string[] = ["mdwalters", "m", "JoshAtticus", "AltJosh"];
+const db = new MongoClient(process.env["MDW125_MONGODB_URL"]).db("MDWalters125");
+const bot = new Bot();
 const wordle = new Wordle();
-const place = new Place(db);
-
-if (!(db.has("MDW125-POLLS"))) {
-    db.set("MDW125-POLLS", []);
-}
+// const place = new Place(db);
 
 bot.onPost(async (user: string, message: string, origin: string | null) => {
-    if (message.startsWith(`@${username} `) && db.has(`MDW125-MUTED-${user}`)) {
-        if (db.get(`MDW125-MUTED-${user}`)) {
-            bot.post(`You are currently muted from ${username}.
-Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
-            log(`${user} tried to use the command "${message}", but they are muted from ${username} for "${db.get(`MDW125-MUTED-${user}`)}"`);
-        } else {
-            bot.post(`You are currently muted from ${username}.`, origin);
-            log(`${user} tried to use the command "${message}", but they are muted from ${username}`);
+    if (message.startsWith(`@${username} `)) {
+        const muted: Promise<Mute | null> = await db.collection("mutes").find({ username: user });
+        if (!muted) {
+            if (muted.reason) {
+                bot.post(`You are currently muted from ${username}.
+Reason: "${muted.reason}"`, origin);
+                log(`${user} tried to use the command "${message}", but they are muted from ${username} for "${muted.reason}"`);
+                return;
+            } else {
+                bot.post(`You are currently muted from ${username}.`, origin);
+                log(`${user} tried to use the command "${message}", but they are muted from ${username}`);
+                return;
+            }
         }
-        return;
-    }
-
-    if (message === `@${username}`) {
-        return;
     }
 
     if (message.startsWith(`@${username} `) && !(help.includes(`${message.split(" ")[1]}`))) {
@@ -179,10 +171,10 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             "Very doubtful.",
             "No.",
             "What do you mean?",
-            "What?"
+            "What?",
+            "Highly unlikely.",
         ];
-        bot.post(`The Eight-Ball says...
-    ${eightBall[Math.floor(Math.random() * eightBall.length)]}`, origin);
+        bot.post(`The Eight-Ball says...\n${eightBall[Math.floor(Math.random() * eightBall.length)]}`, origin);
         log(`${user} used the command ${message}`);
     }
 
@@ -196,41 +188,56 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
             bot.post("You need to specify a website to shorten!", origin);
             log(`${user} used the command ${message}`);
         } else {
-            const link: object = await fetch(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[2]}`).then(res => res.json());
+            const link: Promise<object> = await fetch(`https://api.shrtco.de/v2/shorten?url=${message.split(" ")[2]}`).then(res => res.json());
             bot.post(link.result.full_short_link, origin);
             log(`${user} used the command ${message}`);
         }
     }
 
     if (message.startsWith(`@${username} cat`)) {
-        const image: object = await fetch("https://aws.random.cat/meow").then(res => res.json());
-        bot.post(`[Random cat image: ${image.file}]`, origin);
-        log(`${user} used the command ${message}`);
+        if (Math.floor(Math.random() * 1) == 1) {
+            bot.post("[@cat: https://arrow.pages.dev/favicon.png]", origin);
+        } else {
+            const image: Promise<object> = await fetch("https://aws.random.cat/meow").then(res => res.json());
+            bot.post(`[Random cat image: ${image.file}]`, origin);
+            log(`${user} used the command ${message}`);
+        }
     }
 
     if (message.startsWith(`@${username} status`)) {
         if (message.split(" ")[2] === "set") {
-            db.set(`MDW125-STATUS-${user}`, message.split(" ").slice(3, message.split(" ").length).join(" "));
+            db.collection("status").updateOne({
+                username: user
+            }, {
+                $set: {
+                    username: user,
+                    status: message.split(" ").slice(3, message.split(" ").length).join(" ")
+                }
+            }, {
+                upsert: true
+            });
             bot.post("Status successfully set!", origin);
             log(`${user} set their status with the command "${message}"`);
         } else if (message.split(" ")[2] === "clear") {
-            db.delete(`MDW125-STATUS-${user}`);
+            db.collection("status").deleteOne({ username: user });
             bot.post("Status successfully cleared!", origin);
             log(`${user} cleared their status with the command "${message}"`);
         } else if (message.split(" ")[2] === "view") {
+            const status: Promise<Status | null> = await db.collection("status").findOne({ username: user });
             if (message.split(" ")[3] === user) {
-                if (!(db.has(`MDW125-STATUS-${user}`))) {
+                if (!status) {
                     bot.post(`You don't have a status set. To set one, use @${username} status set [message].`, origin);
                     log(`${user} tried to view their status, but they don't have one set. They used the command "[message]"`);
                 } else {
                     bot.post(`Your status:
-    ${db.get("MDW125-STATUS-" + user)}`, origin);
+    ${status.status}`, origin);
                     log(`${user} viewed their status with the command "${message}"`);
                 }
             } else {
-                if (db.has(`MDW125-STATUS-${user}`)) {
-                    bot.post(`@${message.split(" ")[2]}'s status:
-    ${db.get("MDW125-STATUS-" + message.split(" ")[3])}`, origin);
+                const status: Promise<Status | null> = await db.collection("status").findOne({ username: message.split(" ")[3] });
+                if (status) {
+                    bot.post(`@${message.split(" ")[3]}'s status:
+    ${status.status}`, origin);
                     log(`${user} viewed someone else's status with the command "${message}"`);
                 } else {
                     bot.post(`@${message.split(" ")[3]} doesn't have a status set.`, origin);
@@ -238,12 +245,13 @@ Reason: "${db.get(`MDW125-MUTED-${user}`)}"`, origin);
                 }
             }    
         } else {
-            if (!(db.has(`MDW125-STATUS-${user}`))) {
-                bot.post("You don't have a status set. To set one, use ~status set [message].", origin);
+            const status: Promise<Status | null> = await db.collection("status").findOne({ username: user });
+            if (!status) {
+                bot.post(`You don't have a status set. To set one, use @${username} status set [message].`, origin);
                 log(`${user} tried to view their status, but they don't have one set. They used the command "${message}"`);
             } else {
                 bot.post(`Your status:
-    ${db.get("MDW125-STATUS-" + user)}`, origin);
+    ${status.status}`, origin);
                 log(`${user} viewed their status with the command "${message}"`);
             }
         }
@@ -258,13 +266,23 @@ Bot Library: MeowerBot.js`, origin);
 
     if (message.startsWith(`@${username} karma`)) {
         if (message.split(" ")[2] === "upvote") {
-            if (!(db.has(`MDW125-KARMA-${message.split(" ")[3]}`))) {
+            const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: user });
+            if (!karma) {
                 if (message.split(" ")[3] === user) {
                     bot.post("You can't upvote yourself!", origin);
                     log(`${user} tried to upvote themselves unsucessfully with the command ${message}`);
                 } else {
-                    db.set(`MDW125-KARMA-${message.split(" ")[3]}`, 1);
-                    bot.post(`Successfully upvoted @${message.split(" ")[3]}! They now have 1 karma.`, origin);
+                    db.collection("karma").updateOne({
+                        username: message.split(" ")[3]
+                    }, {
+                        $set: {
+                            username: message.split(" ")[3],
+                            karma: 2
+                        }
+                    }, {
+                        upsert: true
+                    });
+                    bot.post(`Successfully upvoted @${message.split(" ")[3]}! They now have 2 karma.`, origin);
                     log(`${user} upvoted someone with the command "${message}"`);
                 }
             } else {
@@ -272,19 +290,39 @@ Bot Library: MeowerBot.js`, origin);
                     bot.post("You can't upvote yourself!", origin);
                     log(`${user} tried to upvote themselves unsucessfully with the command ${message}`);
                 } else {
-                    db.set(`MDW125-KARMA-${message.split(" ")[3]}`, (parseInt(db.get(`MDW125-KARMA-${message.split(" ")[3]}`)) + 1));
-                    bot.post(`Successfully upvoted @${message.split(" ")[3]}! They now have ${db.get("MDW125-KARMA-" + message.split(" ")[3])} karma.`, origin);
+                    const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: message.split(" ")[3] });
+                    db.collection("karma").updateOne({
+                        username: message.split(" ")[3]
+                    }, {
+                        $set: {
+                            username: message.split(" ")[3],
+                            karma: karma.karma + 1
+                        }
+                    }, {
+                        upsert: true
+                    });
+                    bot.post(`Successfully upvoted @${message.split(" ")[3]}! They now have ${karma.karma + 1} karma.`, origin);
                     log(`${user} upvoted someone with the command "${message}"`);
                 }
             }
         } else if (message.split(" ")[2] === "downvote") {
-            if (!(db.has(`MDW125-KARMA-${message.split(" ")[3]}`))) {
+            const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: message.split(" ")[3] });
+            if (!karma) {
                 if (message.split(" ")[3] === user) {
                     bot.post("You can't downvote yourself!", origin);
                     log(`${user} tried to downvote themselves unsucessfully with the command "${message}"`);
                 } else {
-                    db.set(`MDW125-KARMA-${message.split(" ")[3]}`, -1);
-                    bot.post(`Successfully downvoted @${message.split(" ")[3]}. They now have -1 karma.`, origin);
+                    db.collection("karma").updateOne({
+                        username: message.split(" ")[3]
+                    }, {
+                        $set: {
+                            username: message.split(" ")[3],
+                            karma: 0
+                        }
+                    }, {
+                        upsert: true
+                    });
+                    bot.post(`Successfully downvoted @${message.split(" ")[3]}. They now have 0 karma.`, origin);
                     log(`${user} downvoted someone with the command "${message}"`);
                 }
             } else {
@@ -292,35 +330,48 @@ Bot Library: MeowerBot.js`, origin);
                     bot.post("You can't downvote yourself!", origin);
                     log(`${user} tried to downvote themselves unsucessfully with the command "${message}"`);
                 } else {
-                    db.set(`MDW125-KARMA-${message.split(" ")[3]}`, (parseInt(db.get(`MDW125-KARMA-${message.split(" ")[3]}`)) - 1));
-                    bot.post(`Successfully downvoted @${message.split(" ")[3]}! They now have ${db.get("MDW125-KARMA-" + message.split(" ")[3])} karma.`, origin);
+                    const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: message.split(" ")[3] });
+                    db.collection("karma").updateOne({
+                        username: message.split(" ")[3]
+                    }, {
+                        $set: {
+                            username: message.split(" ")[3],
+                            karma: karma.karma - 1
+                        }
+                    }, {
+                        upsert: true
+                    });
+                    bot.post(`Successfully downvoted @${message.split(" ")[3]}! They now have ${karma.karma} karma.`, origin);
                     log(`${user} downvoted someone with the command "${message}"`);
                 }
             }
         } else if (message.split(" ")[2] === "view") {
+            const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: message.split(" ")[3] });
             if (message.split(" ")[3] === user) {
-                if (!(db.has(`MDW125-KARMA-${user}`))) {
-                    bot.post("You have 0 karma.", origin);
-                    log(`${user} viewed their 0 karma with the command "${message}"`);
+                if (!karma) {
+                    bot.post("You have 1 karma.", origin);
+                    log(`${user} viewed their 1 karma with the command "${message}"`);
                 } else {
-                    bot.post(`You have ${db.get("MDW125-KARMA-" + user)} karma.`, origin);
+                    bot.post(`You have ${karma.karma} karma.`, origin);
                     log(`${user} viewed their karma with the command "${message}"`);
                 }
             } else {
-                if (!(db.has(`MDW125-KARMA-${message.split(" ")[3]}`))) {
-                    bot.post(`@${message.split(" ")[3]} has 0 karma.`, origin);
-                    log(`${user} viewed someone else's 0 karma with the command "${message}"`);
+                const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: message.split(" ")[3] });
+                if (!karma) {
+                    bot.post(`@${message.split(" ")[3]} has 1 karma.`, origin);
+                    log(`${user} viewed someone else's 1 karma with the command "${message}"`);
                 } else {
-                    bot.post(`@${message.split(" ")[3]} has ${db.get("MDW125-KARMA-" + message.split(" ")[3])} karma.`, origin);
+                    bot.post(`@${message.split(" ")[3]} has ${karma.karma} karma.`, origin);
                     log(`${user} viewed someone else's karma with the command "${message}"`);
                 }
             }
         } else {
-            if (!(db.has(`MDW125-KARMA-${user}`))) {
-                bot.post("You have 0 karma.", origin);
-                log(`${user} viewed their 0 karma with the command "${message}"`);
+            const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: message.split(" ")[3] });
+            if (!karma) {
+                bot.post("You have 1 karma.", origin);
+                log(`${user} viewed their 1 karma with the command "${message}"`);
             } else {
-                bot.post(`You have ${db.get("MDW125-KARMA-" + user)} karma.`, origin);
+                bot.post(`You have ${karma.karma} karma.`, origin);
                 log(`${user} viewed their karma with the command "${message}"`);
             }
         }
@@ -328,14 +379,21 @@ Bot Library: MeowerBot.js`, origin);
 
     if (message.startsWith(`@${username} mute`)) {
         if (admins.includes(user)) {
-            if (db.has(`MDW125-MUTED-${message.split(" ")[2]}`)) {
+            const muted: Promise<Mute | null> = await db.collection("mutes").find({ username: user });
+            if (!muted) {
                 bot.post(`@${message.split(" ")[2]} is already muted!`, origin);
                 log(`${user} tried to mute someone, but they are already muted. They used the command "${message}"`);
             } else {
-                if (message.split(" ")[2]) {
-                    db.set(`MDW125-MUTED-${message.split(" ")[2]}`, message.split(" ").slice(3, message.split(" ").length).join(" "));
+                if (message.split(" ")[3]) {
+                    db.collection("mutes").insertOne({
+                        "username": message.split(" ")[2],
+                        "reason": message.split(" ").slice(3, message.split(" ").length).join(" ")
+                    });
                 } else {
-                    db.set(`MDW125-MUTED-${message.split(" ")[2]}`, null);
+                    db.collection("mutes").insertOne({
+                        "username": message.split(" ")[2],
+                        "reason": null
+                    });
                 }
                 bot.post(`Successfully muted @${message.split(" ")[2]}!`, origin);
                 log(`${user} muted someone with the command "${message}"`);
@@ -348,13 +406,14 @@ Bot Library: MeowerBot.js`, origin);
 
     if (message.startsWith(`@${username} unmute`)) {
         if (admins.includes(user)) {
-            if (!(db.has(`MDW125-MUTED-${message.split(" ")[2]}`))) {
-                bot.post(`@${message.split(" ")[2]} isn't muted!`, origin);
-                log(`${user} tried to unmute someone, but they weren't muted. They used the command "${message}"`);
-            } else {
-                db.delete(`MDW125-MUTED-${message.split(" ")[2]}`);
+            const muted: Promise<Mute | null> = await db.collection("mutes").find({ username: message.split(" ")[2] });
+            if (muted) {
+                db.collection("mutes").deleteOne({ username: message.split(" ")[2] });
                 bot.post(`Successfully unmuted @${message.split(" ")[2]}!`, origin);
                 log(`${user} unmuted someone with the command "${message}"`);
+            } else {
+                bot.post(`@${message.split(" ")[2]} isn't muted!`, origin);
+                log(`${user} tried to unmute someone, but they weren't muted. They used the command "${message}"`);
             }
         } else {
             bot.post("You don't have the permissions to run this command.", origin);
@@ -398,48 +457,64 @@ ${wordle.grid[5].join("")}
 
     if (message.startsWith(`@${username} poll`)) {
         if (message.split(" ")[2] === "new") {
-            const polls: object[] = db.get("MDW125-POLLS");
-            polls.push({ "question": message.split(" ").slice(3, message.split(" ").length).join(" "), "id": polls.length + 1, "answers": [], "username": user });
-            db.set("MDW125-POLLS", polls);
-            bot.post(`Succesfully created new poll! For others to answer this poll, use @${username} poll ${polls.length} [answer].`, origin);
+            const total_polls: Promise<number> = await db.collection("polls").countDocuments({ deleted: false });
+            db.collection("polls").insertOne({
+                "_id": total_polls + 1,
+                "question": message.split(" ").slice(3, message.split(" ").length).join(" "),
+                "answers": [],
+                "username": user,
+                "deleted": false
+            });
+            bot.post(`Succesfully created new poll! For others to answer your poll, use @${username} poll answer ${total_polls + 1} [answer].`, origin);
             log(`${user} created a new poll with the command "${message}"`);
         } else if (message.split(" ")[2] === "answer") {
-            const polls: object[] = db.get("MDW125-POLLS");
-            if (user == polls[message.split(" ")[3] - 1].username) {
+            const poll: Promise<Poll | null> = await db.collection("polls").find({ id: message.split(" ")[2] });
+            if (user == poll.username) {
                 bot.post("You can't answer a poll you made!", origin);
                 log(`${user} tried to answer a poll they created with the command "${message}"`);
-            } else if (polls[message.split(" ")[3] - 1] == undefined) {
+            } else if (!poll) {
                 bot.post("This poll doesn't exist!");
             } else {
-                polls[message.split(" ")[3] - 1].answers.push({ "username": user, "answer": message.split(" ").slice(4, message.split(" ").length).join(" ") });
-                db.set("MDW125-POLLS", polls);
+                poll.answers.push({
+                    "username": user,
+                    "answer": message.split(" ").slice(4, message.split(" ").length).join(" ")
+                });
+                db.collection("polls").updateOne({
+                    id: message.split(" ")[2]
+                }, {
+                    $set: {
+                        answers: poll.answers
+                    }
+                });
                 bot.post("Successfully answered poll!", origin);
                 log(`${user} answered a poll with the command "${message}"`);
             }
         } else {
-            const polls: object[] = db.get("MDW125-POLLS");
-
-            for (const i in polls) {
-                if (polls[i].username == user) {
-                    polls.splice(i, 1);
-                }
-            }
-
-            const randomPoll = polls[Math.floor(Math.random() * polls.length)];
+            const polls: Poll[] = await db.collection("polls").find({
+                deleted: false
+            }).toArray();
 
             try {
+                for (const i in polls) {
+                    if (polls[i].username == user) {
+                        polls.splice(i, 1);
+                    }
+                }
+    
+                const randomPoll = polls[Math.floor(Math.random() * polls.length)];
+
                 bot.post(`Random poll: ${randomPoll.question}
-    To answer this poll, use @${username} poll answer ${randomPoll.id} [answer].`, origin);
+    To answer this poll, use @${username} poll answer ${randomPoll._id} [answer].`, origin);
                 log(`${user} found a random poll with the command "${message}"`);
             } catch(e) {
-                bot.post(`There are no polls to answer! Check back later or create a poll with ${username} poll new [poll].`, origin);
+                bot.post(`There are no polls to answer! Check back later or create a poll with @${username} poll new [poll].`, origin);
             }
         }
     }
 
     if (message.startsWith(`@${username} whois`)) {
-        const user: Promise<object> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}`).then(res => res.json());
-        const user_posts: Promise<object> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}/posts?autoget`).then(res => res.json());
+        const user: Promise<User> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}`).then(res => res.json());
+        const user_posts: Promise<UserPosts> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}/posts?autoget`).then(res => res.json());
 
         if (user.error == true) {
             bot.post("This user doesn't exist! Dare to namesnipe?", origin);
@@ -455,6 +530,9 @@ ${wordle.grid[5].join("")}
     }
 
     if (message.startsWith(`@${username} place`)) {
+        bot.post("This command has been temporaily disabled", origin);
+        return;
+
         if (message.split(" ")[2] === "pixel") {
             try {
                 place.set(parseInt(message.split(" ")[3]) - 1, parseInt(message.split(" ")[4]) - 1, message.split(" ")[5], user);
@@ -497,10 +575,7 @@ bot.onMessage((messageData: string) => {
 });
 
 bot.onClose(() => {
-    const command = exec("npm run start");
-    command.stdout.on("data", (output) => {
-        console.log(output.toString());
-    });
+    bot.login(username, password);
 });
 
 bot.onLogin(() => {
@@ -509,3 +584,4 @@ bot.onLogin(() => {
 Use @${username} help to see a list of commands.`);
 });
 
+bot.login(username, password);
