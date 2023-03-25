@@ -8,9 +8,9 @@ import { log } from "../lib/logs.js";
 import Wordle from "../lib/wordle.js";
 import { toRelative } from "../lib/relative.js";
 import { pfp, lvl } from "../lib/whois-utils.js";
-import Place from "../lib/place.js";
+// import Place from "../lib/place.js";
 import { welcome_msg } from "../lib/welcome.js";
-import { Status, Karma, Place, Mute, Poll, PollAnswer } from "../lib/interfaces.js";
+import { Status, Karma, Place, Mute, Poll, PollAnswer, User, UserPosts } from "../lib/interfaces.js";
 
 dotenv.config();
 
@@ -513,8 +513,8 @@ ${wordle.grid[5].join("")}
     }
 
     if (message.startsWith(`@${username} whois`)) {
-        const user: Promise<object> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}`).then(res => res.json());
-        const user_posts: Promise<object> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}/posts?autoget`).then(res => res.json());
+        const user: Promise<User> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}`).then(res => res.json());
+        const user_posts: Promise<UserPosts> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}/posts?autoget`).then(res => res.json());
 
         if (user.error == true) {
             bot.post("This user doesn't exist! Dare to namesnipe?", origin);
@@ -530,6 +530,9 @@ ${wordle.grid[5].join("")}
     }
 
     if (message.startsWith(`@${username} place`)) {
+        bot.post("This command has been temporaily disabled", origin);
+        return;
+
         if (message.split(" ")[2] === "pixel") {
             try {
                 place.set(parseInt(message.split(" ")[3]) - 1, parseInt(message.split(" ")[4]) - 1, message.split(" ")[5], user);

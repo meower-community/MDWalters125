@@ -52,3 +52,33 @@ export interface PollAnswer {
     username: string;
     answer: string;
 }
+
+/**
+* The interface for users on Meower
+*/
+export interface User {
+    _id: string;
+    banned: boolean;
+    created: number;
+    error: boolean;
+    lower_username: string;
+    lvl: number;
+    pfp_data: number;
+    quote: string;
+    uuid: string;
+}
+
+/**
+* The interface for a user's posts on Meower
+*/
+export interface UserPosts {
+    error: boolean;
+    index: string[] | object[];
+    "page#": number;
+    pages: number;
+    query: {
+        isDeleted: boolean;
+        post_origin: string;
+        u: string;
+    };
+}
