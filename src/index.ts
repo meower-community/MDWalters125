@@ -174,8 +174,7 @@ Reason: "${muted.reason}"`, origin);
             "What?",
             "Highly unlikely.",
         ];
-        bot.post(`The Eight-Ball says...
-    ${eightBall[Math.floor(Math.random() * eightBall.length)]}`, origin);
+        bot.post(`The Eight-Ball says...\n${eightBall[Math.floor(Math.random() * eightBall.length)]}`, origin);
         log(`${user} used the command ${message}`);
     }
 
@@ -307,7 +306,8 @@ Bot Library: MeowerBot.js`, origin);
                 }
             }
         } else if (message.split(" ")[2] === "downvote") {
-            if (!(db.has(`MDW125-KARMA-${message.split(" ")[3]}`))) {
+            const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: message.split(" ")[3] });
+            if (!karma) {
                 if (message.split(" ")[3] === user) {
                     bot.post("You can't downvote yourself!", origin);
                     log(`${user} tried to downvote themselves unsucessfully with the command "${message}"`);
