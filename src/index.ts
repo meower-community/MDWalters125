@@ -490,9 +490,9 @@ ${wordle.grid[5].join("")}
                 log(`${user} answered a poll with the command "${message}"`);
             }
         } else {
-            const polls: Polls[] = db.collection("polls").find({
+            const polls: Poll[] = await db.collection("polls").find({
                 deleted: false
-            });
+            }).toArray();
 
             try {
                 for (const i in polls) {
@@ -504,7 +504,7 @@ ${wordle.grid[5].join("")}
                 const randomPoll = polls[Math.floor(Math.random() * polls.length)];
 
                 bot.post(`Random poll: ${randomPoll.question}
-    To answer this poll, use @${username} poll answer ${randomPoll.id} [answer].`, origin);
+    To answer this poll, use @${username} poll answer ${randomPoll._id} [answer].`, origin);
                 log(`${user} found a random poll with the command "${message}"`);
             } catch(e) {
                 bot.post(`There are no polls to answer! Check back later or create a poll with @${username} poll new [poll].`, origin);
