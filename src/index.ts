@@ -36,6 +36,7 @@ const help: string[] = [
     "place"
 ];
 const admins: string[] = ["mdwalters", "m", "JoshAtticus", "AltJosh"];
+const karma_queue: object[] = [];
 const db = new MongoClient(process.env["MDW125_MONGODB_URL"]).db("MDWalters125");
 const bot = new Bot();
 const wordle = new Wordle();
@@ -272,16 +273,19 @@ Bot Library: MeowerBot.js`, origin);
                     bot.post("You can't upvote yourself!", origin);
                     log(`${user} tried to upvote themselves unsucessfully with the command ${message}`);
                 } else {
-                    db.collection("karma").updateOne({
-                        username: message.split(" ")[3]
-                    }, {
-                        $set: {
-                            username: message.split(" ")[3],
-                            karma: 2
+                    for (const i in karma_queue) {
+                        if (karma_queue[i].username === user) {
+                            bot.post("Your cooldown period isn't over yet!", origin);
+                            return;
                         }
-                    }, {
-                        upsert: true
+                    }
+
+                    karma_queue.push({
+                        "username": user,
+                        "user_karma": 2,
+                        "karma": message.split(" ")[3]
                     });
+
                     bot.post(`Successfully upvoted @${message.split(" ")[3]}! They now have 2 karma.`, origin);
                     log(`${user} upvoted someone with the command "${message}"`);
                 }
@@ -290,16 +294,17 @@ Bot Library: MeowerBot.js`, origin);
                     bot.post("You can't upvote yourself!", origin);
                     log(`${user} tried to upvote themselves unsucessfully with the command ${message}`);
                 } else {
-                    const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: message.split(" ")[3] });
-                    db.collection("karma").updateOne({
-                        username: message.split(" ")[3]
-                    }, {
-                        $set: {
-                            username: message.split(" ")[3],
-                            karma: karma.karma + 1
+                    for (const i in karma_queue) {
+                        if (karma_queue[i].username === user) {
+                            bot.post("Your cooldown period isn't over yet!", origin);
+                            return;
                         }
-                    }, {
-                        upsert: true
+                    }
+
+                    karma_queue.push({
+                        "username": user,
+                        "user_karma": karma.karma + 1,
+                        "karma": message.split(" ")[3]
                     });
                     bot.post(`Successfully upvoted @${message.split(" ")[3]}! They now have ${karma.karma + 1} karma.`, origin);
                     log(`${user} upvoted someone with the command "${message}"`);
@@ -312,16 +317,19 @@ Bot Library: MeowerBot.js`, origin);
                     bot.post("You can't downvote yourself!", origin);
                     log(`${user} tried to downvote themselves unsucessfully with the command "${message}"`);
                 } else {
-                    db.collection("karma").updateOne({
-                        username: message.split(" ")[3]
-                    }, {
-                        $set: {
-                            username: message.split(" ")[3],
-                            karma: 0
+                    for (const i in karma_queue) {
+                        if (karma_queue[i].username === user) {
+                            bot.post("Your cooldown period isn't over yet!", origin);
+                            return;
                         }
-                    }, {
-                        upsert: true
+                    }
+
+                    karma_queue.push({
+                        "username": user,
+                        "user_karma": 0,
+                        "karma": message.split(" ")[3]
                     });
+
                     bot.post(`Successfully downvoted @${message.split(" ")[3]}. They now have 0 karma.`, origin);
                     log(`${user} downvoted someone with the command "${message}"`);
                 }
@@ -330,18 +338,20 @@ Bot Library: MeowerBot.js`, origin);
                     bot.post("You can't downvote yourself!", origin);
                     log(`${user} tried to downvote themselves unsucessfully with the command "${message}"`);
                 } else {
-                    const karma: Promise<Karma | null> = await db.collection("karma").findOne({ username: message.split(" ")[3] });
-                    db.collection("karma").updateOne({
-                        username: message.split(" ")[3]
-                    }, {
-                        $set: {
-                            username: message.split(" ")[3],
-                            karma: karma.karma - 1
+                    for (const i in karma_queue) {
+                        if (karma_queue[i].username === user) {
+                            bot.post("Your cooldown period isn't over yet!", origin);
+                            return;
                         }
-                    }, {
-                        upsert: true
+                    }
+
+                    karma_queue.push({
+                        "username": user,
+                        "user_karma": karma.karma - 1,
+                        "karma": message.split(" ")[3]
                     });
-                    bot.post(`Successfully downvoted @${message.split(" ")[3]}! They now have ${karma.karma} karma.`, origin);
+
+                    bot.post(`Successfully downvoted @${message.split(" ")[3]}. They now have ${karma.karma} karma.`, origin);
                     log(`${user} downvoted someone with the command "${message}"`);
                 }
             }
@@ -583,5 +593,24 @@ bot.onLogin(() => {
     bot.post(`${welcome_msg[Math.floor(Math.random() * welcome_msg.length)]}
 Use @${username} help to see a list of commands.`);
 });
+
+setInterval(() => {
+    try {
+        const karma: object = karma_queue[karma_queue.length];
+        db.collection("karma").updateOne({
+            username: karma.user_karma
+        }, {
+            $set: {
+                username: karma.karma,
+                karma: karma.user_karma
+            }
+        }, {
+            upsert: true
+        });
+        karma_queue.pop();
+    } catch(e) {
+        console.error(e);
+    }
+}, 60000);
 
 bot.login(username, password);

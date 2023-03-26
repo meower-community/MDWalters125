@@ -13,7 +13,7 @@ export interface Status {
 export interface Karma {
     _id: string;
     username: string;
-    karma: string;
+    karma: number;
 }
 
 /**
