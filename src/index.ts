@@ -37,7 +37,8 @@ const help: string[] = [
     "place",
     "update"
 ];
-const version: string = "1.0.0"
+const version: string = "1.0.0";
+const update_url: string = "https://raw.githubusercontent.com/meower-community/MDWalters125/main/version.json";
 const admins: string[] = ["mdwalters", "m", "JoshAtticus", "AltJosh"];
 const db = new MongoClient(process.env["MDW125_MONGODB_URL"]).db("MDWalters125");
 const bot = new Bot();
@@ -534,7 +535,15 @@ ${wordle.grid[5].join("")}
 
     if (message.startsWith(`@${username} update`)) {
         if (admins.includes(user)) {
-            const version: object = await fetch("")
+            const latest_version: object = await fetch(update_url).then(res => res.json());
+
+            if (version !== latest_version.latest) {
+                bot.post(`A update is available! Downloading update...`, origin);
+                exec("git pull");
+                exec("npm start");
+            } else {
+                bot.post(`${username} is up to date!`, origin);
+            }
         } else {
             bot.post("You don't have the permissions to run this command.", origin);
         }
