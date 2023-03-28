@@ -3,6 +3,7 @@ import Bot from "meowerbot";
 import fetch from "node-fetch";
 import * as dotenv from "dotenv";
 import { MongoClient } from "mongodb";
+import { exec } from "child_process";
 
 import { log } from "../lib/logs.js";
 import Wordle from "../lib/wordle.js";
@@ -33,8 +34,10 @@ const help: string[] = [
     "wordle",
     "poll",
     "whois",
-    "place"
+    "place",
+    "update"
 ];
+const version: string = "1.0.0"
 const admins: string[] = ["mdwalters", "m", "JoshAtticus", "AltJosh"];
 const db = new MongoClient(process.env["MDW125_MONGODB_URL"]).db("MDWalters125");
 const bot = new Bot();
@@ -529,43 +532,11 @@ ${wordle.grid[5].join("")}
         }
     }
 
-    if (message.startsWith(`@${username} place`)) {
-        bot.post("This command has been temporaily disabled", origin);
-        return;
-
-        if (message.split(" ")[2] === "pixel") {
-            try {
-                place.set(parseInt(message.split(" ")[3]) - 1, parseInt(message.split(" ")[4]) - 1, message.split(" ")[5], user);
-                bot.post(`${place.grid()[0].join("")}
-${place.grid()[1].join("")}
-${place.grid()[2].join("")}
-${place.grid()[3].join("")}
-${place.grid()[4].join("")}
-${place.grid()[5].join("")}
-${place.grid()[6].join("")}
-${place.grid()[7].join("")}
-${place.grid()[8].join("")}
-${place.grid()[9].join("")}`, origin);
-            } catch(e) {
-                console.error(e);
-                bot.post(`An error occured while placing a pixel!
-    ${e}`, origin);
-            }
-        } else if (message.split(" ")[2] === "grid") {
-            bot.post(`${place.grid()[0].join("")}
-${place.grid()[1].join("")}
-${place.grid()[2].join("")}
-${place.grid()[3].join("")}
-${place.grid()[4].join("")}
-${place.grid()[5].join("")}
-${place.grid()[6].join("")}
-${place.grid()[7].join("")}
-${place.grid()[8].join("")}
-${place.grid()[9].join("")}`, origin);
+    if (message.startsWith(`@${username} update`)) {
+        if (admins.includes(user)) {
+            const version: object = await fetch("")
         } else {
-            bot.post(`Commands:
-    @${username} place pixel [x] [y] [colour]
-    @${username} place grid`, origin);
+            bot.post("You don't have the permissions to run this command.", origin);
         }
     }
 });
