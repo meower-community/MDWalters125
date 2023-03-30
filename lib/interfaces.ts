@@ -13,7 +13,7 @@ export interface Status {
 export interface Karma {
     _id: string;
     username: string;
-    karma: string;
+    karma: number;
 }
 
 /**
@@ -81,4 +81,13 @@ export interface UserPosts {
         post_origin: string;
         u: string;
     };
+}
+
+/**
+* The interface for cooldowns
+*/
+export interface Cooldown {
+    username: string;
+    user_karma: number;
+    karma: string;
 }
