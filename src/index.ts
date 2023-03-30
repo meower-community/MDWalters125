@@ -577,7 +577,8 @@ Use @${username} help to see a list of commands.`);
 setInterval(() => {
     try {
         console.log("Clearing cooldowns...");
-        const karma: object = karma_queue[karma_queue.length];
+        const karma: Cooldown = karma_queue[karma_queue.length - 1];
+        console.log(karma);
         db.collection("karma").updateOne({
             username: karma.user_karma
         }, {
@@ -588,7 +589,7 @@ setInterval(() => {
         }, {
             upsert: true
         });
-        karma_queue.splice(karma_queue.length, 1);
+        karma_queue.pop();
         console.log("Finished cleaning cooldowns.");
     } catch(e) {
         console.error(e);
