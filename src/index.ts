@@ -355,7 +355,7 @@ Bot Library: MeowerBot.js`, origin);
                         "karma": message.split(" ")[3]
                     });
 
-                    bot.post(`Successfully downvoted @${message.split(" ")[3]}. They now have ${karma.karma} karma.`, origin);
+                    bot.post(`Successfully downvoted @${message.split(" ")[3]}. They now have ${karma.karma - 1} karma.`, origin);
                     log(`${user} downvoted someone with the command "${message}"`);
                 }
             }
@@ -578,7 +578,6 @@ setInterval(() => {
     try {
         console.log("Clearing cooldowns...");
         const karma: Cooldown = karma_queue[karma_queue.length - 1];
-        console.log(karma);
         db.collection("karma").updateOne({
             username: karma.user_karma
         }, {
