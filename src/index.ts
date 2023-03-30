@@ -11,7 +11,7 @@ import { toRelative } from "../lib/relative.js";
 import { pfp, lvl } from "../lib/whois-utils.js";
 // import Place from "../lib/place.js";
 import { welcome_msg } from "../lib/welcome.js";
-import { Status, Karma, Mute, Poll, User, UserPosts } from "../lib/interfaces.js";
+import { Status, Karma, Mute, Poll, User, UserPosts, Cooldown } from "../lib/interfaces.js";
 
 dotenv.config();
 
@@ -37,10 +37,10 @@ const help: string[] = [
     "place",
     "update"
 ];
-const version = "1.0.0";
+const version = "1.1.0";
 const update_url = "https://raw.githubusercontent.com/meower-community/MDWalters125/main/version.json";
 const admins: string[] = ["mdwalters", "m", "JoshAtticus", "AltJosh"];
-const karma_queue: object[] = [];
+const karma_queue: Cooldown[] = [];
 const db = new MongoClient(process.env["MDW125_MONGODB_URL"]).db("MDWalters125");
 const bot = new Bot();
 const wordle = new Wordle();
@@ -576,6 +576,7 @@ Use @${username} help to see a list of commands.`);
 
 setInterval(() => {
     try {
+        console.log("Clearing cooldowns...");
         const karma: object = karma_queue[karma_queue.length];
         db.collection("karma").updateOne({
             username: karma.user_karma
@@ -588,6 +589,7 @@ setInterval(() => {
             upsert: true
         });
         karma_queue.splice(karma_queue.length, 1);
+        console.log("Finished cleaning cooldowns.");
     } catch(e) {
         console.error(e);
     }

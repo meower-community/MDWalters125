@@ -82,3 +82,12 @@ export interface UserPosts {
         u: string;
     };
 }
+
+/**
+* The interface for cooldowns
+*/
+export interface Cooldown {
+    username: string;
+    user_karma: number;
+    karma: string;
+}
