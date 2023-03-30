@@ -3,6 +3,7 @@ import Bot from "meowerbot";
 import fetch from "node-fetch";
 import * as dotenv from "dotenv";
 import { MongoClient } from "mongodb";
+import { exec } from "child_process";
 
 import { log } from "../lib/logs.js";
 import Wordle from "../lib/wordle.js";
@@ -33,8 +34,11 @@ const help: string[] = [
     "wordle",
     "poll",
     "whois",
-    "place"
+    "place",
+    "update"
 ];
+const version: string = "1.0.0";
+const update_url: string = "https://raw.githubusercontent.com/meower-community/MDWalters125/main/version.json";
 const admins: string[] = ["mdwalters", "m", "JoshAtticus", "AltJosh"];
 const karma_queue: object[] = [];
 const db = new MongoClient(process.env["MDW125_MONGODB_URL"]).db("MDWalters125");
@@ -539,43 +543,19 @@ ${wordle.grid[5].join("")}
         }
     }
 
-    if (message.startsWith(`@${username} place`)) {
-        bot.post("This command has been temporaily disabled", origin);
-        return;
+    if (message.startsWith(`@${username} update`)) {
+        if (admins.includes(user)) {
+            const latest_version: object = await fetch(update_url).then(res => res.json());
 
-        if (message.split(" ")[2] === "pixel") {
-            try {
-                place.set(parseInt(message.split(" ")[3]) - 1, parseInt(message.split(" ")[4]) - 1, message.split(" ")[5], user);
-                bot.post(`${place.grid()[0].join("")}
-${place.grid()[1].join("")}
-${place.grid()[2].join("")}
-${place.grid()[3].join("")}
-${place.grid()[4].join("")}
-${place.grid()[5].join("")}
-${place.grid()[6].join("")}
-${place.grid()[7].join("")}
-${place.grid()[8].join("")}
-${place.grid()[9].join("")}`, origin);
-            } catch(e) {
-                console.error(e);
-                bot.post(`An error occured while placing a pixel!
-    ${e}`, origin);
+            if (version !== latest_version.latest) {
+                bot.post(`A update is available! Downloading update...`, origin);
+                exec("git pull");
+                exec("npm start");
+            } else {
+                bot.post(`${username} is up to date!`, origin);
             }
-        } else if (message.split(" ")[2] === "grid") {
-            bot.post(`${place.grid()[0].join("")}
-${place.grid()[1].join("")}
-${place.grid()[2].join("")}
-${place.grid()[3].join("")}
-${place.grid()[4].join("")}
-${place.grid()[5].join("")}
-${place.grid()[6].join("")}
-${place.grid()[7].join("")}
-${place.grid()[8].join("")}
-${place.grid()[9].join("")}`, origin);
         } else {
-            bot.post(`Commands:
-    @${username} place pixel [x] [y] [colour]
-    @${username} place grid`, origin);
+            bot.post("You don't have the permissions to run this command.", origin);
         }
     }
 });
