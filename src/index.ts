@@ -11,7 +11,7 @@ import { toRelative } from "../lib/relative.js";
 import { pfp, lvl } from "../lib/whois-utils.js";
 // import Place from "../lib/place.js";
 import { welcome_msg } from "../lib/welcome.js";
-import { Status, Karma, Place, Mute, Poll, PollAnswer, User, UserPosts } from "../lib/interfaces.js";
+import { Status, Karma, Mute, Poll, User, UserPosts } from "../lib/interfaces.js";
 
 dotenv.config();
 
