@@ -587,7 +587,7 @@ setInterval(() => {
         }, {
             upsert: true
         });
-        karma_queue.pop();
+        karma_queue.splice(karma_queue.length, 1);
     } catch(e) {
         console.error(e);
     }
