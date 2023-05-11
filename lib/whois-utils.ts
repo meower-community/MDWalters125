@@ -21,7 +21,7 @@ export const pfp: string[] = [
     "Unknown [20]",
     "Unknown [21]",
     "Meowy [22]",
-    "a Cat block [23]",
+    "@DaCatBlock [23]",
     "a lawnmower [24]",
     "a duck [25]",
     "a rubber duck [26]",
