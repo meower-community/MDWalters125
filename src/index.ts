@@ -511,6 +511,7 @@ ${wordle.grid[5].join("")}
     To answer this poll, use @${username} poll answer ${randomPoll._id} [answer].`, origin);
                 log(`${user} found a random poll with the command "${message}"`);
             } catch(e) {
+                console.error(e);
                 bot.post(`There are no polls to answer! Check back later or create a poll with @${username} poll new [poll].`, origin);
             }
         }
@@ -519,17 +520,29 @@ ${wordle.grid[5].join("")}
     if (message.startsWith(`@${username} whois`)) {
         const user: Promise<User> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}`).then(res => res.json());
         const user_posts: Promise<UserPosts> = await fetch(`https://api.meower.org/users/${message.split(" ")[2]}/posts?autoget`).then(res => res.json());
+        const user_status: Promise<Status> = db.collection("status").findOne({ username: user._id });
 
         if (user.error == true) {
             bot.post("This user doesn't exist! Dare to namesnipe?", origin);
         } else {
-            bot.post(`${user._id} (${lvl[user.lvl]}):
+            try {
+                bot.post(`${user._id} (${lvl[user.lvl]}):
     ${(user.banned ? "Banned" : "Not banned")}
     Created ${toRelative(user.created * 1000)}
     ${(user.quote != "" ? `Quote: "${user.quote}"` : "User doesn't have a quote")}
     Profile picture is ${pfp[user.pfp_data - 1]}
     Last seen ${toRelative(user_posts.autoget[0].t.e * 1000)}
-    ${(db.has(`MDW125-STATUS-${user._id}`) ? `Status: "${db.get(`MDW125-STATUS-${user._id}`)}"` : "User doesn't have a status")}`, origin);
+    ${user_status.status ? `Status: "${user_status.status}"` : "User doesn't have a status"}`, origin);
+            } catch(e) {
+                console.error(e);
+                bot.post(`${user._id} (${lvl[user.lvl]}):
+    ${(user.banned ? "Banned" : "Not banned")}
+    Created ${toRelative(user.created * 1000)}
+    ${(user.quote != "" ? `Quote: "${user.quote}"` : "User doesn't have a quote")}
+    Profile picture is ${pfp[user.pfp_data - 1]}
+    Last seen never
+    ${user_status.status ? `Status: "${user_status.status}"` : "User doesn't have a status"}`, origin);
+            }
         }
     }
 
