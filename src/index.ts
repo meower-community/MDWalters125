@@ -37,7 +37,7 @@ const help: string[] = [
     "place",
     "update"
 ];
-const version: string = "1.1.0";
+const version: string = "2023.05.24";
 const update_url: string = "https://raw.githubusercontent.com/meower-community/MDWalters125/main/version.json";
 const admins: string[] = ["mdwalters", "m", "JoshAtticus", "AltJosh"];
 const db = new MongoClient(process.env["MDW125_MONGODB_URL"]).db("MDWalters125");
@@ -551,7 +551,8 @@ ${wordle.grid[5].join("")}
 
             if (version !== latest_version.latest) {
                 bot.post(`A update is available! Downloading update...`, origin);
-                exec("git pull");
+                exec("git p ull");
+                bot.close();
                 exec("npm start");
             } else {
                 bot.post(`${username} is up to date!`, origin);
@@ -573,7 +574,8 @@ bot.onClose(() => {
 bot.onLogin(() => {
     log(`Logged on as user ${username}`);
     bot.post(`${welcome_msg[Math.floor(Math.random() * welcome_msg.length)]}
-Use @${username} help to see a list of commands.`);
+Use @${username} help to see a list of commands.
+Bot version is v${version}`);
 });
 
 bot.login(username, password);
