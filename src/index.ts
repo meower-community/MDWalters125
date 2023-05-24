@@ -100,7 +100,7 @@ Reason: "${muted.reason}"`, origin);
                 break;
             case "cat":
                 bot.post(`@${username} cat:
-    Posts random cat pictures.`, origin);
+    Posts random cat pictures. May or may not show you something other than a cat`, origin);
                 break;
             case "status":
                 bot.post(`@${username} status:
@@ -199,11 +199,10 @@ Reason: "${muted.reason}"`, origin);
     }
 
     if (message.startsWith(`@${username} cat`)) {
-        if (Math.floor(Math.random() * 1) == 1) {
+        if (Math.floor(Math.random() * 2) == 0) {
             bot.post("[@cat: https://arrow.pages.dev/favicon.png]", origin);
         } else {
-            const image: Promise<object> = await fetch("https://aws.random.cat/meow").then(res => res.json());
-            bot.post(`[Random cat image: ${image.file}]`, origin);
+            bot.post(`[Random cat image: https://cataas.com/cat]`, origin);
             log(`${user} used the command ${message}`);
         }
     }

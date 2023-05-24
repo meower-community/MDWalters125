@@ -21,8 +21,9 @@ export const welcome_msg: string[] = [
     "Furries can do infinite crimes",
     "Never gonna give you up",
     "Why did the chicken cross the road? To get to the other side",
-    "Made in Canada",
+    "Made in Canada, hosted in Australia or Canada",
     "The question that I always ask Bill Gates is why Windows is closed-source",
     "M.D. created Markdown, you can't deny that",
-    "Hello from TypeScript!"
+    "Hello from TypeScript!",
+    "Check out my world famous eight ball command!"
 ];

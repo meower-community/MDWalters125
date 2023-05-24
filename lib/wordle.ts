@@ -34,21 +34,17 @@ export default class Wordle {
 
         if (!(this.ready)) {
             throw "You didn't start a new Wordle game yet! Use ~wordle new to start a new Wordle.";
-            return;
         }
 
         if (letters.length > 5) {
             throw "Word is too long!";
-            return;
         } else if (letters.length < 5) {
             throw "Word is too short!";
-            return;
         }
 
         if (this.tries == 5) {
             this.ready = false;
             throw "The Wordle game has finished! Use ~wordle new to start a new Wordle.";
-            return;
         } else {
             this.tries++;
         }
