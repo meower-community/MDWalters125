@@ -37,7 +37,7 @@ const help: string[] = [
     "place",
     "update"
 ];
-const version: string = "2023.05.24";
+const version: string = "2023.05.24.1";
 const update_url: string = "https://raw.githubusercontent.com/meower-community/MDWalters125/main/version.json";
 const admins: string[] = ["mdwalters", "m", "JoshAtticus", "AltJosh"];
 const db = new MongoClient(process.env["MDW125_MONGODB_URL"]).db("MDWalters125");
@@ -200,7 +200,7 @@ Reason: "${muted.reason}"`, origin);
 
     if (message.startsWith(`@${username} cat`)) {
         if (Math.floor(Math.random() * 2) == 0) {
-            bot.post("[@cat: https://arrow.pages.dev/favicon.png]", origin);
+            bot.post("[@cat: hhttps://go.meower.org/096c5336]", origin);
         } else {
             bot.post(`[Random cat image: https://cataas.com/cat]`, origin);
             log(`${user} used the command ${message}`);
@@ -550,12 +550,12 @@ ${wordle.grid[5].join("")}
             const latest_version: object = await fetch(update_url).then(res => res.json());
 
             if (version !== latest_version.latest) {
-                bot.post(`A update is available! Downloading update...`, origin);
-                exec("git p ull");
+                bot.post(`Version v${latest_version.latest} is available! Downloading update...`, origin);
+                exec("git pull");
                 bot.close();
                 exec("npm start");
             } else {
-                bot.post(`${username} is up to date!`, origin);
+                bot.post(`There are no updates available.`, origin);
             }
         } else {
             bot.post("You don't have the permissions to run this command.", origin);
