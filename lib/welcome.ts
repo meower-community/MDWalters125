@@ -25,5 +25,6 @@ export const welcome_msg: string[] = [
     "The question that I always ask Bill Gates is why Windows is closed-source",
     "M.D. created Markdown, you can't deny that",
     "Hello from TypeScript!",
-    "Check out my world famous eight ball command!"
+    "Check out my world famous eight ball command!",
+    "h"
 ];

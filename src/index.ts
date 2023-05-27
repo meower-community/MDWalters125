@@ -37,7 +37,7 @@ const help: string[] = [
     "place",
     "update"
 ];
-const version: string = "2023.05.24.1";
+const version: string = "2023.05.27";
 const update_url: string = "https://raw.githubusercontent.com/meower-community/MDWalters125/main/version.json";
 const admins: string[] = ["mdwalters", "m", "JoshAtticus", "AltJosh"];
 const db = new MongoClient(process.env["MDW125_MONGODB_URL"]).db("MDWalters125");
