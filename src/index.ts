@@ -37,8 +37,8 @@ const help: string[] = [
     "place",
     "update"
 ];
-const version: string = "2023.05.27";
-const update_url: string = "https://raw.githubusercontent.com/meower-community/MDWalters125/main/version.json";
+const version = "2023.05.27";
+const update_url = "https://raw.githubusercontent.com/meower-community/MDWalters125/main/version.json";
 const admins: string[] = ["mdwalters", "m", "JoshAtticus", "AltJosh"];
 const db = new MongoClient(process.env["MDW125_MONGODB_URL"]).db("MDWalters125");
 const bot = new Bot();
@@ -202,7 +202,7 @@ Reason: "${muted.reason}"`, origin);
         if (Math.floor(Math.random() * 2) == 0) {
             bot.post("[@cat: hhttps://go.meower.org/096c5336]", origin);
         } else {
-            bot.post(`[Random cat image: https://cataas.com/cat]`, origin);
+            bot.post("[Random cat image: https://cataas.com/cat]", origin);
             log(`${user} used the command ${message}`);
         }
     }
@@ -555,7 +555,7 @@ ${wordle.grid[5].join("")}
                 bot.close();
                 exec("npm start");
             } else {
-                bot.post(`There are no updates available.`, origin);
+                bot.post("There are no updates available.", origin);
             }
         } else {
             bot.post("You don't have the permissions to run this command.", origin);

@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "tsc && node .",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "repository": {
     "type": "git",
