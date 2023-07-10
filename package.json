@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/mdwalters/MDWalters125",
   "dependencies": {
-    "@types/node": "^20.3.1",
+    "@types/node": "^20.4.1",
     "dotenv": "^16.3.0",
     "fs": "0.0.1-security",
     "meowerbot": "^2023.5.22",
