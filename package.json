@@ -2,10 +2,10 @@
   "name": "mdwalters125",
   "version": "1.0.0",
   "description": "A multi-purpose Meower bot",
-  "main": "./src/index.js",
+  "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "start": "tsc && node .",
+    "start": "/home/linuxbrew/.linuxbrew/bin/npx tsc && /home/linuxbrew/.linuxbrew/bin/node .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
