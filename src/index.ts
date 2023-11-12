@@ -37,7 +37,7 @@ const help: string[] = [
     "place",
     "update"
 ];
-const version = "2023.05.27";
+const version = "2023.11.12";
 const update_url = "https://raw.githubusercontent.com/meower-community/MDWalters125/main/version.json";
 const admins: string[] = ["mdwalters", "m", "JoshAtticus", "AltJosh"];
 const db = new MongoClient(process.env["MDW125_MONGODB_URL"]).db("MDWalters125");
@@ -574,8 +574,8 @@ bot.onClose(() => {
 bot.onLogin(() => {
     log(`Logged on as user ${username}`);
     bot.post(`${welcome_msg[Math.floor(Math.random() * welcome_msg.length)]}
-Use @${username} help to see a list of commands.
-Bot version is v${version}`);
+###### Use @${username} help to see a list of commands.
+###### Bot version is v${version}`);
 });
 
 bot.login(username, password);
