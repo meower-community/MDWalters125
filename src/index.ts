@@ -261,8 +261,8 @@ Reason: "${muted.reason}"`, origin);
     }
 
     if (message.startsWith(`@${username} credits`)) {
-        bot.post(`Creator: M.D. Walters
-Hosting: M.D. Walters (MDWalters125), JoshAtticus (MDBot)
+        bot.post(`Creator: Max Walters
+Hosting: Max Walters (MDWalters125), JoshAtticus (MDBot)
 Bot Library: MeowerBot.js`, origin);
         log(`${user} used the command ${message}`);
     }
@@ -427,34 +427,32 @@ Bot Library: MeowerBot.js`, origin);
     if (message.startsWith(`@${username} wordle`)) {
         if (message.split(" ")[2] === "new") {
             wordle.init();
-            bot.post(`New Wordle game started! Use @${username} wordle guess [word] to guess a word.`, origin);
+            bot.post(`New Wordle game started! Use **@${username} wordle guess [word]** to guess a word.`, origin);
             log(`${user} started a Wordle game with the command "${message}"`);
         } else if (message.split(" ")[2] === "guess") {
             try {
                 wordle.guess(message.split(" ")[3]);
-                bot.post(`${wordle.grid[0].join("")}
-${wordle.grid[1].join("")}
-${wordle.grid[2].join("")}
-${wordle.grid[3].join("")}
-${wordle.grid[4].join("")}
-${wordle.grid[5].join("")}          
-`, origin);
+                bot.post(`## ${wordle.grid[0].join("")}
+## ${wordle.grid[1].join("")}
+## ${wordle.grid[2].join("")}
+## ${wordle.grid[3].join("")}
+## ${wordle.grid[4].join("")}
+## ${wordle.grid[5].join("")}`, origin);
             } catch(e) {
                 bot.post(`${e}`, origin);
             }
         } else if (message.split(" ")[3] === "grid") {
             bot.post(`${wordle.grid[0].join("")}
-${wordle.grid[1].join("")} 
-${wordle.grid[2].join("")}
-${wordle.grid[3].join("")}
-${wordle.grid[4].join("")}
-${wordle.grid[5].join("")}          
-`, origin);
+## ${wordle.grid[1].join("")} 
+## ${wordle.grid[2].join("")}
+## ${wordle.grid[3].join("")}
+## ${wordle.grid[4].join("")}
+## ${wordle.grid[5].join("")}`, origin);
         } else {
             bot.post(`Commands:
-    @${username} wordle new
-    @${username} wordle guess [word]
-    @${username} wordle grid`);
+    **@${username} wordle new**
+    **@${username} wordle guess [word]**
+    **@${username} wordle grid**`);
         }
     }
 
@@ -507,11 +505,11 @@ ${wordle.grid[5].join("")}
                 const randomPoll = polls[Math.floor(Math.random() * polls.length)];
 
                 bot.post(`Random poll: ${randomPoll.question}
-    To answer this poll, use @${username} poll answer ${randomPoll._id} [answer].`, origin);
+    To answer this poll, use **@${username} poll answer ${randomPoll._id} [answer]**.`, origin);
                 log(`${user} found a random poll with the command "${message}"`);
             } catch(e) {
                 console.error(e);
-                bot.post(`There are no polls to answer! Check back later or create a poll with @${username} poll new [poll].`, origin);
+                bot.post(`There are no polls to answer! Check back later or create a poll with **@${username} poll new [poll]**.`, origin);
             }
         }
     }
@@ -574,8 +572,8 @@ bot.onClose(() => {
 bot.onLogin(() => {
     log(`Logged on as user ${username}`);
     bot.post(`${welcome_msg[Math.floor(Math.random() * welcome_msg.length)]}
-###### Use @${username} help to see a list of commands.
-###### Bot version is v${version}`);
+Use **@${username} help** to see a list of commands.
+Bot version is **v${version}**`);
 });
 
 bot.login(username, password);
