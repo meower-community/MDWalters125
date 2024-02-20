@@ -21,7 +21,7 @@
   "homepage": "https://github.com/mdwalters/MDWalters125",
   "dependencies": {
     "@types/node": "^20.11.7",
-    "dotenv": "^16.4.1",
+    "dotenv": "^16.4.5",
     "fs": "0.0.1-security",
     "meowerbot": "^2023.5.22",
     "mongodb": "^6.3.0",
